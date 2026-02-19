@@ -1,0 +1,179 @@
+"use client";
+import React, {
+  useState,
+  useContext,
+  useEffect,
+  useCallback,
+  useRef,
+} from "react";
+import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
+import { useCurrentUserAPI, useLogoutAPI } from "@/api/user";
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { AlertTriangle } from "lucide-react";
+import {
+  useGetAuthServiceHealth,
+  useGetServerContainersHealth,
+  useGetVideoServiceHealth,
+} from "@/api/server-health";
+import { ServicesAlertUI } from "@/components/services";
+import {
+  ServerContainersHealthResponse,
+  ServiceContainerKeys,
+} from "@/types/service-health";
+
+const AuthContext = React.createContext({});
+
+const protectedRoutes = [
+  /^\/analytics$/,
+  /^\/organisations(\/.*)?$/,
+  /^\/access-organisation$/,
+  /^\/$/,
+] as const;
+
+const unprotectedRoutes = [/^\/login$/] as const;
+
+// used for stop current user api fetching
+const unblockedRoutesWithAuth = [] as RegExp[];
+
+const blockedRoutes = [/^\/login$/] as const;
+
+const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+  const router = useRouter();
+  const pathname = usePathname();
+  const maintenanceToastShownRef = useRef(false);
+
+  const isProtected = !unblockedRoutesWithAuth.some((route) =>
+    route.test(pathname),
+  );
+  const {
+    data: currentUser,
+    isLoading: isCurrentUserLoading,
+    isPending: isCurrentUserPending,
+    isFetched: isCurrentUserFetched,
+    isError,
+    error,
+    refetch: refetchCurrentUser,
+  } = useCurrentUserAPI({ isProtected });
+
+  useEffect(() => {
+    if (isCurrentUserLoading) return;
+
+    if (!currentUser?.data?.permissions.length) {
+      refetchCurrentUser();
+    }
+  }, [isCurrentUserLoading]);
+
+  const {
+    data: authServiceHealthData,
+    isLoading: isAuthServiceHealthLoading,
+    isError: isAuthServiceHealthError,
+  } = useGetAuthServiceHealth();
+  const {
+    data: videoServiceHealthData,
+    isLoading: isVideoServiceHealthLoading,
+    isError: isVideoServiceHealthError,
+  } = useGetVideoServiceHealth();
+  const { data: serverContainersHealthData } = useGetServerContainersHealth();
+
+  useEffect(() => {
+    if (unblockedRoutesWithAuth.some((route) => route.test(pathname))) return;
+    const maintenanceToastShown = maintenanceToastShownRef.current;
+    const containers = serverContainersHealthData?.data?.containers;
+    if (!containers) return;
+
+    const affectedEntries = Object.entries(containers).filter(
+      ([, c]) => c.status !== "running" || c.state !== "healthy",
+    ) as [
+      ServiceContainerKeys,
+      ServerContainersHealthResponse["containers"][ServiceContainerKeys],
+    ][];
+    if (affectedEntries.length === 0 || maintenanceToastShown) return;
+
+    const titleNode = (
+      <div className="space-y-2">
+        <div className="flex items-center gap-2">
+          <AlertTriangle className="h-4 w-4 text-yellow-600" />
+          <span className="font-semibold">Service Update</span>
+        </div>
+
+        <ServicesAlertUI services={affectedEntries} />
+      </div>
+    );
+
+    toast.warning(titleNode, { duration: 50000 });
+    maintenanceToastShownRef.current = true;
+  }, [serverContainersHealthData, pathname]);
+
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if (blockedRoutes.some((route) => route.test(pathname))) {
+      if (isCurrentUserFetched && currentUser) {
+        router.replace(
+          new URLSearchParams(window.location.search).get("redirect") ||
+            "/settings",
+        );
+      }
+    }
+  }, [currentUser, isCurrentUserFetched, isError, pathname, router]);
+
+  const { mutateAsync: logoutMutateAsync, isPending: isLogoutLoading } =
+    useLogoutAPI();
+
+  const logoutHandler = useCallback(async () => {
+    try {
+      await logoutMutateAsync();
+      window.location.href = `/login?redirect=${encodeURIComponent(pathname + window.location.search)}`;
+    } catch (err) {
+      console.error(err);
+    } finally {
+      queryClient.clear();
+    }
+  }, [logoutMutateAsync, pathname, queryClient, router]);
+
+  useEffect(() => {
+    if (isError && error?.response?.status === 401 && currentUser) {
+      logoutHandler();
+    }
+  }, [isError, error?.response?.status, currentUser, logoutHandler]);
+
+  useEffect(() => {
+    if (isCurrentUserFetched) {
+      if (
+        !currentUser &&
+        protectedRoutes.some((route) => route.test(pathname))
+      ) {
+        router.replace(
+          `/login?redirect=${encodeURIComponent(pathname + window.location.search)}`,
+        );
+      }
+    }
+  }, [currentUser, pathname, router, isCurrentUserFetched]);
+
+  return (
+    <AuthContext.Provider
+      value={{
+        currentUser,
+        isCurrentUserLoading,
+        isCurrentUserPending,
+        isLogoutLoading,
+        logoutHandler,
+        // Service health exposure
+        authServiceHealthData,
+        isAuthServiceHealthLoading,
+        isAuthServiceHealthError,
+        videoServiceHealthData,
+        isVideoServiceHealthLoading,
+        isVideoServiceHealthError,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+export const useGlobalAuthContext = () => useContext(AuthContext);
+
+export { AuthProvider };
