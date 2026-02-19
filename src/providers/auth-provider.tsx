@@ -13,11 +13,33 @@ import {
 } from "@/api/server-health";
 import { ServicesAlertUI } from "@/components/api-services";
 import {
+  AuthServerContainersHealthResponse,
   ServerContainersHealthResponse,
   ServiceContainerKeys,
+  VideoServerContainersHealthResponse,
 } from "@/types/service-health";
+import { AxiosResponse } from "axios";
 
-const AuthContext = React.createContext({});
+const AuthContext = React.createContext<AuthContextType>({} as AuthContextType);
+
+type AuthContextType = {
+  currentUser: any;
+  isCurrentUserLoading: boolean;
+  isCurrentUserPending: boolean;
+  isLogoutPending: boolean;
+  logoutUser: () => Promise<void>;
+  // Service health exposure
+  authServiceHealthData:
+    | AxiosResponse<AuthServerContainersHealthResponse, any, {}>
+    | undefined;
+  isAuthServiceHealthLoading: boolean;
+  isAuthServiceHealthError: boolean;
+  videoServiceHealthData:
+    | AxiosResponse<VideoServerContainersHealthResponse, any, {}>
+    | undefined;
+  isVideoServiceHealthLoading: boolean;
+  isVideoServiceHealthError: boolean;
+};
 
 const protectedRoutes = [
   /^\/analytics$/,
@@ -102,21 +124,21 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const queryClient = useQueryClient();
 
-  useEffect(() => {
-    if (blockedRoutes.some((route) => route.test(pathname))) {
-      if (isCurrentUserFetched && currentUser) {
-        router.replace(
-          new URLSearchParams(window.location.search).get("redirect") ||
-            "/settings",
-        );
-      }
-    }
-  }, [currentUser, isCurrentUserFetched, isError, pathname, router]);
+  // useEffect(() => {
+  //   if (blockedRoutes.some((route) => route.test(pathname))) {
+  //     if (isCurrentUserFetched && currentUser) {
+  //       router.replace(
+  //         new URLSearchParams(window.location.search).get("redirect") ||
+  //           "/analytics",
+  //       );
+  //     }
+  //   }
+  // }, [currentUser, isCurrentUserFetched, isError, pathname, router]);
 
-  const { mutateAsync: logoutMutateAsync, isPending: isLogoutLoading } =
+  const { mutateAsync: logoutMutateAsync, isPending: isLogoutPending } =
     useLogoutAPI();
 
-  const logoutHandler = useCallback(async () => {
+  const logoutUser = useCallback(async () => {
     try {
       await logoutMutateAsync();
       window.location.href = `/login?redirect=${encodeURIComponent(pathname + window.location.search)}`;
@@ -129,22 +151,22 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     if (isError && error?.response?.status === 401 && currentUser) {
-      logoutHandler();
+      logoutUser();
     }
-  }, [isError, error?.response?.status, currentUser, logoutHandler]);
+  }, [isError, error?.response?.status, currentUser, logoutUser]);
 
-  useEffect(() => {
-    if (isCurrentUserFetched) {
-      if (
-        !currentUser &&
-        protectedRoutes.some((route) => route.test(pathname))
-      ) {
-        router.replace(
-          `/login?redirect=${encodeURIComponent(pathname + window.location.search)}`,
-        );
-      }
-    }
-  }, [currentUser, pathname, router, isCurrentUserFetched]);
+  // useEffect(() => {
+  //   if (isCurrentUserFetched) {
+  //     if (
+  //       !currentUser &&
+  //       protectedRoutes.some((route) => route.test(pathname))
+  //     ) {
+  //       router.replace(
+  //         `/login?redirect=${encodeURIComponent(pathname + window.location.search)}`,
+  //       );
+  //     }
+  //   }
+  // }, [currentUser, pathname, router, isCurrentUserFetched]);
 
   return (
     <AuthContext.Provider
@@ -152,8 +174,8 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         currentUser,
         isCurrentUserLoading,
         isCurrentUserPending,
-        isLogoutLoading,
-        logoutHandler,
+        isLogoutPending,
+        logoutUser,
         // Service health exposure
         authServiceHealthData,
         isAuthServiceHealthLoading,
