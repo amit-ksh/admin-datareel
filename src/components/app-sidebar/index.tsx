@@ -58,7 +58,7 @@ export function AppSidebar({ ...props }) {
           },
           {
             title: "Access Organisations",
-            url: "/access-organisations",
+            url: "/access-organisation",
             icon: DoorOpenIcon,
             hasAccess: true,
             isActive: pathname.startsWith("/access-organisation"),
