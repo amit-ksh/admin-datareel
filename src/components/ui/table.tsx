@@ -1,18 +1,15 @@
 "use client"
 
 import * as React from "react"
+import { ArrowUpIcon, ArrowDownIcon, ChevronsUpDown } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
 function Table({ className, ...props }: React.ComponentProps<"table">) {
   return (
-    <div
-      data-slot="table-container"
-      className="relative w-full overflow-x-auto"
-    >
+    <div className="overflow-x-auto overflow-y-clip rounded-lg border border-gray-200">
       <table
-        data-slot="table"
-        className={cn("w-full caption-bottom text-sm", className)}
+        className={cn("min-w-full divide-y divide-gray-200 text-sm", className)}
         {...props}
       />
     </div>
@@ -22,8 +19,7 @@ function Table({ className, ...props }: React.ComponentProps<"table">) {
 function TableHeader({ className, ...props }: React.ComponentProps<"thead">) {
   return (
     <thead
-      data-slot="table-header"
-      className={cn("[&_tr]:border-b", className)}
+      className={cn("bg-gray-50 text-left text-xs uppercase text-gray-600", className)}
       {...props}
     />
   )
@@ -32,8 +28,7 @@ function TableHeader({ className, ...props }: React.ComponentProps<"thead">) {
 function TableBody({ className, ...props }: React.ComponentProps<"tbody">) {
   return (
     <tbody
-      data-slot="table-body"
-      className={cn("[&_tr:last-child]:border-0", className)}
+      className={cn("divide-y divide-gray-100 bg-white", className)}
       {...props}
     />
   )
@@ -42,9 +37,8 @@ function TableBody({ className, ...props }: React.ComponentProps<"tbody">) {
 function TableFooter({ className, ...props }: React.ComponentProps<"tfoot">) {
   return (
     <tfoot
-      data-slot="table-footer"
       className={cn(
-        "bg-muted/50 border-t font-medium [&>tr]:last:border-b-0",
+        "border-t bg-muted/50 font-medium [&>tr]:last:border-b-0",
         className
       )}
       {...props}
@@ -52,27 +46,28 @@ function TableFooter({ className, ...props }: React.ComponentProps<"tfoot">) {
   )
 }
 
-function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
+function TableRow({ className, onClick, ...props }: React.ComponentProps<"tr">) {
   return (
     <tr
-      data-slot="table-row"
       className={cn(
-        "hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors",
+        "transition-colors hover:bg-gray-50",
+        onClick && "cursor-pointer",
         className
       )}
+      onClick={onClick}
       {...props}
     />
   )
 }
 
-function TableHead({ className, ...props }: React.ComponentProps<"th">) {
+function TableHead({ className, onClick, ...props }: React.ComponentProps<"th">) {
   return (
     <th
-      data-slot="table-head"
       className={cn(
-        "text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
+        "px-3 py-2 font-medium text-left align-middle",
         className
       )}
+      onClick={onClick}
       {...props}
     />
   )
@@ -81,11 +76,7 @@ function TableHead({ className, ...props }: React.ComponentProps<"th">) {
 function TableCell({ className, ...props }: React.ComponentProps<"td">) {
   return (
     <td
-      data-slot="table-cell"
-      className={cn(
-        "p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
-        className
-      )}
+      className={cn("px-3 py-2 align-middle", className)}
       {...props}
     />
   )
@@ -97,10 +88,52 @@ function TableCaption({
 }: React.ComponentProps<"caption">) {
   return (
     <caption
-      data-slot="table-caption"
-      className={cn("text-muted-foreground mt-4 text-sm", className)}
+      className={cn("mt-4 text-sm text-muted-foreground", className)}
       {...props}
     />
+  )
+}
+
+function SortIcon({ active, order }: { active: boolean; order?: "asc" | "desc" }) {
+  if (active) {
+    return order === "asc" ? (
+      <ArrowUpIcon className="h-3.5 w-3.5 text-gray-900" />
+    ) : (
+      <ArrowDownIcon className="h-3.5 w-3.5 text-gray-900" />
+    )
+  }
+  return <ChevronsUpDown className="h-3.5 w-3.5 text-gray-400" />
+}
+
+interface SortableHeaderProps extends React.ComponentProps<"th"> {
+  label: string
+  sortKey: string
+  currentSortBy: string
+  currentSortOrder: "asc" | "desc"
+  onSort: (key: string) => void
+}
+
+function SortableHeader({
+  label,
+  sortKey,
+  currentSortBy,
+  currentSortOrder,
+  onSort,
+  className,
+  ...props
+}: SortableHeaderProps) {
+  const active = currentSortBy === sortKey
+  return (
+    <TableHead
+      className={cn("group cursor-pointer select-none transition-colors hover:bg-gray-50 hover:text-gray-900", className)}
+      onClick={() => onSort(sortKey)}
+      {...props}
+    >
+      <div className="flex items-center gap-1">
+        {label}
+        <SortIcon active={active} order={currentSortOrder} />
+      </div>
+    </TableHead>
   )
 }
 
@@ -113,4 +146,6 @@ export {
   TableRow,
   TableCell,
   TableCaption,
+  SortIcon,
+  SortableHeader,
 }
