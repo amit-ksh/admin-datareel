@@ -5,104 +5,123 @@ import { ArrowUpIcon, ArrowDownIcon, ChevronsUpDown } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
-function Table({ className, ...props }: React.ComponentProps<"table">) {
-  return (
-    <div className="overflow-x-auto overflow-y-clip rounded-lg border border-gray-200">
-      <table
-        className={cn("min-w-full divide-y divide-gray-200 text-sm", className)}
-        {...props}
-      />
-    </div>
-  )
-}
-
-function TableHeader({ className, ...props }: React.ComponentProps<"thead">) {
-  return (
-    <thead
-      className={cn("bg-gray-50 text-left text-xs uppercase text-gray-600", className)}
+const Table = React.forwardRef<
+  HTMLTableElement,
+  React.HTMLAttributes<HTMLTableElement>
+>(({ className, ...props }, ref) => (
+  <div className="relative w-full overflow-auto">
+    <table
+      ref={ref}
+      className={cn("w-full caption-bottom text-sm", className)}
       {...props}
     />
-  )
-}
+  </div>
+))
+Table.displayName = "Table"
 
-function TableBody({ className, ...props }: React.ComponentProps<"tbody">) {
-  return (
-    <tbody
-      className={cn("divide-y divide-gray-100 bg-white", className)}
-      {...props}
-    />
-  )
-}
+const TableHeader = React.forwardRef<
+  HTMLTableSectionElement,
+  React.HTMLAttributes<HTMLTableSectionElement>
+>(({ className, ...props }, ref) => (
+  <thead
+    ref={ref}
+    className={cn("[&_tr]:border-b [&_tr]:bg-muted/20 [&_tr]:hover:bg-muted/20", className)}
+    {...props}
+  />
+))
+TableHeader.displayName = "TableHeader"
 
-function TableFooter({ className, ...props }: React.ComponentProps<"tfoot">) {
-  return (
-    <tfoot
-      className={cn(
-        "border-t bg-muted/50 font-medium [&>tr]:last:border-b-0",
-        className
-      )}
-      {...props}
-    />
-  )
-}
+const TableBody = React.forwardRef<
+  HTMLTableSectionElement,
+  React.HTMLAttributes<HTMLTableSectionElement>
+>(({ className, ...props }, ref) => (
+  <tbody
+    ref={ref}
+    className={cn("[&_tr:last-child]:border-0 bg-background", className)}
+    {...props}
+  />
+))
+TableBody.displayName = "TableBody"
 
-function TableRow({ className, onClick, ...props }: React.ComponentProps<"tr">) {
-  return (
-    <tr
-      className={cn(
-        "transition-colors hover:bg-gray-50",
-        onClick && "cursor-pointer",
-        className
-      )}
-      onClick={onClick}
-      {...props}
-    />
-  )
-}
+const TableFooter = React.forwardRef<
+  HTMLTableSectionElement,
+  React.HTMLAttributes<HTMLTableSectionElement>
+>(({ className, ...props }, ref) => (
+  <tfoot
+    ref={ref}
+    className={cn(
+      "border-t bg-muted/50 font-medium [&>tr]:last:border-b-0",
+      className
+    )}
+    {...props}
+  />
+))
+TableFooter.displayName = "TableFooter"
 
-function TableHead({ className, onClick, ...props }: React.ComponentProps<"th">) {
-  return (
-    <th
-      className={cn(
-        "px-3 py-2 font-medium text-left align-middle",
-        className
-      )}
-      onClick={onClick}
-      {...props}
-    />
-  )
-}
+const TableRow = React.forwardRef<
+  HTMLTableRowElement,
+  React.HTMLAttributes<HTMLTableRowElement>
+>(({ className, ...props }, ref) => (
+  <tr
+    ref={ref}
+    className={cn(
+      "border-b transition-colors hover:bg-muted/30 data-[state=selected]:bg-muted",
+      className
+    )}
+    {...props}
+  />
+))
+TableRow.displayName = "TableRow"
 
-function TableCell({ className, ...props }: React.ComponentProps<"td">) {
-  return (
-    <td
-      className={cn("px-3 py-2 align-middle", className)}
-      {...props}
-    />
-  )
-}
+const TableHead = React.forwardRef<
+  HTMLTableCellElement,
+  React.ThHTMLAttributes<HTMLTableCellElement>
+>(({ className, ...props }, ref) => (
+  <th
+    ref={ref}
+    className={cn(
+      "h-12 px-4 text-left align-middle font-bold text-[11px] uppercase tracking-wider text-muted-foreground [&:has([role=checkbox])]:pr-0",
+      className
+    )}
+    {...props}
+  />
+))
+TableHead.displayName = "TableHead"
 
-function TableCaption({
-  className,
-  ...props
-}: React.ComponentProps<"caption">) {
-  return (
-    <caption
-      className={cn("mt-4 text-sm text-muted-foreground", className)}
-      {...props}
-    />
-  )
-}
+const TableCell = React.forwardRef<
+  HTMLTableCellElement,
+  React.TdHTMLAttributes<HTMLTableCellElement>
+>(({ className, ...props }, ref) => (
+  <td
+    ref={ref}
+    className={cn("p-4 align-middle [&:has([role=checkbox])]:pr-0", className)}
+    {...props}
+  />
+))
+TableCell.displayName = "TableCell"
 
+const TableCaption = React.forwardRef<
+  HTMLTableCaptionElement,
+  React.HTMLAttributes<HTMLTableCaptionElement>
+>(({ className, ...props }, ref) => (
+  <caption
+    ref={ref}
+    className={cn("mt-4 text-sm text-muted-foreground", className)}
+    {...props}
+  />
+))
+TableCaption.displayName = "TableCaption"
+
+// Custom Sort Components
 function SortIcon({ active, order }: { active: boolean; order?: "asc" | "desc" }) {
   if (active) {
     return order === "asc" ? (
-      <ArrowUpIcon className="h-3.5 w-3.5 text-gray-900" />
+      <ArrowUpIcon className="h-3.5 w-3.5 text-foreground" />
     ) : (
-      <ArrowDownIcon className="h-3.5 w-3.5 text-gray-900" />
+      <ArrowDownIcon className="h-3.5 w-3.5 text-foreground" />
     )
   }
-  return <ChevronsUpDown className="h-3.5 w-3.5 text-gray-400" />
+  return <ChevronsUpDown className="h-3.5 w-3.5 text-muted-foreground" />
 }
 
 interface SortableHeaderProps extends React.ComponentProps<"th"> {
@@ -125,11 +144,11 @@ function SortableHeader({
   const active = currentSortBy === sortKey
   return (
     <TableHead
-      className={cn("group cursor-pointer select-none transition-colors hover:bg-gray-50 hover:text-gray-900", className)}
+      className={cn("cursor-pointer select-none transition-colors hover:text-foreground group", className)}
       onClick={() => onSort(sortKey)}
       {...props}
     >
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-1.5">
         {label}
         <SortIcon active={active} order={currentSortOrder} />
       </div>
