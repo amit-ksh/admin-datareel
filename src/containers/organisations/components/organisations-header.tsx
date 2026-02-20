@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { Plus, Filter } from "lucide-react";
+import { Filter } from "lucide-react";
+import { OnboardOrganisationDialog } from "./onboard-organisation-dialog";
 
 export function OrganisationsHeader() {
   return (
@@ -15,10 +16,7 @@ export function OrganisationsHeader() {
           <Filter className="mr-2 h-4 w-4" />
           Filter
         </Button>
-        <Button size="sm" className="hidden sm:flex h-9 px-4 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium shadow-sm">
-          <Plus className="mr-2 h-4 w-4" />
-          Onboard
-        </Button>
+        <OnboardOrganisationDialog />
       </div>
     </div>
   );
