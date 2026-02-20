@@ -165,7 +165,7 @@ export default function AnalyticsContainer() {
 
 
       {/* Status Charts Row */}
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-2">
         <AnalyticsStatusChart
           title="Runs Status"
           data={runsStatusData}

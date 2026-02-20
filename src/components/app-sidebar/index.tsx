@@ -108,7 +108,7 @@ export function AppSidebar({ ...props }) {
             alt="DataReel Logo"
             width={256}
             height={256}
-            className="rounded h-16 dark:block hidden"
+            className="rounded h-16 group-data-[collapsible=icon]:w-[calc(100%-8px)] mx-auto group-data-[collapsible=icon]:h-auto dark:block hidden"
           />
           <Image
             src={
@@ -119,11 +119,11 @@ export function AppSidebar({ ...props }) {
             alt="DataReel Logo"
             width={256}
             height={256}
-            className="rounded h-16 dark:hidden block"
+            className="rounded h-16 group-data-[collapsible=icon]:w-[calc(100%-8px)] mx-auto group-data-[collapsible=icon]:h-auto dark:hidden block"
           />
         </div>
       </SidebarHeader>
-      <SidebarContent className={cn("flex p-0 items-center -mt-2")}>
+      <SidebarContent className={cn("flex p-0 items-center -mt-2 h-16 group-data-[collapsible=icon]:mt-4")}>
         <SidebarGroup>
           <SidebarMenu className={"space-y-4"}>
             {items.navMain.map((item, menuIdx) => {
