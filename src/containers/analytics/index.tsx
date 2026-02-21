@@ -92,7 +92,7 @@ const videoApprovalCardData = [
 ];
 
 export default function AnalyticsContainer() {
-  const { } = useAnalytics();
+  const {} = useAnalytics();
 
   return (
     <div className="space-y-8 min-h-screen">
@@ -150,7 +150,7 @@ export default function AnalyticsContainer() {
           chartType="bar"
           dataKey="value"
         />
-        
+
         <AnalyticsMetricCard
           title="Viewer Satisfaction"
           value="4.5"
@@ -160,9 +160,7 @@ export default function AnalyticsContainer() {
           chartType="bar"
           dataKey="value"
         />
-        
       </div>
-
 
       {/* Status Charts Row */}
       <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-2">
@@ -170,9 +168,9 @@ export default function AnalyticsContainer() {
           title="Runs Status"
           data={runsStatusData}
           config={{
-             Processing: { label: "Processing", color: "#3b82f6" },
-             Completed: { label: "Completed", color: "#22c55e" },
-             Failed: { label: "Failed", color: "#ef4444" },
+            Processing: { label: "Processing", color: "#3b82f6" },
+            Completed: { label: "Completed", color: "#22c55e" },
+            Failed: { label: "Failed", color: "#ef4444" },
           }}
           totalLabel="Runs"
           dataKey="value"
@@ -182,9 +180,9 @@ export default function AnalyticsContainer() {
           title="Approval Status"
           data={approvalStatusData}
           config={{
-             Pending: { label: "Pending", color: "#3b82f6" },
-             Approved: { label: "Approved", color: "#22c55e" },
-             Rejected: { label: "Rejected", color: "#ef4444" },
+            Pending: { label: "Pending", color: "#3b82f6" },
+            Approved: { label: "Approved", color: "#22c55e" },
+            Rejected: { label: "Rejected", color: "#ef4444" },
           }}
           totalLabel="Runs"
           dataKey="value"
@@ -192,34 +190,31 @@ export default function AnalyticsContainer() {
         />
       </div>
 
-
       {/* Bar Charts Row */}
       <div className="grid gap-4 md:grid-cols-2">
         <AnalyticsBarChart
-           title="Video Status"
-           data={videoStatusData}
-           config={{
-              value: { label: "Value", color: "#3b82f6" }
-           }}
-           xAxisKey="name"
-           yAxisKey="value"
+          title="Video Status"
+          data={videoStatusData}
+          config={{
+            value: { label: "Value", color: "#3b82f6" },
+          }}
+          xAxisKey="name"
+          yAxisKey="value"
         />
         <AnalyticsBarChart
-           title="Delivery Stats"
-           data={deliveryStatsData}
-           config={{
-              value: { label: "Value", color: "#10b981" }
-           }}
-           xAxisKey="name"
-           yAxisKey="value"
-        >
-
-        </AnalyticsBarChart>
+          title="Delivery Stats"
+          data={deliveryStatsData}
+          config={{
+            value: { label: "Value", color: "#10b981" },
+          }}
+          xAxisKey="name"
+          yAxisKey="value"
+        ></AnalyticsBarChart>
       </div>
 
       {/* Top Organizations Table */}
       <div className="grid gap-4">
-         <TopOrganizationsTable />
+        <TopOrganizationsTable />
       </div>
     </div>
   );
