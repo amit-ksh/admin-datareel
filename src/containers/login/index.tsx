@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import images from "./images";
 import { Billboard, Banner } from "./components";
 import { View } from "@/webgl/View";
@@ -65,7 +66,14 @@ const COUNT = 10;
 const GAP = 3.2;
 
 export default function LoginContainer() {
+  const router = useRouter()
   const { texture, dimensions, isLoading } = useCollageTexture(images);
+
+  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    router.push("/analytics");
+    console.log("Login");
+  };
 
   if (isLoading || !texture || !dimensions) return null;
 
@@ -97,7 +105,7 @@ export default function LoginContainer() {
             </p>
           </div>
           
-          <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+          <form className="space-y-6" onSubmit={handleLogin}>
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input 

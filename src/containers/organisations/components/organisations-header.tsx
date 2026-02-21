@@ -1,6 +1,15 @@
 import { Button } from "@/components/ui/button";
-import { Filter } from "lucide-react";
+import { Filter, Search } from "lucide-react";
 import { OnboardOrganisationDialog } from "./onboard-organisation-dialog";
+import { Input } from "@/components/ui/input";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export function OrganisationsHeader() {
   return (
@@ -12,10 +21,26 @@ export function OrganisationsHeader() {
         </p>
       </div>
       <div className="flex items-center gap-3">
-        <Button variant="outline" size="sm" className="hidden sm:flex h-9 px-4 text-sm font-medium bg-background hover:bg-muted/50">
-          <Filter className="mr-2 h-4 w-4" />
-          Filter
-        </Button>
+        <div className="relative hidden w-64 sm:block">
+          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Input placeholder="Search Organisation..." className="pl-8 bg-background h-9" />
+        </div>
+        
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="sm" className="hidden sm:flex h-9 px-4 text-sm font-medium bg-background hover:bg-muted/50">
+              <Filter className="mr-2 h-4 w-4" />
+              Filter
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-48">
+            <DropdownMenuLabel>Filter by</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>Join Date</DropdownMenuItem>
+            <DropdownMenuItem>Feedback Score</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
         <OnboardOrganisationDialog />
       </div>
     </div>

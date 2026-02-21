@@ -7,7 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ExternalLink, Star } from "lucide-react";
+import { ExternalLink, Star, ArrowUpDown } from "lucide-react";
 import { TablePagination } from "@/components/ui/table-pagination";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -23,6 +23,7 @@ interface Organisation {
   };
   videos: string;
   views: string;
+  lastVideoCreated?: string;
   feedback: string;
   logoUrl?: string;
   externalLink?: string;
@@ -40,6 +41,7 @@ const dummyData: Organisation[] = [
     },
     videos: "5K",
     views: "50K",
+    lastVideoCreated: "20 Feb 2026",
     feedback: "3.9/5",
     logoUrl: "",
     externalLink: "#",
@@ -54,6 +56,7 @@ const dummyData: Organisation[] = [
       },
       videos: "1.2K",
       views: "15K",
+      lastVideoCreated: "19 Feb 2026",
       feedback: "4.8/5",
       logoUrl: "",
       externalLink: "#",
@@ -68,6 +71,7 @@ const dummyData: Organisation[] = [
       },
       videos: "8.4K",
       views: "120K",
+      lastVideoCreated: "15 Feb 2026",
       feedback: "4.2/5",
       logoUrl: "",
       externalLink: "#",
@@ -86,19 +90,31 @@ export function OrganisationsTable() {
                 Organisation
               </TableHead>
               <TableHead>
-                Join at
+                <div className="flex items-center gap-2 cursor-pointer select-none hover:text-foreground">
+                  Join at
+                  <ArrowUpDown className="h-3.5 w-3.5" />
+                </div>
               </TableHead>
               <TableHead>
                 Usage
               </TableHead>
               <TableHead>
-                Videos
+                <div className="flex items-center gap-2 cursor-pointer select-none hover:text-foreground">
+                  Videos
+                  <ArrowUpDown className="h-3.5 w-3.5" />
+                </div>
               </TableHead>
               <TableHead>
                 Views
               </TableHead>
               <TableHead>
-                Feedback
+                Last Video
+              </TableHead>
+              <TableHead>
+                <div className="flex items-center gap-2 cursor-pointer select-none hover:text-foreground">
+                  Feedback
+                  <ArrowUpDown className="h-3.5 w-3.5" />
+                </div>
               </TableHead>
             </TableRow>
           </TableHeader>
@@ -145,6 +161,7 @@ export function OrganisationsTable() {
                 </TableCell>
                 <TableCell className="text-sm font-bold text-foreground">{org.videos}</TableCell>
                 <TableCell className="text-sm font-bold text-foreground">{org.views}</TableCell>
+                <TableCell className="text-sm font-medium text-foreground">{org.lastVideoCreated || "N/A"}</TableCell>
                 <TableCell className="text-sm font-bold text-foreground">
                   <div className="flex items-center gap-1.5">
                     {org.feedback}
