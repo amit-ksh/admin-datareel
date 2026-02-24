@@ -42,16 +42,16 @@ export function AnalyticsStatusChart({
   }, [data, dataKey]);
 
   return (
-    <Card className="flex flex-col">
-      <CardHeader className="items-center pb-0">
+    <Card className="flex flex-col gap-2">
+      <CardHeader className="items-center py-0">
         <CardTitle>{title}</CardTitle>
         {description && <CardDescription>{description}</CardDescription>}
       </CardHeader>
-      <CardContent className="flex-1 pb-0">
-        <div className="flex items-center justify-between gap-8 w-full p-4">
+      <CardContent className="flex-1 pb-0 p-0 pr-2">
+        <div className="flex items-center justify-between gap-8 w-full">
           <ChartContainer
             config={config}
-            className="aspect-square max-h-[200px] w-[200px]"
+            className="aspect-square max-h-50 w-50"
           >
             <PieChart>
               <ChartTooltip
@@ -100,27 +100,31 @@ export function AnalyticsStatusChart({
 
           <div className="flex flex-col flex-1 gap-2">
             {data.map((item, index) => {
-               const percentage = ((item[dataKey] / total) * 100).toFixed(2);
-               return (
-                  <div key={index} className="flex items-center justify-between py-2 border-b last:border-0 border-border/50">
-                    <div className="flex items-center gap-2">
-                        <div
-                        className="h-3 w-3 rounded-full"
-                        style={{ backgroundColor: item.fill }}
-                        />
-                        <span className="text-muted-foreground">{item[nameKey]}</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                        <span className="font-semibold">{item[dataKey]}</span>
-                        <span className="text-xs bg-muted text-muted-foreground px-2 py-0.5 rounded-sm min-w-[4rem] text-center">
-                            {percentage}%
-                        </span>
-                    </div>
+              const percentage = ((item[dataKey] / total) * 100).toFixed(2);
+              return (
+                <div
+                  key={index}
+                  className="flex items-center justify-between py-2 border-b last:border-0 border-border/50"
+                >
+                  <div className="flex items-center gap-2">
+                    <div
+                      className="h-3 w-3 rounded-full"
+                      style={{ backgroundColor: item.fill }}
+                    />
+                    <span className="text-muted-foreground">
+                      {item[nameKey]}
+                    </span>
                   </div>
-               )
+                  <div className="flex items-center gap-3">
+                    <span className="font-semibold">{item[dataKey]}</span>
+                    <span className="text-xs bg-muted text-muted-foreground px-2 py-0.5 rounded-sm min-w-[4rem] text-center">
+                      {percentage}%
+                    </span>
+                  </div>
+                </div>
+              );
             })}
           </div>
-
         </div>
       </CardContent>
     </Card>

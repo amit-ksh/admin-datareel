@@ -4,35 +4,11 @@ import { useAnalytics } from "./use-analytics.hook";
 import { AnalyticsHeader } from "./components/analytics-header";
 import { AnalyticsMetricCard } from "./components/analytics-metric-card";
 import { AnalyticsStatusChart } from "./components/analytics-status-chart";
-import { AnalyticsBarChart } from "./components/analytics-bar-chart";
+import { AnalyticsLineChart } from "./components/analytics-line-chart";
 import { TopOrganizationsTable } from "./components/top-organizations-table";
-import { ChartConfig } from "@/components/ui/chart";
-
-const chartConfig = {
-  viewers: {
-    label: "Viewers",
-  },
-  chrome: {
-    label: "Chrome",
-    color: "hsl(var(--chart-1))",
-  },
-  safari: {
-    label: "Safari",
-    color: "hsl(var(--chart-2))",
-  },
-  firefox: {
-    label: "Firefox",
-    color: "hsl(var(--chart-3))",
-  },
-  edge: {
-    label: "Edge",
-    color: "hsl(var(--chart-4))",
-  },
-  other: {
-    label: "Other",
-    color: "hsl(var(--chart-5))",
-  },
-} satisfies ChartConfig;
+import { MetricsOverview } from "./components/metrics-overview";
+import { AnalyticsEngagementSection } from "./components/analytics-engagement-section";
+import { AnalyticsSystemHealth } from "./components/analytics-system-health";
 
 const sparklineData = [
   { value: 10 },
@@ -56,20 +32,6 @@ const approvalStatusData = [
   { status: "Rejected", value: 0, fill: "#ef4444" },
 ];
 
-const videoStatusData = [
-  { name: "Total", value: 8500 },
-  { name: "Completed", value: 7100 },
-  { name: "Approved", value: 7100 },
-];
-
-const deliveryStatsData = [
-  { name: "Sent", value: 7000 },
-  { name: "Resent", value: 800 },
-  { name: "Seen", value: 2500 },
-  { name: "Callback", value: 100 },
-  { name: "Feedback", value: 100 },
-];
-
 const viewerSatisfactionData = [
   { rating: "1", value: 12, fill: "#ef4444" },
   { rating: "2", value: 25, fill: "#f97316" },
@@ -91,6 +53,62 @@ const videoApprovalCardData = [
   { status: "Rejected", value: 10, fill: "#ef4444" },
 ];
 
+const yearlyVideoData = {
+  "2026": [
+    { month: "Jan", videos: 4000, approval: 2400, seen: 2400 },
+    { month: "Feb", videos: 3000, approval: 1398, seen: 2210 },
+    { month: "Mar", videos: 2000, approval: 9800, seen: 2290 },
+    { month: "Apr", videos: 2780, approval: 3908, seen: 2000 },
+    { month: "May", videos: 1890, approval: 4800, seen: 2181 },
+    { month: "Jun", videos: 2390, approval: 3800, seen: 2500 },
+    { month: "Jul", videos: 3490, approval: 4300, seen: 2100 },
+    { month: "Aug", videos: 2390, approval: 3800, seen: 2500 },
+    { month: "Sep", videos: 3490, approval: 4300, seen: 2100 },
+    { month: "Oct", videos: 2390, approval: 3800, seen: 2500 },
+    { month: "Nov", videos: 3490, approval: 4300, seen: 2100 },
+    { month: "Dec", videos: 2390, approval: 3800, seen: 2500 },
+  ],
+  "2025": [
+    { month: "Jan", videos: 2000, approval: 1400, seen: 1400 },
+    { month: "Feb", videos: 1000, approval: 398, seen: 1210 },
+    { month: "Mar", videos: 1000, approval: 4800, seen: 1290 },
+    { month: "Apr", videos: 1780, approval: 1908, seen: 1000 },
+    { month: "May", videos: 890, approval: 2800, seen: 1181 },
+    { month: "Jun", videos: 1390, approval: 1800, seen: 1500 },
+    { month: "Jul", videos: 2490, approval: 2300, seen: 1100 },
+    { month: "Aug", videos: 1390, approval: 1800, seen: 1500 },
+    { month: "Sep", videos: 2490, approval: 2300, seen: 1100 },
+    { month: "Oct", videos: 1390, approval: 1800, seen: 1500 },
+    { month: "Nov", videos: 2490, approval: 2300, seen: 1100 },
+    { month: "Dec", videos: 1390, approval: 1800, seen: 1500 },
+  ],
+};
+
+const topActions = [
+  { label: "Schedule Meeting", value: 42, color: "bg-blue-600" },
+  { label: "Request Demo", value: 28, color: "bg-blue-600" },
+  { label: "Download Guide", value: 15, color: "bg-blue-600" },
+  { label: "Contact Support", value: 10, color: "bg-blue-600" },
+  { label: "Book Demo", value: 7, color: "bg-blue-600" },
+];
+
+const bottomActions = [
+  { label: "Follow on Twitter", value: 2, color: "bg-blue-600/50" },
+  { label: "Share on LinkedIn", value: 3, color: "bg-blue-600/50" },
+  { label: "Subscribe to Newsletter", value: 4, color: "bg-blue-600/50" },
+  { label: "View Pricing", value: 6, color: "bg-blue-600/50" },
+  { label: "Book Demo", value: 7, color: "bg-blue-600/50" },
+];
+
+const ratings = [
+  { label: "5 STAR", value: 65, color: "bg-emerald-500" },
+  { label: "4 STAR", value: 19, color: "bg-emerald-500" },
+  { label: "3 STAR", value: 10, color: "bg-amber-500" },
+  { label: "2 STAR", value: 4, color: "bg-rose-400" },
+  { label: "1 STAR", value: 1, color: "bg-red-600" },
+];
+
+
 export default function AnalyticsContainer() {
   const {} = useAnalytics();
 
@@ -98,72 +116,47 @@ export default function AnalyticsContainer() {
     <div className="space-y-8 min-h-screen">
       <AnalyticsHeader />
 
-      {/* Top Metrics Row 1 */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <AnalyticsMetricCard
-          title="Total Videos"
-          value="10K"
-          subtext="last month"
-          trend={{ value: 5, label: "", direction: "up" }}
-          chartData={runsStatusData}
-          chartConfig={{ value: { label: "Value", color: "#ef4444" } }}
-          chartType="bar"
-          dataKey="value"
-        />
-        <AnalyticsMetricCard
-          title="Token Consumption"
-          value="10K"
-          subtext="last month"
-          trend={{ value: 5, label: "", direction: "up" }}
-          chartData={sparklineData}
-          chartConfig={{ value: { label: "Value", color: "#8b5cf6" } }}
-          chartType="line"
-          dataKey="value"
-        />
-        <AnalyticsMetricCard
-          title="LipSync Duration"
-          value="20 days"
-          subtext="last month"
-          trend={{ value: 5, label: "", direction: "up" }}
-          chartData={sparklineData}
-          chartConfig={{ value: { label: "Value", color: "#22c55e" } }}
-          chartType="line"
-          dataKey="value"
-        />
-        <AnalyticsMetricCard
-          title="Video Approval"
-          value="9.5K"
-          subtext="last month"
-          trend={{ value: 5, label: "", direction: "up" }}
-          chartData={videoApprovalCardData}
-          chartConfig={{ value: { label: "Value", color: "#ef4444" } }}
-          chartType="bar"
-          dataKey="value"
-        />
-        <AnalyticsMetricCard
-          title="Video Delivery"
-          value="8K"
-          subtext="last month"
-          trend={{ value: 5, label: "", direction: "up" }}
-          chartData={videoDeliveryData}
-          chartConfig={{ value: { label: "Value", color: "#ef4444" } }}
-          chartType="bar"
-          dataKey="value"
-        />
+      <MetricsOverview
+        organization={{
+          count: "1,250",
+          trend: "12%",
+          onboardedPercent: 85,
+        }}
+        metrics={{
+          totalVideos: { value: "458", trend: "+ 8%", trendColor: "text-emerald-500" },
+          approved: { value: "412", trend: "− 2%", trendColor: "text-rose-500" },
+          delivered: { value: "380", trend: "+ 15%", trendColor: "text-emerald-500" },
+          seen: { value: "310", trend: "+ 20%", trendColor: "text-emerald-500" },
+        }}
+        completion={{
+          value: "245",
+          trend: "+ 10%",
+        }}
+      />
 
-        <AnalyticsMetricCard
-          title="Viewer Satisfaction"
-          value="4.5"
-          subtext="100 comments"
-          chartData={viewerSatisfactionData}
-          chartConfig={{ value: { label: "Value", color: "#ef4444" } }}
-          chartType="bar"
-          dataKey="value"
+      <AnalyticsSystemHealth />
+
+      {/* Yearly Line Chart Row */}
+      <div className="grid gap-4">
+        <AnalyticsLineChart
+          title="Yearly Video Analytics"
+          description="Monthly comparison of videos processed, approved, and seen."
+          data={yearlyVideoData}
+          config={{
+            videos: { label: "Videos", color: "#3b82f6" },
+            approval: { label: "Approval", color: "#22c55e" },
+            seen: { label: "Seen", color: "#eab308" },
+          }}
+          lines={[
+            { key: "videos" },
+            { key: "approval" },
+            { key: "seen" },
+          ]}
         />
       </div>
 
       {/* Status Charts Row */}
-      <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-2">
+      <div className="grid gap-4 lg:grid-cols-2">
         <AnalyticsStatusChart
           title="Runs Status"
           data={runsStatusData}
@@ -190,27 +183,16 @@ export default function AnalyticsContainer() {
         />
       </div>
 
-      {/* Bar Charts Row */}
-      <div className="grid gap-4 md:grid-cols-2">
-        <AnalyticsBarChart
-          title="Video Status"
-          data={videoStatusData}
-          config={{
-            value: { label: "Value", color: "#3b82f6" },
-          }}
-          xAxisKey="name"
-          yAxisKey="value"
-        />
-        <AnalyticsBarChart
-          title="Delivery Stats"
-          data={deliveryStatsData}
-          config={{
-            value: { label: "Value", color: "#10b981" },
-          }}
-          xAxisKey="name"
-          yAxisKey="value"
-        ></AnalyticsBarChart>
-      </div>
+      {/* Engagement Metrics Component */}
+      <AnalyticsEngagementSection
+        callbackRate={68}
+        callbackDescription="from total CTA clicks"
+        feedbackRate={84}
+        feedbackDescription="from total viewers"
+        topActions={topActions}
+        bottomActions={bottomActions}
+        ratings={ratings}
+      />
 
       {/* Top Organizations Table */}
       <div className="grid gap-4">

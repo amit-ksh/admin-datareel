@@ -17,8 +17,8 @@ interface Organization {
   joinDate: string;
   usage: string;
   videos: string;
-  views: string;
-  feedback: string;
+  approvalRate: string;
+  viewerSatisfaction: string;
   logoUrl?: string;
   externalLink?: string;
 }
@@ -28,10 +28,32 @@ const dummyData: Organization[] = [
     id: "#1234",
     name: "Acme org",
     joinDate: "1 Jan 2026",
-    usage: "10000",
+    usage: "12K",
     videos: "5K",
-    views: "50K",
-    feedback: "3.9/5",
+    approvalRate: "95%",
+    viewerSatisfaction: "4.5/5",
+    logoUrl: "",
+    externalLink: "#",
+  },
+  {
+    id: "#1235",
+    name: "Datareel",
+    joinDate: "1 Feb 2026",
+    usage: "2K",
+    videos: "1.2K",
+    approvalRate: "85%",
+    viewerSatisfaction: "4.75/5",
+    logoUrl: "",
+    externalLink: "#",
+  },
+  {
+    id: "#1236",
+    name: "Stark Industries",
+    joinDate: "1 Mar 2026",
+    usage: "10K",
+    videos: "3K",
+    approvalRate: "90%",
+    viewerSatisfaction: "4/5",
     logoUrl: "",
     externalLink: "#",
   },
@@ -62,10 +84,10 @@ export function TopOrganizationsTable() {
                 Videos
               </TableHead>
               <TableHead>
-                Views
+                Approval Rate
               </TableHead>
               <TableHead>
-                Feedback
+                Viewer Satisfaction
               </TableHead>
             </TableRow>
           </TableHeader>
@@ -100,8 +122,8 @@ export function TopOrganizationsTable() {
                    {org.usage}
                 </TableCell>
                 <TableCell className="text-sm font-bold text-foreground">{org.videos}</TableCell>
-                <TableCell className="text-sm font-bold text-foreground">{org.views}</TableCell>
-                <TableCell className="text-sm font-bold text-foreground">{org.feedback}</TableCell>
+                <TableCell className="text-sm font-bold text-foreground">{org.approvalRate}</TableCell>
+                <TableCell className="text-sm font-bold text-foreground">{org.viewerSatisfaction}</TableCell>
               </TableRow>
             ))}
           </TableBody>
