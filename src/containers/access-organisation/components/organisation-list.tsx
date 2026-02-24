@@ -31,7 +31,7 @@ function OrganisationCard({
   onLogin: (org: Organisation) => void;
 }) {
   return (
-    <Card className="border shadow-sm hover:shadow-md transition-shadow duration-200">
+    <Card className="border hover:shadow-sm transition-shadow duration-200">
       <CardContent className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           {/* Icon */}

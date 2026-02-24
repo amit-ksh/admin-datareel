@@ -18,7 +18,7 @@ export function EmailSearchCard({
   onFetch,
 }: EmailSearchCardProps) {
   return (
-    <Card className="border shadow-sm">
+    <Card className="border">
       <CardContent className="flex flex-col gap-4">
         <div className="grid gap-2">
           <Label

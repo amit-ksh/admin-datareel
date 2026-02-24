@@ -2,7 +2,11 @@
 
 import { Button } from "@/components/ui/button";
 import { Download, CalendarIcon } from "lucide-react";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { format, subDays } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import { useState } from "react";
@@ -34,8 +38,8 @@ export function AnalyticsHeader() {
               variant={"outline"}
               size="sm"
               className={cn(
-                "h-9 px-4 text-sm font-medium w-[260px] justify-start text-left bg-background hover:bg-accent hover:text-accent-foreground shadow-sm",
-                !date && "text-muted-foreground"
+                "h-9 px-4 text-sm font-medium w-65 justify-start text-left bg-background hover:bg-accent hover:text-accent-foreground",
+                !date && "text-muted-foreground",
               )}
             >
               <CalendarIcon className="mr-2 h-4 w-4" />
@@ -67,7 +71,10 @@ export function AnalyticsHeader() {
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button size="sm" className="h-9 px-4 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium shadow-sm">
+            <Button
+              size="sm"
+              className="h-9 px-4 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium shadow-sm"
+            >
               <Download className="mr-2 h-4 w-4" />
               Export
             </Button>

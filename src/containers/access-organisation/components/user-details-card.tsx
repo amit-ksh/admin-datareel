@@ -18,7 +18,7 @@ interface UserDetailsCardProps {
 
 export function UserDetailsCard({ user }: UserDetailsCardProps) {
   return (
-    <Card className="border shadow-sm">
+    <Card className="border">
       <CardContent>
         <div className="flex items-center justify-between mb-4">
           <span className="text-lg font-semibold text-foreground">

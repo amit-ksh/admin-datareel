@@ -123,7 +123,11 @@ export function AppSidebar({ ...props }) {
           />
         </div>
       </SidebarHeader>
-      <SidebarContent className={cn("flex p-0 items-center -mt-2 h-16 group-data-[collapsible=icon]:mt-4")}>
+      <SidebarContent
+        className={cn(
+          "flex p-0 items-center h-16 group-data-[collapsible=icon]:mt-4",
+        )}
+      >
         <SidebarGroup>
           <SidebarMenu className={"space-y-4"}>
             {items.navMain.map((item, menuIdx) => {
