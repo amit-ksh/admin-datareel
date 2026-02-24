@@ -24,6 +24,7 @@ import {
   ChevronRightIcon,
   ClapperboardIcon,
   DoorOpenIcon,
+  ActivityIcon,
 } from "lucide-react";
 import { Separator } from "../ui/separator";
 import { cn } from "@/lib/utils";
@@ -177,6 +178,25 @@ export function AppSidebar({ ...props }) {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
+        <SidebarMenu className="px-2 group-data-[collapsible=icon]:p-0">
+          <SidebarMenuItem className="text-medium">
+            <SidebarMenuButton
+              isActive={pathname.startsWith("/server-health")}
+              className="group"
+              asChild
+            >
+              <Link href="/server-health" target="_blank">
+                <ActivityIcon className="size-4 group-data-[active=true]:text-tremor-brand" />
+                <span className="truncate group-data-[collapsible=icon]:hidden">
+                  System Health
+                </span>
+                {pathname.startsWith("/server-health") && (
+                  <ChevronRightIcon className="ml-auto" />
+                )}
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
         <NavUser user={items.user} />
       </SidebarFooter>
       <SidebarRail />
