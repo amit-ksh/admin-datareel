@@ -1,27 +1,27 @@
-"use client";
+'use client'
 
-import * as THREE from "three";
-import { useTexture } from "@react-three/drei";
-import { useFrame } from "@react-three/fiber";
-import { JSX, useRef } from "react";
+import * as THREE from 'three'
+import { useTexture } from '@react-three/drei'
+import { useFrame } from '@react-three/fiber'
+import { JSX, useRef } from 'react'
 
-import "@/webgl/materials/MeshBannerMaterial";
+import '@/webgl/materials/MeshBannerMaterial'
 
-interface BannerProps extends Omit<JSX.IntrinsicElements["mesh"], "material"> {
-  radius?: number;
+interface BannerProps extends Omit<JSX.IntrinsicElements['mesh'], 'material'> {
+  radius?: number
 }
 
 function Banner({ radius = 1.6, ...props }: BannerProps) {
-  const ref = useRef<THREE.Mesh>(null);
+  const ref = useRef<THREE.Mesh>(null)
 
-  const texture = useTexture("/datareel/brand/logo-dark.svg") as THREE.Texture;
-  texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+  const texture = useTexture('/datareel/brand/logo-dark.svg') as THREE.Texture
+  texture.wrapS = texture.wrapT = THREE.RepeatWrapping
 
   useFrame((state, delta) => {
-    if (!ref.current) return;
-    const material = ref.current.material as THREE.MeshBasicMaterial;
-    if (material.map) material.map.offset.x += delta / 30;
-  });
+    if (!ref.current) return
+    const material = ref.current.material as THREE.MeshBasicMaterial
+    if (material.map) material.map.offset.x += delta / 30
+  })
 
   return (
     <mesh ref={ref} {...props}>
@@ -37,7 +37,7 @@ function Banner({ radius = 1.6, ...props }: BannerProps) {
         backfaceRepeatX={0.2}
       />
     </mesh>
-  );
+  )
 }
 
-export default Banner;
+export default Banner

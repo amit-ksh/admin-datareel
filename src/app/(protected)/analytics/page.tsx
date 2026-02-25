@@ -1,5 +1,5 @@
-import AnalyticsContainer from "@/containers/analytics";
+import AnalyticsContainer from '@/containers/analytics'
 
 export default function page() {
-  return <AnalyticsContainer />;
+  return <AnalyticsContainer />
 }

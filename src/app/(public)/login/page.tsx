@@ -1,5 +1,5 @@
-import LoginContainer from "@/containers/login";
+import LoginContainer from '@/containers/login'
 
 export default function page() {
-  return <LoginContainer />;
+  return <LoginContainer />
 }

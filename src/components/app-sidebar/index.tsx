@@ -1,6 +1,6 @@
-"use client";
+'use client'
 
-import * as React from "react";
+import * as React from 'react'
 
 import {
   Sidebar,
@@ -14,11 +14,11 @@ import {
   SidebarFooter,
   SidebarGroupLabel,
   useSidebar,
-} from "@/components/ui/sidebar";
-import Link from "next/link";
-import Image from "next/image";
-import { usePathname } from "next/navigation";
-import { NavUser } from "./nav-user";
+} from '@/components/ui/sidebar'
+import Link from 'next/link'
+import Image from 'next/image'
+import { usePathname } from 'next/navigation'
+import { NavUser } from './nav-user'
 import {
   Building2Icon,
   ChevronRightIcon,
@@ -26,180 +26,180 @@ import {
   DoorOpenIcon,
   ActivityIcon,
   MailIcon,
-} from "lucide-react";
-import { Separator } from "../ui/separator";
-import { cn } from "@/lib/utils";
-import { useGlobalAuthContext } from "@/providers/auth-provider";
+} from 'lucide-react'
+import { Separator } from '../ui/separator'
+import { cn } from '@/lib/utils'
+import { useGlobalAuthContext } from '@/providers/auth-provider'
 
 export function AppSidebar({ ...props }) {
-  const pathname = usePathname();
-  const { currentUser } = useGlobalAuthContext();
+  const pathname = usePathname()
+  const { currentUser } = useGlobalAuthContext()
 
-  const { isMobile, state, setOpen } = useSidebar();
+  const { isMobile, state, setOpen } = useSidebar()
 
   const items = {
     navMain: [
       {
-        title: "",
-        url: "#",
+        title: '',
+        url: '#',
         show: true,
         items: [
           {
-            title: "Analytics",
-            url: "/analytics",
+            title: 'Analytics',
+            url: '/analytics',
             icon: ClapperboardIcon,
             hasAccess: true,
-            isActive: pathname.startsWith("/analytics"),
+            isActive: pathname.startsWith('/analytics'),
           },
           {
-            title: "Organisations",
-            url: "/organisations",
+            title: 'Organisations',
+            url: '/organisations',
             icon: Building2Icon,
             hasAccess: true,
-            isActive: pathname.startsWith("/organisations"),
+            isActive: pathname.startsWith('/organisations'),
           },
           {
-            title: "Access Organisations",
-            url: "/access-organisation",
+            title: 'Access Organisations',
+            url: '/access-organisation',
             icon: DoorOpenIcon,
             hasAccess: true,
-            isActive: pathname.startsWith("/access-organisation"),
+            isActive: pathname.startsWith('/access-organisation'),
           },
           {
-            title: "Email Templates",
-            url: "/email-templates",
+            title: 'Email Templates',
+            url: '/email-templates',
             icon: MailIcon,
             hasAccess: true,
-            isActive: pathname.startsWith("/email-templates"),
+            isActive: pathname.startsWith('/email-templates'),
           },
         ],
       },
     ],
     user: {
-      name: currentUser?.data?.tenant_data?.tenant_name || "Anonymous",
+      name: currentUser?.data?.tenant_data?.tenant_name || 'Anonymous',
       email: currentUser?.data?.tenant_data?.tenant_email,
       avatar: currentUser?.data.tenant_data?.profile_image,
     },
-  };
+  }
 
   // Handle hover-to-expand only when currently collapsed on desktop
-  const hoverExpandedRef = React.useRef(false);
+  const hoverExpandedRef = React.useRef(false)
 
   const handleMouseEnter = React.useCallback(() => {
-    if (!isMobile && state === "collapsed") {
-      hoverExpandedRef.current = true;
-      setOpen(true);
+    if (!isMobile && state === 'collapsed') {
+      hoverExpandedRef.current = true
+      setOpen(true)
     }
-  }, [isMobile, state, setOpen]);
+  }, [isMobile, state, setOpen])
 
   const handleMouseLeave = React.useCallback(() => {
     if (!isMobile && hoverExpandedRef.current) {
-      hoverExpandedRef.current = false;
-      setOpen(false);
+      hoverExpandedRef.current = false
+      setOpen(false)
     }
-  }, [isMobile, setOpen]);
+  }, [isMobile, setOpen])
 
   return (
     <Sidebar
-      collapsible="icon"
+      collapsible='icon'
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       {...props}
     >
-      <SidebarHeader className="group-data-[collapsible=icon]:mt-2 p-0">
-        <div className="flex items-start gap-2 select-none">
+      <SidebarHeader className='p-0 group-data-[collapsible=icon]:mt-2'>
+        <div className='flex items-start gap-2 select-none'>
           <Image
             src={
-              state === "collapsed"
-                ? "/datareel/brand/Monogram.jpg"
-                : "/datareel/brand/logo-dark.svg"
+              state === 'collapsed'
+                ? '/datareel/brand/Monogram.jpg'
+                : '/datareel/brand/logo-dark.svg'
             }
-            alt="DataReel Logo"
+            alt='DataReel Logo'
             width={256}
             height={256}
-            className="rounded h-16 group-data-[collapsible=icon]:w-[calc(100%-8px)] mx-auto group-data-[collapsible=icon]:h-auto dark:block hidden"
+            className='mx-auto hidden h-16 rounded group-data-[collapsible=icon]:h-auto group-data-[collapsible=icon]:w-[calc(100%-8px)] dark:block'
           />
           <Image
             src={
-              state === "collapsed"
-                ? "/datareel/brand/Monogram.jpg"
-                : "/datareel/brand/logo-light.svg"
+              state === 'collapsed'
+                ? '/datareel/brand/Monogram.jpg'
+                : '/datareel/brand/logo-light.svg'
             }
-            alt="DataReel Logo"
+            alt='DataReel Logo'
             width={256}
             height={256}
-            className="rounded h-16 group-data-[collapsible=icon]:w-[calc(100%-8px)] mx-auto group-data-[collapsible=icon]:h-auto dark:hidden block"
+            className='mx-auto block h-16 rounded group-data-[collapsible=icon]:h-auto group-data-[collapsible=icon]:w-[calc(100%-8px)] dark:hidden'
           />
         </div>
       </SidebarHeader>
       <SidebarContent
         className={cn(
-          "flex p-0 items-center h-16 group-data-[collapsible=icon]:mt-4",
+          'flex h-16 items-center p-0 group-data-[collapsible=icon]:mt-4',
         )}
       >
         <SidebarGroup>
-          <SidebarMenu className={"space-y-4"}>
+          <SidebarMenu className={'space-y-4'}>
             {items.navMain.map((item, menuIdx) => {
-              if (!item.show) return null;
+              if (!item.show) return null
               return (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarGroupLabel className="h-auto font-semibold uppercase tracking-[0.01em]">
+                  <SidebarGroupLabel className='h-auto font-semibold tracking-[0.01em] uppercase'>
                     {item.title}
                   </SidebarGroupLabel>
 
-                  <SidebarMenu className="p-2 group-data-[collapsible=icon]:p-0">
+                  <SidebarMenu className='p-2 group-data-[collapsible=icon]:p-0'>
                     {item.items?.map((subItem) => {
-                      if (!subItem.hasAccess) return null;
+                      if (!subItem.hasAccess) return null
                       return (
                         <SidebarMenuItem
                           key={subItem.title}
-                          className="text-medium"
+                          className='text-medium'
                         >
                           <SidebarMenuButton
                             isActive={subItem.isActive}
-                            className="group"
+                            className='group'
                             asChild
                           >
                             <Link href={subItem.url}>
-                              <subItem.icon className="size-4 group-data-[active=true]:text-tremor-brand" />
-                              <span className="truncate group-data-[collapsible=icon]:hidden">
+                              <subItem.icon className='group-data-[active=true]:text-tremor-brand size-4' />
+                              <span className='truncate group-data-[collapsible=icon]:hidden'>
                                 {subItem.title}
                               </span>
                               {subItem.isActive && (
-                                <ChevronRightIcon className="ml-auto" />
+                                <ChevronRightIcon className='ml-auto' />
                               )}
                             </Link>
                           </SidebarMenuButton>
                         </SidebarMenuItem>
-                      );
+                      )
                     })}
                   </SidebarMenu>
 
                   {/* Show divider between groups only when collapsed (icon mode) */}
                   {menuIdx < items.navMain.length - 1 && (
-                    <Separator className="mt-2 hidden bg-gray-300 group-data-[collapsible=icon]:mb-2 group-data-[collapsible=icon]:mt-4 group-data-[collapsible=icon]:block" />
+                    <Separator className='mt-2 hidden bg-gray-300 group-data-[collapsible=icon]:mt-4 group-data-[collapsible=icon]:mb-2 group-data-[collapsible=icon]:block' />
                   )}
                 </SidebarMenuItem>
-              );
+              )
             })}
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <SidebarMenu className="px-2 group-data-[collapsible=icon]:p-0">
-          <SidebarMenuItem className="text-medium">
+        <SidebarMenu className='px-2 group-data-[collapsible=icon]:p-0'>
+          <SidebarMenuItem className='text-medium'>
             <SidebarMenuButton
-              isActive={pathname.startsWith("/server-health")}
-              className="group"
+              isActive={pathname.startsWith('/server-health')}
+              className='group'
               asChild
             >
-              <Link href="/server-health" target="_blank">
-                <ActivityIcon className="size-4 group-data-[active=true]:text-tremor-brand" />
-                <span className="truncate group-data-[collapsible=icon]:hidden">
+              <Link href='/server-health' target='_blank'>
+                <ActivityIcon className='group-data-[active=true]:text-tremor-brand size-4' />
+                <span className='truncate group-data-[collapsible=icon]:hidden'>
                   System Health
                 </span>
-                {pathname.startsWith("/server-health") && (
-                  <ChevronRightIcon className="ml-auto" />
+                {pathname.startsWith('/server-health') && (
+                  <ChevronRightIcon className='ml-auto' />
                 )}
               </Link>
             </SidebarMenuButton>
@@ -209,5 +209,5 @@ export function AppSidebar({ ...props }) {
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
-  );
+  )
 }

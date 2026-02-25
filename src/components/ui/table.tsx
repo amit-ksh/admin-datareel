@@ -1,23 +1,23 @@
-"use client"
+'use client'
 
-import * as React from "react"
-import { ArrowUpIcon, ArrowDownIcon, ChevronsUpDown } from "lucide-react"
+import * as React from 'react'
+import { ArrowUpIcon, ArrowDownIcon, ChevronsUpDown } from 'lucide-react'
 
-import { cn } from "@/lib/utils"
+import { cn } from '@/lib/utils'
 
 const Table = React.forwardRef<
   HTMLTableElement,
   React.HTMLAttributes<HTMLTableElement>
 >(({ className, ...props }, ref) => (
-  <div className="relative w-full overflow-auto">
+  <div className='relative w-full overflow-auto'>
     <table
       ref={ref}
-      className={cn("w-full caption-bottom text-sm", className)}
+      className={cn('w-full caption-bottom text-sm', className)}
       {...props}
     />
   </div>
 ))
-Table.displayName = "Table"
+Table.displayName = 'Table'
 
 const TableHeader = React.forwardRef<
   HTMLTableSectionElement,
@@ -25,11 +25,14 @@ const TableHeader = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <thead
     ref={ref}
-    className={cn("[&_tr]:border-b [&_tr]:bg-muted/20 [&_tr]:hover:bg-muted/20", className)}
+    className={cn(
+      '[&_tr]:bg-muted/20 [&_tr]:hover:bg-muted/20 [&_tr]:border-b',
+      className,
+    )}
     {...props}
   />
 ))
-TableHeader.displayName = "TableHeader"
+TableHeader.displayName = 'TableHeader'
 
 const TableBody = React.forwardRef<
   HTMLTableSectionElement,
@@ -37,11 +40,11 @@ const TableBody = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <tbody
     ref={ref}
-    className={cn("[&_tr:last-child]:border-0 bg-background", className)}
+    className={cn('bg-background [&_tr:last-child]:border-0', className)}
     {...props}
   />
 ))
-TableBody.displayName = "TableBody"
+TableBody.displayName = 'TableBody'
 
 const TableFooter = React.forwardRef<
   HTMLTableSectionElement,
@@ -50,13 +53,13 @@ const TableFooter = React.forwardRef<
   <tfoot
     ref={ref}
     className={cn(
-      "border-t bg-muted/50 font-medium [&>tr]:last:border-b-0",
-      className
+      'bg-muted/50 border-t font-medium [&>tr]:last:border-b-0',
+      className,
     )}
     {...props}
   />
 ))
-TableFooter.displayName = "TableFooter"
+TableFooter.displayName = 'TableFooter'
 
 const TableRow = React.forwardRef<
   HTMLTableRowElement,
@@ -65,13 +68,13 @@ const TableRow = React.forwardRef<
   <tr
     ref={ref}
     className={cn(
-      "border-b transition-colors hover:bg-muted/30 data-[state=selected]:bg-muted",
-      className
+      'hover:bg-muted/30 data-[state=selected]:bg-muted border-b transition-colors',
+      className,
     )}
     {...props}
   />
 ))
-TableRow.displayName = "TableRow"
+TableRow.displayName = 'TableRow'
 
 const TableHead = React.forwardRef<
   HTMLTableCellElement,
@@ -80,13 +83,13 @@ const TableHead = React.forwardRef<
   <th
     ref={ref}
     className={cn(
-      "h-12 px-4 text-left align-middle font-bold text-[11px] uppercase tracking-wider text-muted-foreground [&:has([role=checkbox])]:pr-0",
-      className
+      'text-muted-foreground h-12 px-4 text-left align-middle text-[11px] font-bold tracking-wider uppercase [&:has([role=checkbox])]:pr-0',
+      className,
     )}
     {...props}
   />
 ))
-TableHead.displayName = "TableHead"
+TableHead.displayName = 'TableHead'
 
 const TableCell = React.forwardRef<
   HTMLTableCellElement,
@@ -94,11 +97,11 @@ const TableCell = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <td
     ref={ref}
-    className={cn("p-4 align-middle [&:has([role=checkbox])]:pr-0", className)}
+    className={cn('p-4 align-middle [&:has([role=checkbox])]:pr-0', className)}
     {...props}
   />
 ))
-TableCell.displayName = "TableCell"
+TableCell.displayName = 'TableCell'
 
 const TableCaption = React.forwardRef<
   HTMLTableCaptionElement,
@@ -106,29 +109,35 @@ const TableCaption = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <caption
     ref={ref}
-    className={cn("mt-4 text-sm text-muted-foreground", className)}
+    className={cn('text-muted-foreground mt-4 text-sm', className)}
     {...props}
   />
 ))
-TableCaption.displayName = "TableCaption"
+TableCaption.displayName = 'TableCaption'
 
 // Custom Sort Components
-function SortIcon({ active, order }: { active: boolean; order?: "asc" | "desc" }) {
+function SortIcon({
+  active,
+  order,
+}: {
+  active: boolean
+  order?: 'asc' | 'desc'
+}) {
   if (active) {
-    return order === "asc" ? (
-      <ArrowUpIcon className="h-3.5 w-3.5 text-foreground" />
+    return order === 'asc' ? (
+      <ArrowUpIcon className='text-foreground h-3.5 w-3.5' />
     ) : (
-      <ArrowDownIcon className="h-3.5 w-3.5 text-foreground" />
+      <ArrowDownIcon className='text-foreground h-3.5 w-3.5' />
     )
   }
-  return <ChevronsUpDown className="h-3.5 w-3.5 text-muted-foreground" />
+  return <ChevronsUpDown className='text-muted-foreground h-3.5 w-3.5' />
 }
 
-interface SortableHeaderProps extends React.ComponentProps<"th"> {
+interface SortableHeaderProps extends React.ComponentProps<'th'> {
   label: string
   sortKey: string
   currentSortBy: string
-  currentSortOrder: "asc" | "desc"
+  currentSortOrder: 'asc' | 'desc'
   onSort: (key: string) => void
 }
 
@@ -144,11 +153,14 @@ function SortableHeader({
   const active = currentSortBy === sortKey
   return (
     <TableHead
-      className={cn("cursor-pointer select-none transition-colors hover:text-foreground group", className)}
+      className={cn(
+        'hover:text-foreground group cursor-pointer transition-colors select-none',
+        className,
+      )}
       onClick={() => onSort(sortKey)}
       {...props}
     >
-      <div className="flex items-center gap-1.5">
+      <div className='flex items-center gap-1.5'>
         {label}
         <SortIcon active={active} order={currentSortOrder} />
       </div>

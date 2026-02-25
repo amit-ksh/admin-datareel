@@ -1,5 +1,5 @@
-import OrganisationViewContainer from "@/containers/organisation-view";
+import OrganisationViewContainer from '@/containers/organisation-view'
 
 export default function page() {
-  return <OrganisationViewContainer />;
+  return <OrganisationViewContainer />
 }

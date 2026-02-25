@@ -438,7 +438,7 @@ const StatusPage = () => {
                     className='rounded-lg border border-slate-200 p-4 transition-shadow hover:shadow-sm'
                   >
                     <div className='mb-2 flex items-center justify-between'>
-                      <h4 className='font-medium capitalize text-slate-800'>
+                      <h4 className='font-medium text-slate-800 capitalize'>
                         {name.replace(/_/g, ' ')}
                       </h4>
                       {getStatusIcon(container.status, container.state)}
