@@ -25,6 +25,7 @@ import {
   ClapperboardIcon,
   DoorOpenIcon,
   ActivityIcon,
+  MailIcon,
 } from "lucide-react";
 import { Separator } from "../ui/separator";
 import { cn } from "@/lib/utils";
@@ -63,6 +64,13 @@ export function AppSidebar({ ...props }) {
             icon: DoorOpenIcon,
             hasAccess: true,
             isActive: pathname.startsWith("/access-organisation"),
+          },
+          {
+            title: "Email Templates",
+            url: "/email-templates",
+            icon: MailIcon,
+            hasAccess: true,
+            isActive: pathname.startsWith("/email-templates"),
           },
         ],
       },
