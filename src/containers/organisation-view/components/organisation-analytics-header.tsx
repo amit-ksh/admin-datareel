@@ -6,6 +6,7 @@ import { DateRange } from 'react-day-picker'
 import { Download, CalendarIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Calendar } from '@/components/ui/calendar'
 import {
   Popover,
@@ -28,12 +29,25 @@ export function OrganisationAnalyticsHeader() {
   })
 
   return (
-    <div className='flex flex-col justify-between gap-4 md:flex-row md:items-center'>
-      <div>
-        <h2 className='text-lg font-bold tracking-tight'>Analytics</h2>
-        <p className='text-muted-foreground text-sm'>
-          Monitor your organisation's performance and engagement metrics.
-        </p>
+    <div className='flex flex-col justify-between gap-4 xl:flex-row xl:items-center'>
+      <div className='flex flex-col gap-4 sm:flex-row sm:items-center'>
+        <div>
+          <div className='flex items-center gap-2'>
+            <h2 className='text-lg font-bold tracking-tight'>Analytics</h2>
+            <Tabs
+              defaultValue='cohort'
+              className='mt-2 w-full sm:mt-0 sm:ml-4 sm:w-auto'
+            >
+              <TabsList className='grid w-full grid-cols-2 sm:flex sm:w-auto'>
+                <TabsTrigger value='cohort'>Cohort</TabsTrigger>
+                <TabsTrigger value='cumulative'>Cumulative</TabsTrigger>
+              </TabsList>
+            </Tabs>
+          </div>
+          <p className='text-muted-foreground text-sm'>
+            Monitor your organisation's performance and engagement metrics.
+          </p>
+        </div>
       </div>
       <div className='flex w-full flex-col items-stretch gap-3 sm:flex-row sm:items-center md:w-auto'>
         <Popover>

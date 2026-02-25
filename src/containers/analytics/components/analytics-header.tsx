@@ -12,6 +12,7 @@ import { Calendar } from '@/components/ui/calendar'
 import { useState } from 'react'
 import { DateRange } from 'react-day-picker'
 import { cn } from '@/lib/utils'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -35,8 +36,25 @@ export function AnalyticsHeader() {
   })
 
   return (
-    <div className='mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-center'>
-      <h1 className='text-3xl font-semibold tracking-tight'>Analytics</h1>
+    <div className='mb-8 flex flex-col justify-between gap-4 xl:flex-row xl:items-center'>
+      <div className='flex flex-col gap-4 sm:flex-row sm:items-center'>
+        <div className='flex flex-col gap-1'>
+          <div className='flex items-center gap-2'>
+            <h1 className='text-foreground text-2xl font-bold tracking-tight'>
+              Analytics
+            </h1>
+            <Tabs defaultValue='cohort' className='w-full sm:w-auto'>
+              <TabsList className='grid w-full grid-cols-2 sm:flex sm:w-auto'>
+                <TabsTrigger value='cohort'>Cohort</TabsTrigger>
+                <TabsTrigger value='cumulative'>Cumulative</TabsTrigger>
+              </TabsList>
+            </Tabs>
+          </div>
+          <p className='text-muted-foreground text-sm'>
+            Monitor your organisation&apos;s performance and engagement metrics.
+          </p>
+        </div>
+      </div>
       <div className='flex w-full flex-col items-stretch gap-3 sm:flex-row sm:items-center md:w-auto'>
         <Popover>
           <PopoverTrigger asChild>
