@@ -3,14 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { ChartConfig, ChartContainer } from '@/components/ui/chart'
 import { ArrowUp, ArrowDown } from 'lucide-react'
-import {
-  Bar,
-  BarChart,
-  Line,
-  LineChart,
-  ResponsiveContainer,
-  Cell,
-} from 'recharts'
+import { Bar, BarChart, Line, LineChart, Cell, type BarProps } from 'recharts'
 
 interface AnalyticsMetricCardProps {
   title: string
@@ -21,7 +14,7 @@ interface AnalyticsMetricCardProps {
     label: string
     direction: 'up' | 'down'
   }
-  chartData: any[]
+  chartData: BarProps['data'][]
   chartConfig: ChartConfig
   chartType: 'bar' | 'line'
   dataKey: string

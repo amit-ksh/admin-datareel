@@ -1,6 +1,6 @@
 'use client'
 
-import { forwardRef, useImperativeHandle, useRef } from 'react'
+import { forwardRef, RefObject, useImperativeHandle, useRef } from 'react'
 import { OrbitControls, View as ViewImpl } from '@react-three/drei'
 import { Three } from '@/webgl/helpers/Three'
 
@@ -12,14 +12,14 @@ interface ViewProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const View = forwardRef(
   ({ children, orbit, enableZoom = true, ...props }: ViewProps, ref) => {
-    const localRef = useRef(null)
+    const localRef = useRef<HTMLDivElement>(null)
     useImperativeHandle(ref, () => localRef.current)
 
     return (
       <>
         <div ref={localRef} {...props} />
         <Three>
-          <ViewImpl track={localRef as any}>
+          <ViewImpl track={localRef! as RefObject<HTMLElement>}>
             {children}
             {orbit && <OrbitControls enableZoom={enableZoom} />}
           </ViewImpl>

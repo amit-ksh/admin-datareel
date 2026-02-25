@@ -7,7 +7,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
@@ -21,7 +20,7 @@ import {
 interface AnalyticsStatusChartProps {
   title: string
   description?: string
-  data: any[]
+  data: Record<string, string | number>[]
   config: ChartConfig
   totalLabel: string
   dataKey: string
@@ -38,7 +37,7 @@ export function AnalyticsStatusChart({
   nameKey,
 }: AnalyticsStatusChartProps) {
   const total = React.useMemo(() => {
-    return data.reduce((acc, curr) => acc + curr[dataKey], 0)
+    return data.reduce((acc, curr) => acc + (curr?.[dataKey] as number), 0)
   }, [data, dataKey])
 
   return (
@@ -100,7 +99,10 @@ export function AnalyticsStatusChart({
 
           <div className='flex flex-1 flex-col gap-2'>
             {data.map((item, index) => {
-              const percentage = ((item[dataKey] / total) * 100).toFixed(2)
+              const percentage = (
+                ((item[dataKey] as number) / total) *
+                100
+              ).toFixed(2)
               return (
                 <div
                   key={index}
@@ -109,7 +111,7 @@ export function AnalyticsStatusChart({
                   <div className='flex items-center gap-2'>
                     <div
                       className='h-3 w-3 rounded-full'
-                      style={{ backgroundColor: item.fill }}
+                      style={{ backgroundColor: item.fill as string }}
                     />
                     <span className='text-muted-foreground'>
                       {item[nameKey]}

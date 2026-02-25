@@ -19,7 +19,7 @@ export const ServicesAlertUI = ({
         functionality until recovery is complete.
       </p>
       <ul className='mt-1 list-inside list-disc space-y-1 px-4 text-sm text-gray-800'>
-        {services.map(([name, _container]) => {
+        {services.map(([name]) => {
           const map = SERVICE_IMPACT_MAP[name] || {}
           const label = map.label || name.replace(/_/g, ' ')
           const impacts = map.impacts || ['General functionality']

@@ -23,37 +23,45 @@ import { AxiosResponse } from 'axios'
 const AuthContext = React.createContext<AuthContextType>({} as AuthContextType)
 
 type AuthContextType = {
-  currentUser: any
+  currentUser: Record<string, unknown>
   isCurrentUserLoading: boolean
   isCurrentUserPending: boolean
   isLogoutPending: boolean
   logoutUser: () => Promise<void>
   // Service health exposure
   authServiceHealthData:
-    | AxiosResponse<AuthServerContainersHealthResponse, any, {}>
+    | AxiosResponse<
+        AuthServerContainersHealthResponse,
+        Record<string, unknown>,
+        Record<string, unknown>
+      >
     | undefined
   isAuthServiceHealthLoading: boolean
   isAuthServiceHealthError: boolean
   videoServiceHealthData:
-    | AxiosResponse<VideoServerContainersHealthResponse, any, {}>
+    | AxiosResponse<
+        VideoServerContainersHealthResponse,
+        Record<string, unknown>,
+        Record<string, unknown>
+      >
     | undefined
   isVideoServiceHealthLoading: boolean
   isVideoServiceHealthError: boolean
 }
 
-const protectedRoutes = [
-  /^\/analytics$/,
-  /^\/organisations(\/.*)?$/,
-  /^\/access-organisation$/,
-  /^\/$/,
-] as const
+// const protectedRoutes = [
+//   /^\/analytics$/,
+//   /^\/organisations(\/.*)?$/,
+//   /^\/access-organisation$/,
+//   /^\/$/,
+// ] as const
 
-const unprotectedRoutes = [/^\/login$/] as const
+// const unprotectedRoutes = [/^\/login$/] as const
 
 // used for stop current user api fetching
 const unblockedRoutesWithAuth = [] as RegExp[]
 
-const blockedRoutes = [/^\/login$/] as const
+// const blockedRoutes = [/^\/login$/] as const
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter()
@@ -67,7 +75,6 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     data: currentUser,
     isLoading: isCurrentUserLoading,
     isPending: isCurrentUserPending,
-    isFetched: isCurrentUserFetched,
     isError,
     error,
     refetch: refetchCurrentUser,
@@ -79,6 +86,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if (!currentUser?.data?.permissions.length) {
       refetchCurrentUser()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isCurrentUserLoading])
 
   const {
@@ -147,6 +155,8 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     } finally {
       queryClient.clear()
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [logoutMutateAsync, pathname, queryClient, router])
 
   useEffect(() => {
@@ -171,7 +181,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <AuthContext.Provider
       value={{
-        currentUser,
+        currentUser: {},
         isCurrentUserLoading,
         isCurrentUserPending,
         isLogoutPending,

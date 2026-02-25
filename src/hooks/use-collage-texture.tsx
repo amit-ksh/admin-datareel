@@ -3,10 +3,9 @@ import * as THREE from 'three'
 
 import { getCanvasTexture } from '@/webgl/helpers/getCanvasTexture'
 
-interface Images {
+interface Image {
   url: string
 }
-;[]
 
 interface UseCollageTextureOptions {
   gap?: number
@@ -15,7 +14,7 @@ interface UseCollageTextureOptions {
   axis?: 'x' | 'y'
 }
 export function useCollageTexture(
-  images: Images[],
+  images: Image[],
   options: UseCollageTextureOptions = {},
 ) {
   const [textureResults, setTextureResults] = useState<{

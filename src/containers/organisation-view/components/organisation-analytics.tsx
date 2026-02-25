@@ -122,7 +122,7 @@ export function OrganisationAnalytics() {
       {/* Status Charts Row */}
       <div className='grid gap-4 lg:grid-cols-2'>
         <AnalyticsStatusChart
-          title='Runs Status'
+          title='Videos Status'
           data={runsStatusData}
           config={{
             Processing: { label: 'Processing', color: '#3b82f6' },

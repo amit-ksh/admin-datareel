@@ -45,7 +45,7 @@ export function OrganisationAnalyticsHeader() {
             </Tabs>
           </div>
           <p className='text-muted-foreground text-sm'>
-            Monitor your organisation's performance and engagement metrics.
+            Monitor your organisation&apos;s performance and engagement metrics.
           </p>
         </div>
       </div>

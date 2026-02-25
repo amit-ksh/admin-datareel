@@ -19,7 +19,7 @@ export type ServerContainersHealthResponse = {
       status: 'healthy' | 'unhealthy' | 'running'
       state: 'healthy' | 'unhealthy'
       restart_count: number
-      health: any
+      health: unknown
     }
   }
 }
@@ -37,14 +37,14 @@ export type AuthServerContainersHealthResponse = {
 
 export type VideoServerContainersHealthResponse = {
   app: string
-  bhashini_lock_present: any
-  clone_consumer_lock: any
+  bhashini_lock_present: string
+  clone_consumer_lock: string
   database_connected: boolean
   gpu_instance_status: string
-  gpu_server_lock_present: any
+  gpu_server_lock_present: string
   kafka_consumer_running: boolean
   kafka_producer_initialized: boolean
-  latentsync_lock_present: any
+  latentsync_lock_present: string
   mode: string
   pipeline_semaphore_count: number
   redis_connected: boolean

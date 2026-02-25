@@ -1,7 +1,7 @@
 'use client'
 
 import * as THREE from 'three'
-import { JSX, useRef } from 'react'
+import { JSX, useRef, useMemo } from 'react'
 import { useFrame } from '@react-three/fiber'
 import '@/webgl/materials/MeshImageMaterial'
 
@@ -44,19 +44,26 @@ function Billboard({
   radius = 5,
   ...props
 }: BillboardProps) {
-  const ref = useRef(null)
+  const ref = useRef<THREE.Mesh>(null)
 
-  setupCylinderTextureMapping(texture, dimensions, radius, 2)
+  const localTexture = useMemo(() => {
+    const t = texture.clone()
+    t.needsUpdate = true
+    return t
+  }, [texture])
+  setupCylinderTextureMapping(localTexture, dimensions, radius, 2)
 
   useFrame((state, delta) => {
-    if (texture) (texture as THREE.Texture).offset.x += delta * 0.001
+    if (!ref.current) return
+    const material = ref.current.material as THREE.MeshBasicMaterial
+    if (material && material.map) material.map.offset.x -= delta * 0.001
   })
 
   return (
     <mesh ref={ref} {...props}>
       <cylinderGeometry args={[radius, radius, 2, 100, 1, true]} />
       <meshImageMaterial
-        map={texture}
+        map={localTexture}
         side={THREE.DoubleSide}
         toneMapped={false}
       />

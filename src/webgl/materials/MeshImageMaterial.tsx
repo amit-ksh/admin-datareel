@@ -1,12 +1,16 @@
 import * as THREE from 'three'
-import { extend, ReactThreeFiber } from '@react-three/fiber'
+import { extend } from '@react-three/fiber'
 
 export class MeshImageMaterial extends THREE.MeshBasicMaterial {
   constructor(parameters = {}) {
     super(parameters)
     this.setValues(parameters)
   }
-  onBeforeCompile = (shader: any) => {
+  onBeforeCompile = (shader: {
+    fragmentShader: string
+    vertexShader: string
+    uniforms: Record<string, unknown>
+  }) => {
     shader.fragmentShader = shader.fragmentShader.replace(
       '#include <color_fragment>',
       /* glsl */ `#include <color_fragment>
@@ -20,17 +24,3 @@ export class MeshImageMaterial extends THREE.MeshBasicMaterial {
 }
 
 extend({ MeshImageMaterial })
-
-declare module '@react-three/fiber' {
-  interface ThreeElements {
-    meshImageMaterial: any
-  }
-}
-
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      meshImageMaterial: any
-    }
-  }
-}

@@ -27,7 +27,7 @@ import {
 interface AnalyticsLineChartProps {
   title: string
   description?: string
-  data: Record<string, any[]>
+  data: Record<string, unknown[]>
   config: ChartConfig
   lines: { key: string }[]
 }

@@ -51,7 +51,7 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@types/three": "^0.183.1",
-    "eslint": "^10.0.0",
+    "eslint": "^9.39.3",
     "eslint-config-next": "16.1.6",
     "eslint-plugin-redos": "^4.5.0",
     "husky": "^9.1.7",

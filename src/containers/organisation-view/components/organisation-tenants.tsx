@@ -1,10 +1,8 @@
 import { useState } from 'react'
 import {
-  Plus,
   Pencil,
   Trash2,
   ChevronDown,
-  ChevronUp,
   Eye,
   Shield,
   ChevronLeft,
@@ -12,7 +10,6 @@ import {
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { cn } from '@/lib/utils'
 
 // Mock Data
 const tenants = [

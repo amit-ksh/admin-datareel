@@ -1,6 +1,7 @@
 import { defineConfig, globalIgnores } from 'eslint/config'
 import nextVitals from 'eslint-config-next/core-web-vitals'
 import nextTs from 'eslint-config-next/typescript'
+import redosPlugin from 'eslint-plugin-redos'
 
 const eslintConfig = defineConfig([
   ...nextVitals,
@@ -14,8 +15,9 @@ const eslintConfig = defineConfig([
     'next-env.d.ts',
   ]),
   {
-    extends: ['next/core-web-vitals', 'plugin:redos/recommended'],
-    plugins: ['redos'],
+    plugins: {
+      redos: redosPlugin,
+    },
     rules: {
       'redos/no-vulnerable': ['error', { cache: true }],
     },

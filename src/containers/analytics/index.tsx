@@ -2,23 +2,12 @@
 
 import { useAnalytics } from './use-analytics.hook'
 import { AnalyticsHeader } from './components/analytics-header'
-import { AnalyticsMetricCard } from './components/analytics-metric-card'
 import { AnalyticsStatusChart } from './components/analytics-status-chart'
 import { AnalyticsLineChart } from './components/analytics-line-chart'
 import { TopOrganizationsTable } from './components/top-organizations-table'
 import { MetricsOverview } from './components/metrics-overview'
 import { AnalyticsEngagementSection } from './components/analytics-engagement-section'
 import { AnalyticsSystemHealth } from './components/analytics-system-health'
-
-const sparklineData = [
-  { value: 10 },
-  { value: 20 },
-  { value: 15 },
-  { value: 25 },
-  { value: 30 },
-  { value: 20 },
-  { value: 35 },
-]
 
 const runsStatusData = [
   { status: 'Processing', value: 1307, fill: '#3b82f6' },
@@ -30,27 +19,6 @@ const approvalStatusData = [
   { status: 'Pending', value: 8, fill: '#3b82f6' },
   { status: 'Approved', value: 7092, fill: '#22c55e' },
   { status: 'Rejected', value: 0, fill: '#ef4444' },
-]
-
-const viewerSatisfactionData = [
-  { rating: '1', value: 12, fill: '#ef4444' },
-  { rating: '2', value: 25, fill: '#f97316' },
-  { rating: '3', value: 45, fill: '#eab308' },
-  { rating: '4', value: 80, fill: '#84cc16' },
-  { rating: '5', value: 150, fill: '#22c55e' },
-]
-
-const videoDeliveryData = [
-  { status: 'Sent', value: 7000, fill: '#3b82f6' },
-  { status: 'Seen', value: 2500, fill: '#22c55e' },
-  { status: 'Callback', value: 100, fill: '#eab308' },
-  { status: 'Feedback', value: 100, fill: '#a855f7' },
-]
-
-const videoApprovalCardData = [
-  { status: 'Pending', value: 50, fill: '#3b82f6' },
-  { status: 'Approved', value: 200, fill: '#22c55e' },
-  { status: 'Rejected', value: 10, fill: '#ef4444' },
 ]
 
 const yearlyVideoData = {
@@ -169,7 +137,7 @@ export default function AnalyticsContainer() {
       {/* Status Charts Row */}
       <div className='grid gap-4 lg:grid-cols-2'>
         <AnalyticsStatusChart
-          title='Runs Status'
+          title='Videos Status'
           data={runsStatusData}
           config={{
             Processing: { label: 'Processing', color: '#3b82f6' },

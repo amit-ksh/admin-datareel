@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { Save, X, Edit2 } from 'lucide-react'
 import { FeaturesSettings } from './features-settings'
 import { LanguagesSettings } from './languages-settings'
 import { PersonaOnboardingSettings } from './persona-onboarding-settings'

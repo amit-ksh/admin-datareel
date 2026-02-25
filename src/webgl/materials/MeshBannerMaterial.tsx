@@ -1,9 +1,11 @@
 import * as THREE from 'three'
-import { extend, ReactThreeFiber } from '@react-three/fiber'
+import { extend } from '@react-three/fiber'
 
 export class MeshBannerMaterial extends THREE.MeshBasicMaterial {
   backfaceRepeatX: number
-  constructor(parameters: any = { backfaceRepeatX: 1.0 }) {
+  constructor(
+    parameters: { backfaceRepeatX: number } = { backfaceRepeatX: 1.0 },
+  ) {
     const { backfaceRepeatX, ...materialParams } = parameters
     super(materialParams)
     this.setValues(materialParams)
@@ -11,7 +13,11 @@ export class MeshBannerMaterial extends THREE.MeshBasicMaterial {
     this.backfaceRepeatX = backfaceRepeatX ?? 1.0
   }
 
-  onBeforeCompile = (shader: any) => {
+  onBeforeCompile = (shader: {
+    fragmentShader: string
+    vertexShader: string
+    uniforms: Record<string, unknown>
+  }) => {
     shader.uniforms.repeatX = { value: this.backfaceRepeatX }
     shader.fragmentShader = shader.fragmentShader
       .replace(
@@ -36,17 +42,3 @@ export class MeshBannerMaterial extends THREE.MeshBasicMaterial {
 }
 
 extend({ MeshBannerMaterial })
-
-declare module '@react-three/fiber' {
-  interface ThreeElements {
-    meshBannerMaterial: any
-  }
-}
-
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      meshBannerMaterial: any
-    }
-  }
-}

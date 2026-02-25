@@ -1,7 +1,6 @@
-const { PrivateAxios } = require('@/api')
 import { QUERY_KEYS } from '@/lib/query-keys'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { PublicAxios } from '.'
+import { PrivateAxios, PublicAxios } from '.'
 
 const currentUserAPI = () => {
   return PrivateAxios.get(`admin/login`)

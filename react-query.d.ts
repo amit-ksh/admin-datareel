@@ -2,7 +2,7 @@ import { AxiosError } from 'axios'
 
 export type AppError = {
   message?: string
-  details?: any
+  details?: Record<string, unknown>
 }
 
 declare module '@tanstack/react-query' {

@@ -19,7 +19,7 @@ import {
 interface AnalyticsBarChartProps {
   title: string
   description?: string
-  data: any[]
+  data: unknown[]
   config: ChartConfig
   xAxisKey: string
   yAxisKey: string

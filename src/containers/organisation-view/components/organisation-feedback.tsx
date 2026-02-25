@@ -225,7 +225,6 @@ function RatingBarCard({
   title,
   min,
   max,
-  average,
   averageText,
   progress,
 }: {
@@ -283,13 +282,21 @@ function RatingBarCard({
   )
 }
 
+interface StatCardProps {
+  title: string
+  value: string
+  icon: React.ComponentType<{ className?: string; strokeWidth?: number }>
+  wrapperClass?: string
+  iconProps?: Record<string, unknown>
+}
+
 function StatCard({
   title,
   value,
   icon: Icon,
   wrapperClass = '',
   iconProps = {},
-}: any) {
+}: StatCardProps) {
   return (
     <Card className='border p-4'>
       <CardContent className='flex items-center justify-between p-0'>
@@ -317,7 +324,9 @@ const statsData = [
   {
     title: 'Average Rating',
     value: '4.67',
-    icon: (props: any) => <Star className='h-6 w-6 fill-blue-600' {...props} />,
+    icon: (props: React.ComponentProps<typeof Star>) => (
+      <Star className='h-6 w-6 fill-blue-600' {...props} />
+    ),
     wrapperClass: 'text-blue-600',
   },
   {

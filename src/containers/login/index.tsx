@@ -18,6 +18,8 @@ import * as THREE from 'three'
 
 const Scene = dynamic(() => import('@/webgl/Scene'), { ssr: false })
 
+const random = () => Math.random() - 0.5
+
 const BubblingCubes = () => {
   const count = 50
   const meshRef = useRef<THREE.InstancedMesh>(null)
@@ -25,13 +27,13 @@ const BubblingCubes = () => {
 
   const cubes = useMemo(() => {
     return Array.from({ length: count }).map(() => ({
-      x: (Math.random() - 0.5) * 40,
-      y: (Math.random() - 0.5) * 60 - 30, // Start lower
-      z: (Math.random() - 0.5) * 20 - 20,
-      speed: Math.random() * 0.05 + 0.02,
-      scale: Math.random() * 0.5 + 0.1,
-      rotationSpeedX: Math.random() * 0.0005,
-      rotationSpeedY: Math.random() * 0.0005,
+      x: random() * 40,
+      y: random() * 60 - 30, // Start lower
+      z: random() * 20 - 10,
+      speed: random() * 0.05 + 0.02,
+      scale: random() * 0.5 + 0.1,
+      rotationSpeedX: random() * 0.0005,
+      rotationSpeedY: random() * 0.0005,
     }))
   }, [])
 
@@ -41,7 +43,7 @@ const BubblingCubes = () => {
       cube.y += cube.speed
       if (cube.y > 30) {
         cube.y = -30
-        cube.x = (Math.random() - 0.5) * 40
+        cube.x = (random() - 0.5) * 40
       }
 
       dummy.position.set(cube.x, cube.y, cube.z)
@@ -55,12 +57,9 @@ const BubblingCubes = () => {
   })
 
   return (
-    <instancedMesh
-      ref={meshRef}
-      args={[undefined as any, undefined as any, count]}
-    >
+    <instancedMesh ref={meshRef} args={[undefined, undefined, count]}>
       <boxGeometry args={[1, 1, 1]} />
-      <meshBasicMaterial color='#ffffff' transparent opacity={0.6} />
+      <meshBasicMaterial color='#ffffff' transparent opacity={0.8} />
     </instancedMesh>
   )
 }
