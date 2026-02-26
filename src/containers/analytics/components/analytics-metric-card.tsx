@@ -68,7 +68,8 @@ export function AnalyticsMetricCard({
                     {chartData.map((entry, index) => (
                       <Cell
                         key={`cell-${index}`}
-                        fill={entry.fill || `var(--color-${dataKey})`}
+                        // @ts-expect-error - bad type
+                        fill={entry?.fill || `var(--color-${dataKey})`}
                       />
                     ))}
                   </Bar>
