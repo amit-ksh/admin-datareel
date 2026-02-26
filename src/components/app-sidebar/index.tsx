@@ -76,9 +76,9 @@ export function AppSidebar({ ...props }) {
       },
     ],
     user: {
-      name: currentUser?.data?.tenant_data?.tenant_name || 'Anonymous',
-      email: currentUser?.data?.tenant_data?.tenant_email,
-      avatar: currentUser?.data.tenant_data?.profile_image,
+      name: currentUser?.tenant_data?.tenant_name || 'Anonymous',
+      email: currentUser?.tenant_data?.tenant_email || '',
+      avatar: currentUser?.tenant_data?.profile_image || '',
     },
   }
 

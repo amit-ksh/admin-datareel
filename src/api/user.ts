@@ -3,7 +3,10 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 import { PrivateAxios, PublicAxios } from '.'
 
 const currentUserAPI = () => {
-  return PrivateAxios.get(`admin/login`)
+  return PrivateAxios.get<{
+    permissions: string[]
+    tenant_data: Record<string, string>
+  }>(`admin/login`)
 }
 
 export const useCurrentUserAPI = ({

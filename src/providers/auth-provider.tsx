@@ -23,7 +23,10 @@ import { AxiosResponse } from 'axios'
 const AuthContext = React.createContext<AuthContextType>({} as AuthContextType)
 
 type AuthContextType = {
-  currentUser: Record<string, unknown>
+  currentUser?: {
+    permissions: string[]
+    tenant_data: Record<string, string>
+  }
   isCurrentUserLoading: boolean
   isCurrentUserPending: boolean
   isLogoutPending: boolean
@@ -181,7 +184,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <AuthContext.Provider
       value={{
-        currentUser: {},
+        currentUser: currentUser?.data,
         isCurrentUserLoading,
         isCurrentUserPending,
         isLogoutPending,
