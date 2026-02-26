@@ -1,0 +1,13 @@
+var R=require("../../chunks/ssr/[turbopack]_runtime.js")("server/app/_not-found/page.js")
+R.c("server/chunks/ssr/datareel-admin_c89fb573._.js")
+R.c("server/chunks/ssr/[root-of-the-server]__91e6c970._.js")
+R.c("server/chunks/ssr/83d22_next_dist_esm_build_templates_app-page_8f9320ae.js")
+R.c("server/chunks/ssr/[root-of-the-server]__27d5d6f5._.js")
+R.c("server/chunks/ssr/83d22_next_dist_ee85801c._.js")
+R.c("server/chunks/ssr/[root-of-the-server]__ce4ae6a1._.js")
+R.c("server/chunks/ssr/[root-of-the-server]__678be5e5._.js")
+R.c("server/chunks/ssr/83d22_next_dist_client_components_98a79682._.js")
+R.c("server/chunks/ssr/83d22_next_dist_client_components_builtin_forbidden_6605d1b0.js")
+R.c("server/chunks/ssr/datareel-admin__next-internal_server_app__not-found_page_actions_d3976a0d.js")
+R.m(8516)
+module.exports=R.m(8516).exports

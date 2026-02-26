@@ -1,0 +1,16 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/(protected)/layout,_N_T_/(protected)/access-organisation/layout,_N_T_/(protected)/access-organisation/page,_N_T_/access-organisation"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/!KHByb3RlY3RlZCk/access-organisation/__PAGE__",
+    "/!KHByb3RlY3RlZCk/access-organisation",
+    "/!KHByb3RlY3RlZCk",
+    "/_index",
+    "/_head"
+  ]
+}

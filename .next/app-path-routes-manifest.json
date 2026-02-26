@@ -1,0 +1,12 @@
+{
+  "/(protected)/access-organisation/page": "/access-organisation",
+  "/(protected)/analytics/page": "/analytics",
+  "/(protected)/email-templates/page": "/email-templates",
+  "/(protected)/organisations/[organisationId]/page": "/organisations/[organisationId]",
+  "/(protected)/organisations/page": "/organisations",
+  "/(public)/login/page": "/login",
+  "/(public)/server-health/page": "/server-health",
+  "/_global-error/page": "/_global-error",
+  "/_not-found/page": "/_not-found",
+  "/page": "/"
+}
