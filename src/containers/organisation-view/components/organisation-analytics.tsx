@@ -82,6 +82,11 @@ export function OrganisationAnalytics() {
             trend: '+ 8%',
             trendColor: 'text-emerald-500',
           },
+          completed: {
+            value: '428',
+            trend: '+ 18%',
+            trendColor: 'text-emerald-500',
+          },
           approved: {
             value: '412',
             trend: '− 2%',
