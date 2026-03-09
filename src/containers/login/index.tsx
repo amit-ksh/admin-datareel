@@ -9,6 +9,7 @@ import { useCollageTexture } from '@/hooks/use-collage-texture'
 import dynamic from 'next/dynamic'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import { useLogin } from './use-login.hook'
 import { Label } from '@/components/ui/label'
 import { Layers } from 'lucide-react'
 import Image from 'next/image'
@@ -71,10 +72,21 @@ export default function LoginContainer() {
   const router = useRouter()
   const { texture, dimensions, isLoading } = useCollageTexture(images)
 
-  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
+  const { loginMutation } = useLogin()
+  const { mutateAsync: loginMutate, isPending: isLoginPending } = loginMutation
+
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    router.push('/analytics')
-    console.log('Login')
+    const formData = new FormData(e.currentTarget)
+    const email = formData.get('email') as string
+    const password = formData.get('password') as string
+
+    try {
+      await loginMutate({ email, password })
+      router.push('/analytics')
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   if (isLoading || !texture || !dimensions) return null
@@ -112,6 +124,7 @@ export default function LoginContainer() {
               <Label htmlFor='email'>Email</Label>
               <Input
                 id='email'
+                name='email'
                 type='email'
                 placeholder='m@example.com'
                 required
@@ -123,14 +136,15 @@ export default function LoginContainer() {
               </div>
               <Input
                 id='password'
+                name='password'
                 type='password'
                 placeholder='••••••••'
                 required
               />
             </div>
 
-            <Button type='submit' className='w-full'>
-              Login
+            <Button type='submit' className='w-full' disabled={isLoginPending}>
+              {isLoginPending ? 'Logging in...' : 'Login'}
             </Button>
           </form>
         </div>

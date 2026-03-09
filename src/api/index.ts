@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { refreshToken } from './auth'
 
 const API_VERSION = {
   V1: `api/v1`,
@@ -23,3 +24,5 @@ export const PrivateAxios = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL + API_VERSION.V1,
   withCredentials: true,
 })
+
+PrivateAxios.interceptors.response.use((response) => response, refreshToken)

@@ -1,5 +1,9 @@
 'use client'
+import { useLoginAPI } from '@/api/auth'
 
 export const useLogin = () => {
-  return {}
+  const loginMutation = useLoginAPI()
+  return {
+    loginMutation,
+  }
 }
