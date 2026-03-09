@@ -70,6 +70,35 @@ export const useLogoutAPI = () => {
   })
 }
 
+export const impersonateLoginAPI = async (payload: {
+  org_id: string
+  email: string
+}) => {
+  const response = await PrivateAxios.post<AuthResponse>(
+    'admin/impersonate',
+    payload,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    },
+  )
+  return response.data
+}
+
+export const useImpersonateLogin = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: impersonateLoginAPI,
+    onSuccess: (data) => {
+      if (data?.redirect) {
+        window.location.href = data.redirect
+      }
+      queryClient.invalidateQueries()
+    },
+  })
+}
+
 const refreshTokenAPI = async () => {
   return PublicAxios.post('auth/tenant/refresh', undefined, {
     headers: {

@@ -14,12 +14,6 @@ interface UserDetails {
   status: 'active' | 'inactive'
 }
 
-interface Organisation {
-  id: string
-  name: string
-  activeTenants: number
-}
-
 const dummyUser: UserDetails = {
   name: 'John Doe',
   email: 'john.doe@company.com',
@@ -28,23 +22,14 @@ const dummyUser: UserDetails = {
   status: 'active',
 }
 
-const dummyOrganisations: Organisation[] = [
-  { id: '1', name: 'Acme Global Corporation', activeTenants: 5 },
-  { id: '2', name: 'Starlight Industries Ltd', activeTenants: 12 },
-]
-
 export default function AccessOrganisationContainer() {
   const [email, setEmail] = useState('')
-  const [fetched, setFetched] = useState(true) // default true to show the dummy state
+  const [searchEmail, setSearchEmail] = useState('')
 
   const handleFetch = () => {
     if (email.trim()) {
-      setFetched(true)
+      setSearchEmail(email.trim())
     }
-  }
-
-  const handleLogin = (org: Organisation) => {
-    console.log('Logging into:', org)
   }
 
   return (
@@ -68,18 +53,15 @@ export default function AccessOrganisationContainer() {
             onEmailChange={setEmail}
             onFetch={handleFetch}
           />
-          {fetched && <UserDetailsCard user={dummyUser} />}
+          {searchEmail && (
+            <UserDetailsCard user={{ ...dummyUser, email: searchEmail }} />
+          )}
         </div>
 
         <Separator className='mb-8' />
 
         {/* Organisations Section */}
-        {fetched && (
-          <OrganisationList
-            organisations={dummyOrganisations}
-            onLogin={handleLogin}
-          />
-        )}
+        <OrganisationList email={searchEmail} />
       </div>
     </div>
   )
