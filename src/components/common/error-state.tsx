@@ -21,6 +21,7 @@ import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 import { buttonVariants } from '@/components/ui/button'
 import { AxiosError } from 'axios'
+import { COMMON_TEST_IDS } from './test-ids'
 
 function normalizeError(err: AxiosError) {
   if (!err) return { code: 'UNKNOWN', message: 'Something went wrong.' }
@@ -158,17 +159,24 @@ export default function ErrorState({
   return (
     <div
       className={cn('flex w-full items-center justify-center p-6', className)}
+      data-testid={COMMON_TEST_IDS.ERROR_STATE.CONTAINER}
     >
       <div className='w-full max-w-3xl rounded-xl border bg-white p-6 shadow-sm'>
         <div className='flex items-start gap-4'>
-          <div className='flex size-12 items-center justify-center rounded-full border bg-gray-50'>
+          <div
+            className='flex size-12 items-center justify-center rounded-full border bg-gray-50'
+            data-testid={COMMON_TEST_IDS.ERROR_STATE.ICON_CONTAINER}
+          >
             <Icon className='size-6 text-gray-600' />
           </div>
           <div className='flex-1'>
             <div className='flex items-start justify-between gap-2'>
               <div>
                 <div className='flex items-center gap-2'>
-                  <h2 className='text-lg font-semibold'>
+                  <h2
+                    className='text-lg font-semibold'
+                    data-testid={COMMON_TEST_IDS.ERROR_STATE.TITLE}
+                  >
                     {title || preset.title}
                   </h2>
                   {onRetry && (
@@ -179,13 +187,17 @@ export default function ErrorState({
                         variant: 'ghost',
                         className: 'inline-flex items-center gap-2',
                       })}
+                      data-testid={COMMON_TEST_IDS.ERROR_STATE.RETRY_BUTTON}
                     >
                       <RefreshCw className='size-4' />
                       Retry
                     </button>
                   )}
                 </div>
-                <p className='mt-1 text-sm text-gray-600'>
+                <p
+                  className='mt-1 text-sm text-gray-600'
+                  data-testid={COMMON_TEST_IDS.ERROR_STATE.DESCRIPTION}
+                >
                   {description || preset.hint}
                 </p>
               </div>
@@ -197,6 +209,7 @@ export default function ErrorState({
                   'inline-flex items-center gap-1 rounded-md border px-2 py-1 text-xs text-gray-600 hover:bg-gray-50',
                 )}
                 title='Copy error details'
+                data-testid={COMMON_TEST_IDS.ERROR_STATE.COPY_ALL_BUTTON}
               >
                 {copiedAll ? (
                   <>
@@ -219,6 +232,7 @@ export default function ErrorState({
                   className={buttonVariants({
                     className: 'inline-flex items-center gap-2',
                   })}
+                  data-testid={COMMON_TEST_IDS.ERROR_STATE.PRIMARY_ACTION_LINK}
                 >
                   {primaryAction.label}
                   <ExternalLink className='size-4' />
@@ -230,6 +244,9 @@ export default function ErrorState({
                   className={buttonVariants({
                     className: 'inline-flex items-center gap-2',
                   })}
+                  data-testid={
+                    COMMON_TEST_IDS.ERROR_STATE.PRIMARY_ACTION_BUTTON
+                  }
                 >
                   {primaryAction.label}
                 </button>
@@ -240,6 +257,7 @@ export default function ErrorState({
                   className={buttonVariants({
                     className: 'inline-flex items-center gap-2',
                   })}
+                  data-testid={COMMON_TEST_IDS.ERROR_STATE.GO_BACK_BUTTON}
                 >
                   Go back
                 </button>
@@ -251,6 +269,7 @@ export default function ErrorState({
                 type='button'
                 className='flex w-full items-center justify-between px-3 py-2 text-left text-sm text-gray-700'
                 onClick={() => setOpen((v) => !v)}
+                data-testid={COMMON_TEST_IDS.ERROR_STATE.SUMMARY_TOGGLE}
               >
                 <span className='font-medium'>Summary</span>
                 {open ? (
@@ -260,11 +279,15 @@ export default function ErrorState({
                 )}
               </button>
               {open && (
-                <div className='grid grid-cols-1 gap-3 border-t p-3 sm:grid-cols-2'>
+                <div
+                  className='grid grid-cols-1 gap-3 border-t p-3 sm:grid-cols-2'
+                  data-testid={COMMON_TEST_IDS.ERROR_STATE.SUMMARY_CONTAINER}
+                >
                   {Object.entries(summary).map(([k, v]) => (
                     <div
                       key={k}
                       className='rounded-md bg-white p-3 shadow-sm ring-1 ring-gray-100'
+                      data-testid={COMMON_TEST_IDS.ERROR_STATE.SUMMARY_ITEM(k)}
                     >
                       <div className='flex items-center justify-between'>
                         <span className='text-xs font-medium text-gray-500'>
@@ -275,6 +298,9 @@ export default function ErrorState({
                             type='button'
                             title='Copy'
                             className='text-gray-400 hover:text-gray-600'
+                            data-testid={COMMON_TEST_IDS.ERROR_STATE.SUMMARY_ITEM_COPY(
+                              k,
+                            )}
                             onClick={() => {
                               navigator.clipboard.writeText(String(v))
                               toast.success(

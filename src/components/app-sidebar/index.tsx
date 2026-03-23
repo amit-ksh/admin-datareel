@@ -19,6 +19,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { NavUser } from './nav-user'
+import { APP_SIDEBAR_TEST_IDS } from './test-ids'
 import {
   Building2Icon,
   ChevronRightIcon,
@@ -104,6 +105,7 @@ export function AppSidebar({ ...props }) {
       collapsible='icon'
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      data-testid={APP_SIDEBAR_TEST_IDS.CONTAINER}
       {...props}
     >
       <SidebarHeader className='p-0 group-data-[collapsible=icon]:mt-2'>
@@ -118,6 +120,7 @@ export function AppSidebar({ ...props }) {
             width={256}
             height={256}
             className='mx-auto hidden h-16 rounded group-data-[collapsible=icon]:h-auto group-data-[collapsible=icon]:w-[calc(100%-8px)] dark:block'
+            data-testid={APP_SIDEBAR_TEST_IDS.LOGO_DESKTOP}
           />
           <Image
             src={
@@ -129,6 +132,7 @@ export function AppSidebar({ ...props }) {
             width={256}
             height={256}
             className='mx-auto block h-16 rounded group-data-[collapsible=icon]:h-auto group-data-[collapsible=icon]:w-[calc(100%-8px)] dark:hidden'
+            data-testid={APP_SIDEBAR_TEST_IDS.LOGO_MOBILE}
           />
         </div>
       </SidebarHeader>
@@ -143,7 +147,12 @@ export function AppSidebar({ ...props }) {
               if (!item.show) return null
               return (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarGroupLabel className='h-auto font-semibold tracking-[0.01em] uppercase'>
+                  <SidebarGroupLabel
+                    className='h-auto font-semibold tracking-[0.01em] uppercase'
+                    data-testid={APP_SIDEBAR_TEST_IDS.NAV_GROUP_LABEL(
+                      item.title,
+                    )}
+                  >
                     {item.title}
                   </SidebarGroupLabel>
 
@@ -158,6 +167,9 @@ export function AppSidebar({ ...props }) {
                           <SidebarMenuButton
                             isActive={subItem.isActive}
                             className='group'
+                            data-testid={APP_SIDEBAR_TEST_IDS.NAV_ITEM(
+                              subItem.title,
+                            )}
                             asChild
                           >
                             <Link href={subItem.url}>
@@ -191,6 +203,7 @@ export function AppSidebar({ ...props }) {
             <SidebarMenuButton
               isActive={pathname.startsWith('/server-health')}
               className='group'
+              data-testid={APP_SIDEBAR_TEST_IDS.FOOTER_SYSTEM_HEALTH}
               asChild
             >
               <Link href='/server-health' target='_blank'>
@@ -205,7 +218,9 @@ export function AppSidebar({ ...props }) {
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
-        <NavUser user={items.user} />
+        <div data-testid={APP_SIDEBAR_TEST_IDS.NAV_USER}>
+          <NavUser user={items.user} />
+        </div>
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
