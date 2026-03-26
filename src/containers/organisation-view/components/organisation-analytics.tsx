@@ -16,36 +16,20 @@ const approvalStatusData = [
   { status: 'Rejected', value: 0, fill: '#ef4444' },
 ]
 
-const yearlyVideoData = {
-  '2026': [
-    { month: 'Jan', videos: 4000, approval: 2400, seen: 2400 },
-    { month: 'Feb', videos: 3000, approval: 1398, seen: 2210 },
-    { month: 'Mar', videos: 2000, approval: 9800, seen: 2290 },
-    { month: 'Apr', videos: 2780, approval: 3908, seen: 2000 },
-    { month: 'May', videos: 1890, approval: 4800, seen: 2181 },
-    { month: 'Jun', videos: 2390, approval: 3800, seen: 2500 },
-    { month: 'Jul', videos: 3490, approval: 4300, seen: 2100 },
-    { month: 'Aug', videos: 2390, approval: 3800, seen: 2500 },
-    { month: 'Sep', videos: 3490, approval: 4300, seen: 2100 },
-    { month: 'Oct', videos: 2390, approval: 3800, seen: 2500 },
-    { month: 'Nov', videos: 3490, approval: 4300, seen: 2100 },
-    { month: 'Dec', videos: 2390, approval: 3800, seen: 2500 },
-  ],
-  '2025': [
-    { month: 'Jan', videos: 2000, approval: 1400, seen: 1400 },
-    { month: 'Feb', videos: 1000, approval: 398, seen: 1210 },
-    { month: 'Mar', videos: 1000, approval: 4800, seen: 1290 },
-    { month: 'Apr', videos: 1780, approval: 1908, seen: 1000 },
-    { month: 'May', videos: 890, approval: 2800, seen: 1181 },
-    { month: 'Jun', videos: 1390, approval: 1800, seen: 1500 },
-    { month: 'Jul', videos: 2490, approval: 2300, seen: 1100 },
-    { month: 'Aug', videos: 1390, approval: 1800, seen: 1500 },
-    { month: 'Sep', videos: 2490, approval: 2300, seen: 1100 },
-    { month: 'Oct', videos: 1390, approval: 1800, seen: 1500 },
-    { month: 'Nov', videos: 2490, approval: 2300, seen: 1100 },
-    { month: 'Dec', videos: 1390, approval: 1800, seen: 1500 },
-  ],
-}
+const yearlyVideoData = [
+  { month: 'Jan', videos: 4000, approval: 2400, delivered: 2400, seen: 2400 },
+  { month: 'Feb', videos: 3000, approval: 1398, delivered: 1398, seen: 2210 },
+  { month: 'Mar', videos: 2000, approval: 9800, delivered: 9800, seen: 2290 },
+  { month: 'Apr', videos: 2780, approval: 3908, delivered: 3908, seen: 2000 },
+  { month: 'May', videos: 1890, approval: 4800, delivered: 4800, seen: 2181 },
+  { month: 'Jun', videos: 2390, approval: 3800, delivered: 3800, seen: 2500 },
+  { month: 'Jul', videos: 3490, approval: 4300, delivered: 4300, seen: 2100 },
+  { month: 'Aug', videos: 2390, approval: 3800, delivered: 3800, seen: 2500 },
+  { month: 'Sep', videos: 3490, approval: 4300, delivered: 4300, seen: 2100 },
+  { month: 'Oct', videos: 2390, approval: 3800, delivered: 3800, seen: 2500 },
+  { month: 'Nov', videos: 3490, approval: 4300, delivered: 4300, seen: 2100 },
+  { month: 'Dec', videos: 2390, approval: 3800, delivered: 3800, seen: 2500 },
+]
 
 const topActions = [
   { label: 'Schedule Meeting', value: 42, color: 'bg-blue-600' },
@@ -113,6 +97,7 @@ export function OrganisationAnalytics() {
       <div className='grid gap-4'>
         <AnalyticsLineChart
           title='Yearly Video Analytics'
+          year='2026'
           description='Monthly comparison of videos processed, approved, and seen.'
           data={yearlyVideoData}
           config={{
