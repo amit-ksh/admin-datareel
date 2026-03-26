@@ -39,6 +39,11 @@ export interface Organisation {
     cloning_job_id: string | null
     cloning_details: unknown | null
   }
+  persona_onboarding_config?: {
+    require_thumbnail: boolean
+    require_video: boolean
+    require_audio: boolean
+  }
 }
 
 export interface ListOrganisationsParams {
@@ -152,5 +157,20 @@ export const useAccessClientApp = () => {
         window.open(data.redirectUrl, '_blank')
       }
     },
+  })
+}
+
+export const getOrganisationAPI = async (id: string) => {
+  const response = await PrivateAxios.get<Organisation>('organisation/', {
+    params: { id },
+  })
+  return response.data
+}
+
+export const useGetOrganisation = (id: string) => {
+  return useQuery({
+    queryKey: ['organisation', id],
+    queryFn: () => getOrganisationAPI(id),
+    enabled: !!id,
   })
 }

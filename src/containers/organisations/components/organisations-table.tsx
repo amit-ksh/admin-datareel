@@ -16,6 +16,7 @@ import {
   ListOrganisationsParams,
 } from '@/api/organisation'
 import { format } from 'date-fns'
+import { useRouter } from 'next/navigation'
 import ErrorState from '@/components/common/error-state'
 import { AxiosError } from 'axios'
 
@@ -86,6 +87,7 @@ export function OrganisationsTable({
   params,
   updateQueryParams,
 }: OrganisationsTableProps) {
+  const router = useRouter()
   const handleSort = (key: ListOrganisationsParams['sort_by']) => {
     const order =
       params.sort_by === key && params.sort_order === 'desc' ? 'asc' : 'desc'
@@ -143,7 +145,11 @@ export function OrganisationsTable({
               </TableRow>
             ) : (
               data?.docs.map((org, idx) => (
-                <TableRow key={org.id} className='h-20'>
+                <TableRow
+                  key={org.id}
+                  className='hover:bg-muted/50 h-20 cursor-pointer transition-colors'
+                  onClick={() => router.push(`/organisations/${org.id}`)}
+                >
                   <TableCell className='pl-6'>
                     <div className='flex items-center gap-3'>
                       <Avatar className={`h-10 w-10 border-none`}>

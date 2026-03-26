@@ -8,7 +8,35 @@ import { OrganisationFeedback } from './components/organisation-feedback'
 import { OrganisationProjectsAssets } from './components/organisation-projects-assets'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
+import { useOrganisationView } from './use-organisation-view.hook'
+import { Skeleton } from '@/components/ui/skeleton'
+
 export default function OrganisationViewContainer() {
+  const { organisation, isLoading } = useOrganisationView()
+
+  if (isLoading) {
+    return (
+      <div className='flex min-h-screen flex-col space-y-8 p-4'>
+        <div className='flex items-center gap-4'>
+          <Skeleton className='size-16 rounded-lg' />
+          <div className='space-y-2'>
+            <Skeleton className='h-8 w-48' />
+            <Skeleton className='h-4 w-32' />
+          </div>
+        </div>
+        <Skeleton className='h-12 w-full' />
+        <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
+          <Skeleton className='h-64' />
+          <Skeleton className='h-64' />
+        </div>
+      </div>
+    )
+  }
+
+  if (!organisation) {
+    return <div>Organisation not found</div>
+  }
+
   return (
     <div className='flex min-h-screen flex-col'>
       <OrganisationViewHeader />
@@ -17,7 +45,7 @@ export default function OrganisationViewContainer() {
         defaultValue='overview'
         className='relative w-full flex-1 space-y-0'
       >
-        <div className='bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-18 z-10 rounded-lg shadow-sm backdrop-blur'>
+        <div className='bg-background/95 supports-backdrop-filter:bg-background/60 sticky top-18 z-10 rounded-lg shadow-sm backdrop-blur'>
           <TabsList className='bg-muted/50 h-12 w-full justify-start rounded-lg p-1'>
             <TabsTrigger
               value='overview'
@@ -45,7 +73,7 @@ export default function OrganisationViewContainer() {
             </TabsTrigger>
             <TabsTrigger
               value='projects-assets'
-              className='pnpmrounded-md h-full px-6 text-sm'
+              className='h-full rounded-md px-6 text-sm'
             >
               Project & Assets
             </TabsTrigger>
