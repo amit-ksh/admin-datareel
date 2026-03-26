@@ -1,6 +1,6 @@
 {
   "app": {
-    "[project]/datareel-admin/src/app/(protected)/access-organisation/page": [
+    "[project]/datareel/admin-datareel/src/app/(protected)/access-organisation/page": [
       "static/media/043b82ab31bba5a4-s.p.b67c2e04.woff2",
       "static/media/c7d9ca68f9942779-s.p.5f8f1848.woff2",
       "static/media/c875c6f5d3e977ac-s.p.80fc2c9e.woff2",
@@ -11,7 +11,7 @@
       "static/media/829ba4228c966254-s.p.a61bc753.woff2",
       "static/media/4b766aa38fdaaae3-s.p.6d98c708.woff2"
     ],
-    "[project]/datareel-admin/src/app/(protected)/analytics/page": [
+    "[project]/datareel/admin-datareel/src/app/(protected)/analytics/page": [
       "static/media/043b82ab31bba5a4-s.p.b67c2e04.woff2",
       "static/media/c7d9ca68f9942779-s.p.5f8f1848.woff2",
       "static/media/c875c6f5d3e977ac-s.p.80fc2c9e.woff2",
@@ -22,7 +22,7 @@
       "static/media/829ba4228c966254-s.p.a61bc753.woff2",
       "static/media/4b766aa38fdaaae3-s.p.6d98c708.woff2"
     ],
-    "[project]/datareel-admin/src/app/(protected)/email-templates/page": [
+    "[project]/datareel/admin-datareel/src/app/(protected)/email-templates/page": [
       "static/media/043b82ab31bba5a4-s.p.b67c2e04.woff2",
       "static/media/c7d9ca68f9942779-s.p.5f8f1848.woff2",
       "static/media/c875c6f5d3e977ac-s.p.80fc2c9e.woff2",
@@ -33,7 +33,7 @@
       "static/media/829ba4228c966254-s.p.a61bc753.woff2",
       "static/media/4b766aa38fdaaae3-s.p.6d98c708.woff2"
     ],
-    "[project]/datareel-admin/src/app/(protected)/organisations/[organisationId]/page": [
+    "[project]/datareel/admin-datareel/src/app/(protected)/organisations/[organisationId]/page": [
       "static/media/043b82ab31bba5a4-s.p.b67c2e04.woff2",
       "static/media/c7d9ca68f9942779-s.p.5f8f1848.woff2",
       "static/media/c875c6f5d3e977ac-s.p.80fc2c9e.woff2",
@@ -44,7 +44,7 @@
       "static/media/829ba4228c966254-s.p.a61bc753.woff2",
       "static/media/4b766aa38fdaaae3-s.p.6d98c708.woff2"
     ],
-    "[project]/datareel-admin/src/app/(protected)/organisations/page": [
+    "[project]/datareel/admin-datareel/src/app/(protected)/organisations/page": [
       "static/media/043b82ab31bba5a4-s.p.b67c2e04.woff2",
       "static/media/c7d9ca68f9942779-s.p.5f8f1848.woff2",
       "static/media/c875c6f5d3e977ac-s.p.80fc2c9e.woff2",
@@ -55,7 +55,7 @@
       "static/media/829ba4228c966254-s.p.a61bc753.woff2",
       "static/media/4b766aa38fdaaae3-s.p.6d98c708.woff2"
     ],
-    "[project]/datareel-admin/src/app/(public)/login/page": [
+    "[project]/datareel/admin-datareel/src/app/(public)/login/page": [
       "static/media/043b82ab31bba5a4-s.p.b67c2e04.woff2",
       "static/media/c7d9ca68f9942779-s.p.5f8f1848.woff2",
       "static/media/c875c6f5d3e977ac-s.p.80fc2c9e.woff2",
@@ -66,7 +66,7 @@
       "static/media/829ba4228c966254-s.p.a61bc753.woff2",
       "static/media/4b766aa38fdaaae3-s.p.6d98c708.woff2"
     ],
-    "[project]/datareel-admin/src/app/(public)/server-health/page": [
+    "[project]/datareel/admin-datareel/src/app/(public)/server-health/page": [
       "static/media/043b82ab31bba5a4-s.p.b67c2e04.woff2",
       "static/media/c7d9ca68f9942779-s.p.5f8f1848.woff2",
       "static/media/c875c6f5d3e977ac-s.p.80fc2c9e.woff2",
@@ -77,7 +77,7 @@
       "static/media/829ba4228c966254-s.p.a61bc753.woff2",
       "static/media/4b766aa38fdaaae3-s.p.6d98c708.woff2"
     ],
-    "[project]/datareel-admin/src/app/_not-found/page": [
+    "[project]/datareel/admin-datareel/src/app/_not-found/page": [
       "static/media/043b82ab31bba5a4-s.p.b67c2e04.woff2",
       "static/media/c7d9ca68f9942779-s.p.5f8f1848.woff2",
       "static/media/c875c6f5d3e977ac-s.p.80fc2c9e.woff2",
@@ -88,7 +88,7 @@
       "static/media/829ba4228c966254-s.p.a61bc753.woff2",
       "static/media/4b766aa38fdaaae3-s.p.6d98c708.woff2"
     ],
-    "[project]/datareel-admin/src/app/page": [
+    "[project]/datareel/admin-datareel/src/app/page": [
       "static/media/043b82ab31bba5a4-s.p.b67c2e04.woff2",
       "static/media/c7d9ca68f9942779-s.p.5f8f1848.woff2",
       "static/media/c875c6f5d3e977ac-s.p.80fc2c9e.woff2",
