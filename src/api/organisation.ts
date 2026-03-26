@@ -29,6 +29,9 @@ export interface Organisation {
   unlocked_at: string
   created_at: string
   updated_at: string
+  total_tokens: number
+  used_tokens: number
+  infinite_tokens: boolean
   onboarding_status: {
     email_verified: boolean
     email_verified_at: string | null
@@ -44,6 +47,20 @@ export interface Organisation {
     require_video: boolean
     require_audio: boolean
   }
+}
+
+export interface OrgTokenBalance {
+  organisation_id: string
+  total_tokens: number
+  used_tokens: number
+  remaining_tokens: number | null
+  infinite_tokens: boolean
+}
+
+export interface UpdateOrgTokensPayload {
+  total_tokens?: number | null
+  infinite_tokens?: boolean | null
+  reset_used?: boolean
 }
 
 export interface ListOrganisationsParams {
@@ -225,5 +242,45 @@ export const useListOrganisationTenants = (
     queryKey: ['organisation-tenants', params],
     queryFn: () => listOrganisationTenantsAPI(params),
     enabled: !!params.org_id,
+  })
+}
+
+export const getOrgTokenBalanceAPI = async (orgId: string) => {
+  const response = await PrivateAxios.get<OrgTokenBalance>(
+    `dashboard/auth/organisations/${orgId}/tokens`,
+  )
+  return response.data
+}
+
+export const useGetOrgTokenBalance = (orgId: string) => {
+  return useQuery({
+    queryKey: ['organisation-tokens', orgId],
+    queryFn: () => getOrgTokenBalanceAPI(orgId),
+    enabled: !!orgId,
+  })
+}
+
+export const updateOrgTokensAPI = async (
+  orgId: string,
+  payload: UpdateOrgTokensPayload,
+) => {
+  const response = await PrivateAxios.put<OrgTokenBalance>(
+    `dashboard/auth/organisations/${orgId}/tokens`,
+    payload,
+  )
+  return response.data
+}
+
+export const useUpdateOrgTokens = (orgId: string) => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (payload: UpdateOrgTokensPayload) =>
+      updateOrgTokensAPI(orgId, payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['organisation-tokens', orgId],
+      })
+      queryClient.invalidateQueries({ queryKey: ['organisation', orgId] })
+    },
   })
 }

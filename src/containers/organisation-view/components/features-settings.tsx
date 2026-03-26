@@ -19,7 +19,7 @@ export function FeaturesSettings({ isEditing }: FeaturesSettingsProps) {
       <CardHeader className='pb-4'>
         <CardTitle className='flex items-center gap-2 text-lg'>
           <Zap className='h-5 w-5 text-blue-500' />
-          Features
+          Settings
         </CardTitle>
         <CardDescription>
           Manage beta features and specific module access for this organization.
