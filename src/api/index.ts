@@ -16,6 +16,7 @@ export const VideoAxiosWithoutVersion = axios.create({
 
 export const VideoAxios = axios.create({
   baseURL: process.env.NEXT_PUBLIC_VIDEO_API_BASE_URL + API_VERSION.V2,
+  withCredentials: true,
 })
 
 export const PublicAxios = axios.create({

@@ -1,72 +1,59 @@
 'use client'
 
-import { useCallback, useMemo } from 'react'
-import { useRouter, useSearchParams, usePathname } from 'next/navigation'
-import Image from 'next/image'
-import { AxiosError } from 'axios'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import {
   Building2,
   LogIn,
-  ArrowUpDown,
   Search,
   Calendar as CalendarIcon,
-  Video,
-  Eye,
   CheckCircle2,
   XCircle,
+  Loader2,
 } from 'lucide-react'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+
 import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
 import { format } from 'date-fns'
-import {
-  useListOrganisations,
-  Organisation,
-  ListOrganisationsParams,
-} from '@/api/organisation'
-import { useImpersonateLogin } from '@/api/auth'
+import { Organisation } from '@/api/organisation'
 import ErrorState from '@/components/common/error-state'
 import { Badge } from '@/components/ui/badge'
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
+import { useAccessOrganisation } from '../use-access-organisation.hook'
+import { AxiosError } from 'axios'
 
 function OrganisationCard({
   org,
   onLogin,
+  loading,
 }: {
   org: Organisation
   onLogin: (org: Organisation) => void
+  loading?: boolean
 }) {
   return (
     <Card className='border transition-shadow duration-200 hover:shadow-sm'>
       <CardContent className='flex items-center justify-between p-4'>
         <div className='flex items-center gap-4'>
           {/* Icon/Logo */}
-          <div className='bg-muted/60 relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-lg border'>
-            {org.logo ? (
-              <Image
-                src={org.logo}
-                alt={org.name}
-                fill
-                className='object-cover'
-              />
-            ) : (
+          <Avatar className='h-14 w-14 rounded-lg border'>
+            <AvatarImage
+              src={org.organisation_logo || undefined}
+              alt={org.organisation_name}
+              className='object-cover'
+            />
+            <AvatarFallback className='bg-muted/60 rounded-lg'>
               <Building2 className='text-muted-foreground h-7 w-7' />
-            )}
-          </div>
+            </AvatarFallback>
+          </Avatar>
 
           {/* Org Info */}
           <div className='space-y-1'>
             <div className='flex items-center gap-2'>
-              <p className='text-foreground text-sm font-bold'>{org.name}</p>
-              {org.onboarded ? (
+              <p className='text-foreground text-sm font-bold'>
+                {org.organisation_name}
+              </p>
+              {org.unlocked ? (
                 <CheckCircle2 className='h-3.5 w-3.5 text-green-500' />
               ) : (
                 <XCircle className='h-3.5 w-3.5 text-gray-300' />
@@ -77,35 +64,31 @@ function OrganisationCard({
               <div className='flex items-center gap-1.5'>
                 <CalendarIcon className='text-muted-foreground h-3.5 w-3.5' />
                 <span className='text-muted-foreground text-xs'>
-                  Joined {format(new Date(org.joined_at), 'PP')}
-                </span>
-              </div>
-              <div className='flex items-center gap-1.5'>
-                <Video className='text-muted-foreground h-3.5 w-3.5' />
-                <span className='text-muted-foreground text-xs'>
-                  {org.total_videos} Videos
-                </span>
-              </div>
-              <div className='flex items-center gap-1.5'>
-                <Eye className='text-muted-foreground h-3.5 w-3.5' />
-                <span className='text-muted-foreground text-xs'>
-                  {org.views.toLocaleString()} Views
+                  Joined {format(new Date(org.created_at), 'PP')}
                 </span>
               </div>
               <div className='flex items-center gap-1.5'>
                 <Building2 className='text-muted-foreground h-3.5 w-3.5' />
                 <span className='text-muted-foreground text-xs'>
-                  {org.activeTenants ?? 0} Tenants
+                  Tenant: {org.tenant_id.slice(0, 8)}...
                 </span>
               </div>
             </div>
 
-            {org.last_video_creation_date && (
-              <p className='text-muted-foreground text-[10px]'>
-                Last video:{' '}
-                {format(new Date(org.last_video_creation_date), 'PP')}
-              </p>
-            )}
+            <div className='flex gap-2'>
+              <span
+                className={`rounded-full px-1.5 py-0.5 text-[10px] ${org?.onboarding_status?.email_verified ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}`}
+              >
+                {org?.onboarding_status?.email_verified
+                  ? 'Email Verified'
+                  : 'Email Pending'}
+              </span>
+              {org.enable_cdn && (
+                <span className='rounded-full bg-blue-100 px-1.5 py-0.5 text-[10px] text-blue-700'>
+                  CDN Enabled
+                </span>
+              )}
+            </div>
           </div>
         </div>
 
@@ -113,18 +96,28 @@ function OrganisationCard({
         <Button
           variant='outline'
           size='sm'
+          disabled={loading}
           className='h-9 border-blue-200 bg-blue-50 px-4 text-sm font-medium text-blue-600 transition-colors hover:border-blue-300 hover:bg-blue-100 hover:text-blue-700'
           onClick={() => onLogin(org)}
         >
-          Login
-          <LogIn className='ml-2 h-3.5 w-3.5' />
+          {loading ? (
+            <>
+              Accessing...
+              <Loader2 className='ml-2 h-3.5 w-3.5 animate-spin' />
+            </>
+          ) : (
+            <>
+              Login
+              <LogIn className='ml-2 h-3.5 w-3.5' />
+            </>
+          )}
         </Button>
       </CardContent>
     </Card>
   )
 }
 
-function OrganisationSkeleton() {
+export function OrganisationSkeleton() {
   return (
     <div className='flex flex-col gap-3'>
       {[1, 2, 3].map((i) => (
@@ -135,7 +128,6 @@ function OrganisationSkeleton() {
               <div className='space-y-2'>
                 <Skeleton className='h-4 w-32' />
                 <div className='flex gap-4'>
-                  <Skeleton className='h-3 w-20' />
                   <Skeleton className='h-3 w-20' />
                   <Skeleton className='h-3 w-20' />
                 </div>
@@ -149,80 +141,22 @@ function OrganisationSkeleton() {
   )
 }
 
-interface OrganisationListProps {
-  email?: string
-}
+export function OrganisationList() {
+  const {
+    data,
+    isLoading,
+    isAccessPending,
+    isError,
+    error,
+    search,
+    page,
+    handleSearch,
+    handleOrgLogin,
+    updateQueryParams,
+    refetch,
+  } = useAccessOrganisation()
 
-export function OrganisationList({ email }: OrganisationListProps) {
-  const router = useRouter()
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
-
-  const page = Number(searchParams.get('page')) || 1
-  const page_limit = Number(searchParams.get('page_limit')) || 10
-  const search = searchParams.get('search') || ''
-  const onboarded =
-    searchParams.get('onboarded') === 'true'
-      ? true
-      : searchParams.get('onboarded') === 'false'
-        ? false
-        : undefined
-  const sort_by = (searchParams.get('sort_by') ||
-    'joined_at') as ListOrganisationsParams['sort_by']
-  const sort_order = (searchParams.get('sort_order') ||
-    'desc') as ListOrganisationsParams['sort_order']
-
-  const params: ListOrganisationsParams = useMemo(
-    () => ({
-      page,
-      page_limit,
-      search: email || search || undefined,
-      onboarded,
-      sort_by,
-      sort_order,
-    }),
-    [page, page_limit, search, email, onboarded, sort_by, sort_order],
-  )
-
-  const { data, isLoading, isError, error, refetch } =
-    useListOrganisations(params)
-
-  const { mutate: impersonateLogin, isPending: isLoggingIn } =
-    useImpersonateLogin()
-
-  const handleOrgLogin = (org: Organisation) => {
-    if (email) {
-      impersonateLogin({ org_id: org.id, email })
-    }
-  }
-
-  const updateQueryParams = useCallback(
-    (updates: Record<string, string | null>) => {
-      const newParams = new URLSearchParams(searchParams.toString())
-      Object.entries(updates).forEach(([key, value]) => {
-        if (value === null) {
-          newParams.delete(key)
-        } else {
-          newParams.set(key, value)
-        }
-      })
-      router.push(`${pathname}?${newParams.toString()}`)
-    },
-    [pathname, router, searchParams],
-  )
-
-  const handleSearch = (val: string) => {
-    updateQueryParams({ search: val || null, page: '1' })
-  }
-
-  const handleSort = (key: string) => {
-    const order = sort_by === key && sort_order === 'desc' ? 'asc' : 'desc'
-    updateQueryParams({ sort_by: key, sort_order: order, page: '1' })
-  }
-
-  const handleOnboardedFilter = (val: string) => {
-    updateQueryParams({ onboarded: val === 'all' ? null : val, page: '1' })
-  }
+  const totalPages = data ? Math.ceil(data.meta.total / data.meta.limit) : 0
 
   return (
     <div className='space-y-6'>
@@ -252,44 +186,6 @@ export function OrganisationList({ email }: OrganisationListProps) {
               onChange={(e) => handleSearch(e.target.value)}
             />
           </div>
-
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant='outline'
-                size='sm'
-                className='bg-background hover:bg-muted/50 h-9 px-4 text-sm font-medium'
-              >
-                <ArrowUpDown className='h-3.5 w-3.5' />
-                Sort By:{' '}
-                <span className='capitalize'>
-                  {(sort_by || '').replace('_', ' ')}
-                </span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align='end' className='w-48'>
-              <DropdownMenuLabel>Sort by</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => handleSort('joined_at')}>
-                Joined At{' '}
-                {sort_by === 'joined_at' && (sort_order === 'desc' ? '↓' : '↑')}
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleSort('feedback_score')}>
-                Feedback Score{' '}
-                {sort_by === 'feedback_score' &&
-                  (sort_order === 'desc' ? '↓' : '↑')}
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleSort('videos')}>
-                Total Videos{' '}
-                {sort_by === 'videos' && (sort_order === 'desc' ? '↓' : '↑')}
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleSort('last_video')}>
-                Last Video{' '}
-                {sort_by === 'last_video' &&
-                  (sort_order === 'desc' ? '↓' : '↑')}
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
         </div>
       </div>
 
@@ -298,32 +194,30 @@ export function OrganisationList({ email }: OrganisationListProps) {
         <OrganisationSkeleton />
       ) : isError ? (
         <ErrorState error={error as AxiosError} onRetry={() => refetch()} />
-      ) : data?.data.length === 0 ? (
+      ) : !data?.docs || data?.docs.length === 0 ? (
         <div className='bg-muted/20 flex flex-col items-center justify-center rounded-xl border border-dashed py-12'>
           <Building2 className='text-muted-foreground/40 mb-3 h-12 w-12' />
           <p className='text-muted-foreground text-sm font-medium'>
             No organisations found
           </p>
-          <Button
-            variant='link'
-            onClick={() => router.push(pathname)}
-            className='mt-1'
-          >
-            Clear all filters
-          </Button>
         </div>
       ) : (
         <div className='flex flex-col gap-3'>
-          {data?.data.map((org) => (
-            <OrganisationCard key={org.id} org={org} onLogin={handleOrgLogin} />
+          {data?.docs.map((org) => (
+            <OrganisationCard
+              key={org.id}
+              org={org}
+              onLogin={handleOrgLogin}
+              loading={isAccessPending}
+            />
           ))}
 
-          {/* Pagination could go here */}
-          {data && data.meta.last_page > 1 && (
+          {/* Pagination Footer */}
+          {data && totalPages > 1 && (
             <div className='mt-4 flex items-center justify-between py-2'>
               <p className='text-muted-foreground text-xs'>
-                Showing {(page - 1) * page_limit + 1} to{' '}
-                {Math.min(page * page_limit, data.meta.total)} of{' '}
+                Showing {(page - 1) * data.meta.limit + 1} to{' '}
+                {Math.min(page * data.meta.limit, data.meta.total)} of{' '}
                 {data.meta.total}
               </p>
               <div className='flex items-center gap-2'>
@@ -340,7 +234,7 @@ export function OrganisationList({ email }: OrganisationListProps) {
                 <Button
                   variant='outline'
                   size='sm'
-                  disabled={page >= data.meta.last_page}
+                  disabled={page >= totalPages}
                   onClick={() =>
                     updateQueryParams({ page: (page + 1).toString() })
                   }

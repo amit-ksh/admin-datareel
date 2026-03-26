@@ -113,8 +113,6 @@ describe('AppSidebar Component', () => {
   it('AppSidebar_OnHoverWhenCollapsed_CallsSetOpen', () => {
     // Arrange - Reset mock state
     vi.mocked(mockSetOpen).mockClear()
-    // Need to temporarily override mock for this test only if we want to change `state` to 'collapsed',
-    // Alternatively, we test behavior when expanded
 
     // Act
     render(<AppSidebar />)

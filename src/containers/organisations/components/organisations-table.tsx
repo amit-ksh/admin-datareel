@@ -7,7 +7,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Star, ArrowUpDown, Building2 } from 'lucide-react'
+import { ArrowUpDown, Building2 } from 'lucide-react'
 import { TablePagination } from '@/components/ui/table-pagination'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -96,6 +96,8 @@ export function OrganisationsTable({
     updateQueryParams({ page })
   }
 
+  const totalPages = data ? Math.ceil(data.meta.total / data.meta.limit) : 0
+
   return (
     <Card className='bg-card w-full overflow-hidden rounded-lg border p-0 shadow-none'>
       <CardContent className='p-0'>
@@ -112,26 +114,11 @@ export function OrganisationsTable({
                   <ArrowUpDown className='h-3.5 w-3.5' />
                 </div>
               </TableHead>
-              <TableHead>
-                <div
-                  className='hover:text-foreground flex cursor-pointer items-center gap-2 select-none'
-                  onClick={() => handleSort('videos')}
-                >
-                  Videos
-                  <ArrowUpDown className='h-3.5 w-3.5' />
-                </div>
-              </TableHead>
-              <TableHead>Views</TableHead>
-              <TableHead>Last Video</TableHead>
-              <TableHead>
-                <div
-                  className='hover:text-foreground flex cursor-pointer items-center gap-2 select-none'
-                  onClick={() => handleSort('feedback_score')}
-                >
-                  Feedback
-                  <ArrowUpDown className='h-3.5 w-3.5' />
-                </div>
-              </TableHead>
+              <TableHead>Tenant ID</TableHead>
+              <TableHead>CDN</TableHead>
+              <TableHead>HLS</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Unlocked</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -139,13 +126,13 @@ export function OrganisationsTable({
               <OrganisationSkeleton />
             ) : isError ? (
               <TableRow>
-                <TableCell colSpan={6} className='p-0'>
+                <TableCell colSpan={7} className='p-0'>
                   <ErrorState error={error as AxiosError} onRetry={refetch} />
                 </TableCell>
               </TableRow>
-            ) : data?.data.length === 0 ? (
+            ) : !data?.docs || data?.docs.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className='h-40 text-center'>
+                <TableCell colSpan={7} className='h-40 text-center'>
                   <div className='flex flex-col items-center justify-center gap-2'>
                     <Building2 className='text-muted-foreground/40 h-8 w-8' />
                     <p className='text-muted-foreground text-sm font-medium'>
@@ -155,21 +142,24 @@ export function OrganisationsTable({
                 </TableCell>
               </TableRow>
             ) : (
-              data?.data.map((org, idx) => (
+              data?.docs.map((org, idx) => (
                 <TableRow key={org.id} className='h-20'>
                   <TableCell className='pl-6'>
                     <div className='flex items-center gap-3'>
                       <Avatar className={`h-10 w-10 border-none`}>
-                        <AvatarImage src={org.logo} alt={org.name} />
+                        <AvatarImage
+                          src={org.organisation_logo || undefined}
+                          alt={org.organisation_name}
+                        />
                         <AvatarFallback
                           className={`${AVATAR_COLORS[idx % AVATAR_COLORS.length]} text-sm font-semibold`}
                         >
-                          {org.name.substring(0, 1)}
+                          {org.organisation_name.substring(0, 1)}
                         </AvatarFallback>
                       </Avatar>
                       <div className='flex flex-col'>
                         <div className='text-foreground flex items-center text-sm font-bold'>
-                          {org.name}
+                          {org.organisation_name}
                         </div>
                         <span className='text-muted-foreground mt-0.5 text-xs'>
                           ID: {org.id.slice(0, 8)}...
@@ -178,27 +168,30 @@ export function OrganisationsTable({
                     </div>
                   </TableCell>
                   <TableCell className='text-foreground text-sm font-medium'>
-                    {format(new Date(org.joined_at), 'dd MMM yyyy')}
-                  </TableCell>
-                  <TableCell className='text-foreground text-sm font-bold'>
-                    {org.total_videos.toLocaleString()}
-                  </TableCell>
-                  <TableCell className='text-foreground text-sm font-bold'>
-                    {org.views.toLocaleString()}
+                    {format(new Date(org.created_at), 'dd MMM yyyy')}
                   </TableCell>
                   <TableCell className='text-foreground text-sm font-medium'>
-                    {org.last_video_creation_date
-                      ? format(
-                          new Date(org.last_video_creation_date),
-                          'dd MMM yyyy',
-                        )
-                      : 'N/A'}
+                    {org.tenant_id.slice(0, 8)}...
                   </TableCell>
-                  <TableCell className='text-foreground text-sm font-bold'>
-                    <div className='flex items-center gap-1.5'>
-                      {org.avg_feedback.toFixed(1)}
-                      <Star className='h-4 w-4 border-none fill-yellow-400 text-yellow-400' />
+                  <TableCell className='text-foreground text-sm font-medium'>
+                    {org.enable_cdn ? 'Yes' : 'No'}
+                  </TableCell>
+                  <TableCell className='text-foreground text-sm font-medium'>
+                    {org.enable_hls ? 'Yes' : 'No'}
+                  </TableCell>
+                  <TableCell className='text-foreground text-sm font-medium'>
+                    <div className='flex flex-col gap-1'>
+                      <span
+                        className={`w-fit rounded-full px-1.5 py-0.5 text-[10px] ${org?.onboarding_status?.email_verified ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}`}
+                      >
+                        {org?.onboarding_status?.email_verified
+                          ? 'Email Verified'
+                          : 'Email Pending'}
+                      </span>
                     </div>
+                  </TableCell>
+                  <TableCell className='text-foreground text-sm font-medium'>
+                    {org.unlocked ? 'Yes' : 'No'}
                   </TableCell>
                 </TableRow>
               ))
@@ -207,12 +200,12 @@ export function OrganisationsTable({
         </Table>
 
         {/* Pagination Footer */}
-        {data && data.meta.last_page > 1 && (
+        {data && totalPages > 1 && (
           <TablePagination
             currentPage={data.meta.page}
-            totalPages={data.meta.last_page}
+            totalPages={totalPages}
             totalItems={data.meta.total}
-            pageSize={data.meta.page_limit}
+            pageSize={data.meta.limit}
             entityName='organisations'
             onPageChange={handlePageChange}
             className='border-t'

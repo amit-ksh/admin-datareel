@@ -1,10 +1,14 @@
 'use client'
 
-import { useState } from 'react'
+import { Suspense } from 'react'
 import { Separator } from '@/components/ui/separator'
 import { EmailSearchCard } from './components/email-search-card'
 import { UserDetailsCard } from './components/user-details-card'
-import { OrganisationList } from './components/organisation-list'
+import {
+  OrganisationList,
+  OrganisationSkeleton,
+} from './components/organisation-list'
+import { useAccessOrganisation } from './use-access-organisation.hook'
 
 interface UserDetails {
   name: string
@@ -23,14 +27,8 @@ const dummyUser: UserDetails = {
 }
 
 export default function AccessOrganisationContainer() {
-  const [email, setEmail] = useState('')
-  const [searchEmail, setSearchEmail] = useState('')
-
-  const handleFetch = () => {
-    if (email.trim()) {
-      setSearchEmail(email.trim())
-    }
-  }
+  const { email, setEmail, searchEmail, isLoading, handleFetch } =
+    useAccessOrganisation()
 
   return (
     <div className='min-h-screen'>
@@ -52,8 +50,9 @@ export default function AccessOrganisationContainer() {
             email={email}
             onEmailChange={setEmail}
             onFetch={handleFetch}
+            loading={isLoading}
           />
-          {searchEmail && (
+          {searchEmail && !isLoading && (
             <UserDetailsCard user={{ ...dummyUser, email: searchEmail }} />
           )}
         </div>
@@ -61,7 +60,9 @@ export default function AccessOrganisationContainer() {
         <Separator className='mb-8' />
 
         {/* Organisations Section */}
-        <OrganisationList email={searchEmail} />
+        <Suspense fallback={<OrganisationSkeleton />}>
+          <OrganisationList />
+        </Suspense>
       </div>
     </div>
   )

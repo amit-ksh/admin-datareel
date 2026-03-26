@@ -1,7 +1,6 @@
 'use client'
 
 import { Line, LineChart, CartesianGrid, XAxis, YAxis } from 'recharts'
-import { useState } from 'react'
 
 import {
   Card,
@@ -27,10 +26,28 @@ import {
 interface AnalyticsLineChartProps {
   title: string
   description?: string
-  data: Record<string, unknown[]>
+  data: Record<
+    string,
+    {
+      month: string
+      videos: number
+      approval: number
+      delivered: number
+      seen: number
+    }[]
+  >
   config: ChartConfig
   lines: { key: string }[]
+  year: string
+  onYearChange?: (year: string) => void
 }
+
+const currentYearNum = new Date().getFullYear()
+const startYear = 2023
+const selectableYears = Array.from(
+  { length: currentYearNum - startYear + 1 },
+  (_, i) => (currentYearNum - i).toString(),
+)
 
 export function AnalyticsLineChart({
   title,
@@ -38,12 +55,10 @@ export function AnalyticsLineChart({
   data,
   config,
   lines,
+  year,
+  onYearChange = () => {},
 }: AnalyticsLineChartProps) {
-  const years = Object.keys(data).sort((a, b) => Number(b) - Number(a))
-  const [selectedYear, setSelectedYear] = useState(years[0] || '')
-
-  const chartData = selectedYear ? data[selectedYear] : []
-
+  const chartData = Array.isArray(data) ? data : []
   return (
     <Card>
       <CardHeader className='flex flex-col justify-between space-y-4 pb-2 md:flex-row md:items-center md:space-y-0'>
@@ -71,13 +86,13 @@ export function AnalyticsLineChart({
             })}
           </div>
 
-          {years.length > 0 && (
-            <Select value={selectedYear} onValueChange={setSelectedYear}>
+          {selectableYears.length > 0 && (
+            <Select value={year} onValueChange={onYearChange}>
               <SelectTrigger className='w-full sm:w-[120px]'>
                 <SelectValue placeholder='Select Year' />
               </SelectTrigger>
               <SelectContent>
-                {years.map((year) => (
+                {selectableYears.map((year) => (
                   <SelectItem key={year} value={year}>
                     {year}
                   </SelectItem>

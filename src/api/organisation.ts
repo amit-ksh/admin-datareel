@@ -1,5 +1,10 @@
 import { PrivateAxios } from '@/api'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  useInfiniteQuery,
+} from '@tanstack/react-query'
 import { z } from 'zod'
 
 export const createOrganisationSchema = z.object({
@@ -13,19 +18,31 @@ export type CreateOrganisationPayload = z.infer<typeof createOrganisationSchema>
 
 export interface Organisation {
   id: string
-  name: string
-  logo?: string
-  joined_at: string
-  onboarded: boolean
-  total_videos: number
-  views: number
-  last_video_creation_date: string | null
-  avg_feedback: number
-  video_views_counts: number
-  activeTenants?: number
+  organisation_name: string
+  organisation_logo: string | null
+  tenant_id: string
+  enable_cdn: boolean
+  enable_hls: boolean
+  enable_content_ai: boolean
+  enable_avatar_ai: boolean
+  unlocked: boolean
+  unlocked_at: string
+  created_at: string
+  updated_at: string
+  onboarding_status: {
+    email_verified: boolean
+    email_verified_at: string | null
+    information_extracted: boolean
+    information_extracted_at: string | null
+    assets_cloned: boolean
+    assets_cloned_at: string | null
+    cloning_job_id: string | null
+    cloning_details: unknown | null
+  }
 }
 
 export interface ListOrganisationsParams {
+  email?: string
   page?: number
   page_limit?: number
   search?: string
@@ -38,18 +55,17 @@ export interface ListOrganisationsParams {
 }
 
 export interface ListOrganisationsResponse {
-  data: Organisation[]
+  docs: Organisation[]
   meta: {
     total: number
     page: number
-    page_limit: number
-    last_page: number
+    limit: number
   }
 }
 
 export const listOrganisationsAPI = async (params: ListOrganisationsParams) => {
   const response = await PrivateAxios.get<ListOrganisationsResponse>(
-    'admin/organisations',
+    'dashboard/auth/organisations',
     { params },
   )
   return response.data
@@ -59,6 +75,21 @@ export const useListOrganisations = (params: ListOrganisationsParams) => {
   return useQuery({
     queryKey: ['organisations', params],
     queryFn: () => listOrganisationsAPI(params),
+  })
+}
+
+export const useInfiniteListOrganisations = (
+  params: Omit<ListOrganisationsParams, 'page'>,
+) => {
+  return useInfiniteQuery({
+    queryKey: ['organisations-infinite', params],
+    queryFn: ({ pageParam = 1 }) =>
+      listOrganisationsAPI({ ...params, page: pageParam }),
+    getNextPageParam: (lastPage: ListOrganisationsResponse) => {
+      const { page, total, limit } = lastPage.meta
+      return page * limit < total ? page + 1 : undefined
+    },
+    initialPageParam: 1,
   })
 }
 
@@ -78,6 +109,35 @@ export const useCreateOrganisation = () => {
     mutationFn: createOrganisationAPI,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['organisations'] })
+    },
+  })
+}
+
+export interface AccessClientAppPayload {
+  email: string
+  organisationId: string
+}
+
+export interface AccessClientAppResponse {
+  message: string
+  redirectUrl: string
+}
+
+export const accessClientAppAPI = async (payload: AccessClientAppPayload) => {
+  const response = await PrivateAxios.post<AccessClientAppResponse>(
+    'dashboard/auth/access-client-app',
+    payload,
+  )
+  return response.data
+}
+
+export const useAccessClientApp = () => {
+  return useMutation({
+    mutationFn: accessClientAppAPI,
+    onSuccess: (data) => {
+      if (data?.redirectUrl) {
+        window.open(data.redirectUrl, '_blank')
+      }
     },
   })
 }

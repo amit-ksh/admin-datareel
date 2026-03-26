@@ -10,6 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { ExternalLink } from 'lucide-react'
 import { TablePagination } from '@/components/ui/table-pagination'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
 
 interface Organization {
   id: string
@@ -23,43 +24,29 @@ interface Organization {
   externalLink?: string
 }
 
-const dummyData: Organization[] = [
-  {
-    id: '#1234',
-    name: 'Acme org',
-    joinDate: '1 Jan 2026',
-    usage: '12K',
-    videos: '5K',
-    approvalRate: '95%',
-    viewerSatisfaction: '4.5/5',
-    logoUrl: '',
-    externalLink: '#',
-  },
-  {
-    id: '#1235',
-    name: 'Datareel',
-    joinDate: '1 Feb 2026',
-    usage: '2K',
-    videos: '1.2K',
-    approvalRate: '85%',
-    viewerSatisfaction: '4.75/5',
-    logoUrl: '',
-    externalLink: '#',
-  },
-  {
-    id: '#1236',
-    name: 'Stark Industries',
-    joinDate: '1 Mar 2026',
-    usage: '10K',
-    videos: '3K',
-    approvalRate: '90%',
-    viewerSatisfaction: '4/5',
-    logoUrl: '',
-    externalLink: '#',
-  },
-]
+interface TopOrganizationsTableProps {
+  data?: Organization[]
+  isLoading?: boolean
+}
 
-export function TopOrganizationsTable() {
+export function TopOrganizationsTable({
+  data = [],
+  isLoading,
+}: TopOrganizationsTableProps) {
+  if (isLoading) {
+    return (
+      <Card className='bg-card w-full gap-0 overflow-hidden rounded-lg border p-0 shadow-none'>
+        <CardHeader className='px-6 py-4'>
+          <CardTitle className='text-base font-bold'>
+            Top Organisation
+          </CardTitle>
+        </CardHeader>
+        <CardContent className='flex items-center justify-center p-8'>
+          <Skeleton className='h-[400px] w-full' />
+        </CardContent>
+      </Card>
+    )
+  }
   return (
     <Card className='bg-card w-full gap-0 overflow-hidden rounded-lg border p-0 shadow-none'>
       <CardHeader className='px-6 py-4'>
@@ -71,14 +58,13 @@ export function TopOrganizationsTable() {
             <TableRow>
               <TableHead className='w-[300px] pl-6'>Organisation</TableHead>
               <TableHead>Join at</TableHead>
-              <TableHead>Usage</TableHead>
               <TableHead>Videos</TableHead>
               <TableHead>Approval Rate</TableHead>
               <TableHead>Viewer Satisfaction</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {dummyData.map((org) => (
+            {data.map((org) => (
               <TableRow key={org.id} className='h-20'>
                 <TableCell className='pl-6'>
                   <div className='flex items-center gap-3'>
@@ -110,9 +96,6 @@ export function TopOrganizationsTable() {
                 </TableCell>
                 <TableCell className='text-foreground text-sm font-medium'>
                   {org.joinDate}
-                </TableCell>
-                <TableCell className='text-foreground text-sm font-medium'>
-                  {org.usage}
                 </TableCell>
                 <TableCell className='text-foreground text-sm font-bold'>
                   {org.videos}
