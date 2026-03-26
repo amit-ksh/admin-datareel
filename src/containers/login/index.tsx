@@ -1,6 +1,5 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
 import images from './images'
 import { Billboard, Banner } from './components'
 import { View } from '@/webgl/View'
@@ -69,25 +68,9 @@ const COUNT = 10
 const GAP = 3.2
 
 export default function LoginContainer() {
-  const router = useRouter()
   const { texture, dimensions, isLoading } = useCollageTexture(images)
 
-  const { loginMutation } = useLogin()
-  const { mutateAsync: loginMutate, isPending: isLoginPending } = loginMutation
-
-  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    const formData = new FormData(e.currentTarget)
-    const email = formData.get('email') as string
-    const password = formData.get('password') as string
-
-    try {
-      await loginMutate({ email, password })
-      router.push('/analytics')
-    } catch (error) {
-      console.error(error)
-    }
-  }
+  const { handleLogin, isLoginPending } = useLogin()
 
   if (isLoading || !texture || !dimensions) return null
 
@@ -111,7 +94,7 @@ export default function LoginContainer() {
             className='hidden h-16 dark:block'
           />
         </div>
-        <div className='mx-auto mt-12 w-full max-w-[400px] space-y-8'>
+        <div className='mx-auto mt-12 w-full max-w-100 space-y-8'>
           <div className='space-y-2 text-center lg:text-left'>
             <h1 className='text-3xl font-bold tracking-tight'>Welcome Back</h1>
             <p className='text-muted-foreground'>

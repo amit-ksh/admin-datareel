@@ -1,6 +1,5 @@
 import { PrivateAxios, PublicAxios } from '@/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { AxiosError, InternalAxiosRequestConfig } from 'axios'
 import { z } from 'zod'
 
 export const loginSchema = z.object({
@@ -17,7 +16,7 @@ export interface AuthResponse {
 
 export const loginAPI = async (credentials: LoginCredentials) => {
   const response = await PublicAxios.post<AuthResponse>(
-    'admin/login',
+    'dashboard/auth/login',
     credentials,
     {
       headers: {
@@ -97,35 +96,4 @@ export const useImpersonateLogin = () => {
       queryClient.invalidateQueries()
     },
   })
-}
-
-const refreshTokenAPI = async () => {
-  return PublicAxios.post('auth/tenant/refresh', undefined, {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-}
-
-export const refreshToken = async (error: AxiosError) => {
-  const originalRequest = error.config as InternalAxiosRequestConfig & {
-    _retry?: boolean
-  }
-  if (
-    error.response &&
-    error.response.status === 401 &&
-    !originalRequest?._retry
-  ) {
-    originalRequest._retry = true
-    try {
-      const response = await refreshTokenAPI()
-      console.log('Interceptors', response)
-
-      return PrivateAxios(originalRequest)
-    } catch (refreshError) {
-      console.log(refreshError)
-      return Promise.reject(refreshError)
-    }
-  }
-  return Promise.reject(error)
 }
