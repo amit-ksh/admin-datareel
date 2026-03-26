@@ -80,21 +80,14 @@ export default function AnalyticsContainer() {
     },
   ]
 
-  const currentYear = new Date().getFullYear().toString()
-  const yearlyVideoData: Record<string, MonthlyVideoCount[]> = {}
-  if (yearlyData?.year && yearlyData?.months) {
-    yearlyVideoData[String(yearlyData.year)] = yearlyData.months.map(
-      (m: MonthlyVideoCountApi) => ({
-        month: m.month_label,
-        videos: m.total_videos || 0,
-        approval: m.approved_videos || 0,
-        delivered: m.delivered_videos || 0,
-        seen: m.seen_videos || 0,
-      }),
-    )
-  } else {
-    yearlyVideoData[currentYear] = []
-  }
+  const yearlyVideoData: MonthlyVideoCount[] =
+    yearlyData?.months.map((m: MonthlyVideoCountApi) => ({
+      month: m.month_label,
+      videos: m.total_videos || 0,
+      approval: m.approved_videos || 0,
+      delivered: m.delivered_videos || 0,
+      seen: m.seen_videos || 0,
+    })) || []
 
   const topActionsKeys = Object.entries(summaryData?.callbacks_total || {})
   const topActions = topActionsKeys.map(([key, value]) => ({
@@ -240,9 +233,15 @@ export default function AnalyticsContainer() {
           config={{
             videos: { label: 'Videos', color: '#3b82f6' },
             approval: { label: 'Approval', color: '#22c55e' },
+            delivered: { label: 'Delivered', color: '#f59e0b' },
             seen: { label: 'Seen', color: '#eab308' },
           }}
-          lines={[{ key: 'videos' }, { key: 'approval' }, { key: 'seen' }]}
+          lines={[
+            { key: 'videos' },
+            { key: 'approval' },
+            { key: 'delivered' },
+            { key: 'seen' },
+          ]}
           year={year.toString()}
           onYearChange={(y) => setYear(parseInt(y))}
         />

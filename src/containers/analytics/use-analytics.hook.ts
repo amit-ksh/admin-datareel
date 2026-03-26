@@ -84,7 +84,7 @@ export const useAnalytics = () => {
     queryFn: () =>
       listOrganisationsAPI({
         page: 1,
-        page_limit: 100,
+        page_limit: 10,
         sort_by: 'videos',
         sort_order: 'desc',
       }),

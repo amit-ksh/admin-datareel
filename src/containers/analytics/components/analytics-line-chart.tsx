@@ -26,16 +26,13 @@ import {
 interface AnalyticsLineChartProps {
   title: string
   description?: string
-  data: Record<
-    string,
-    {
-      month: string
-      videos: number
-      approval: number
-      delivered: number
-      seen: number
-    }[]
-  >
+  data: {
+    month: string
+    videos: number
+    approval: number
+    delivered: number
+    seen: number
+  }[]
   config: ChartConfig
   lines: { key: string }[]
   year: string
