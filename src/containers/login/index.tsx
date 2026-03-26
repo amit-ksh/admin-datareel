@@ -1,6 +1,5 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
 import images from './images'
 import { Billboard, Banner } from './components'
 import { View } from '@/webgl/View'
@@ -9,6 +8,7 @@ import { useCollageTexture } from '@/hooks/use-collage-texture'
 import dynamic from 'next/dynamic'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import { useLogin } from './use-login.hook'
 import { Label } from '@/components/ui/label'
 import { Layers } from 'lucide-react'
 import Image from 'next/image'
@@ -68,14 +68,9 @@ const COUNT = 10
 const GAP = 3.2
 
 export default function LoginContainer() {
-  const router = useRouter()
   const { texture, dimensions, isLoading } = useCollageTexture(images)
 
-  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    router.push('/analytics')
-    console.log('Login')
-  }
+  const { handleLogin, isLoginPending } = useLogin()
 
   if (isLoading || !texture || !dimensions) return null
 
@@ -99,7 +94,7 @@ export default function LoginContainer() {
             className='hidden h-16 dark:block'
           />
         </div>
-        <div className='mx-auto mt-12 w-full max-w-[400px] space-y-8'>
+        <div className='mx-auto mt-12 w-full max-w-100 space-y-8'>
           <div className='space-y-2 text-center lg:text-left'>
             <h1 className='text-3xl font-bold tracking-tight'>Welcome Back</h1>
             <p className='text-muted-foreground'>
@@ -112,6 +107,7 @@ export default function LoginContainer() {
               <Label htmlFor='email'>Email</Label>
               <Input
                 id='email'
+                name='email'
                 type='email'
                 placeholder='m@example.com'
                 required
@@ -123,14 +119,15 @@ export default function LoginContainer() {
               </div>
               <Input
                 id='password'
+                name='password'
                 type='password'
                 placeholder='••••••••'
                 required
               />
             </div>
 
-            <Button type='submit' className='w-full'>
-              Login
+            <Button type='submit' className='w-full' disabled={isLoginPending}>
+              {isLoginPending ? 'Logging in...' : 'Login'}
             </Button>
           </form>
         </div>

@@ -1,10 +1,14 @@
 'use client'
 
-import { useState } from 'react'
+import { Suspense } from 'react'
 import { Separator } from '@/components/ui/separator'
 import { EmailSearchCard } from './components/email-search-card'
 import { UserDetailsCard } from './components/user-details-card'
-import { OrganisationList } from './components/organisation-list'
+import {
+  OrganisationList,
+  OrganisationSkeleton,
+} from './components/organisation-list'
+import { useAccessOrganisation } from './use-access-organisation.hook'
 
 interface UserDetails {
   name: string
@@ -12,12 +16,6 @@ interface UserDetails {
   role: string
   lastLogin: string
   status: 'active' | 'inactive'
-}
-
-interface Organisation {
-  id: string
-  name: string
-  activeTenants: number
 }
 
 const dummyUser: UserDetails = {
@@ -28,24 +26,9 @@ const dummyUser: UserDetails = {
   status: 'active',
 }
 
-const dummyOrganisations: Organisation[] = [
-  { id: '1', name: 'Acme Global Corporation', activeTenants: 5 },
-  { id: '2', name: 'Starlight Industries Ltd', activeTenants: 12 },
-]
-
 export default function AccessOrganisationContainer() {
-  const [email, setEmail] = useState('')
-  const [fetched, setFetched] = useState(true) // default true to show the dummy state
-
-  const handleFetch = () => {
-    if (email.trim()) {
-      setFetched(true)
-    }
-  }
-
-  const handleLogin = (org: Organisation) => {
-    console.log('Logging into:', org)
-  }
+  const { email, setEmail, searchEmail, isLoading, handleFetch } =
+    useAccessOrganisation()
 
   return (
     <div className='min-h-screen'>
@@ -67,19 +50,19 @@ export default function AccessOrganisationContainer() {
             email={email}
             onEmailChange={setEmail}
             onFetch={handleFetch}
+            loading={isLoading}
           />
-          {fetched && <UserDetailsCard user={dummyUser} />}
+          {searchEmail && !isLoading && (
+            <UserDetailsCard user={{ ...dummyUser, email: searchEmail }} />
+          )}
         </div>
 
         <Separator className='mb-8' />
 
         {/* Organisations Section */}
-        {fetched && (
-          <OrganisationList
-            organisations={dummyOrganisations}
-            onLogin={handleLogin}
-          />
-        )}
+        <Suspense fallback={<OrganisationSkeleton />}>
+          <OrganisationList />
+        </Suspense>
       </div>
     </div>
   )

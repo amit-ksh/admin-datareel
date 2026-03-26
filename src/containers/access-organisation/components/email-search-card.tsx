@@ -10,12 +10,14 @@ interface EmailSearchCardProps {
   email: string
   onEmailChange: (value: string) => void
   onFetch: () => void
+  loading?: boolean
 }
 
 export function EmailSearchCard({
   email,
   onEmailChange,
   onFetch,
+  loading,
 }: EmailSearchCardProps) {
   return (
     <Card className='border'>
@@ -34,6 +36,7 @@ export function EmailSearchCard({
               type='email'
               placeholder='name@company.com'
               className='pl-9'
+              disabled={loading}
               value={email}
               onChange={(e) => onEmailChange(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && onFetch()}
@@ -43,9 +46,10 @@ export function EmailSearchCard({
         <Button
           className='w-full bg-blue-600 font-medium text-white hover:bg-blue-700'
           onClick={onFetch}
+          disabled={loading || !email.trim()}
         >
           <Search className='mr-2 h-4 w-4' />
-          Fetch Organisations
+          {loading ? 'Fetching...' : 'Fetch Organisations'}
         </Button>
       </CardContent>
     </Card>

@@ -15,6 +15,7 @@ export interface MetricsOverviewProps {
   }
   metrics: {
     totalVideos: MetricValue
+    completed: MetricValue
     approved: MetricValue
     delivered: MetricValue
     seen: MetricValue
@@ -86,35 +87,38 @@ export function MetricsOverview({
         </div>
       )}
 
-      <div className='flex flex-1 flex-col items-center gap-6 p-4 md:p-6 lg:flex-row lg:gap-4 xl:gap-0 xl:px-8'>
-        <div className='grid w-full flex-1 grid-cols-2 gap-6 md:grid-cols-4 md:gap-4 lg:gap-2 xl:gap-0'>
-          <MetricItem
-            title='TOTAL VIDEOS'
-            value={String(metrics.totalVideos.value)}
-            trend={metrics.totalVideos.trend}
-            trendColor={metrics.totalVideos.trendColor}
-          />
-          <MetricItem
-            title='APPROVED'
-            value={String(metrics.approved.value)}
-            trend={metrics.approved.trend}
-            trendColor={metrics.approved.trendColor}
-          />
-          <MetricItem
-            title='DELIVERED'
-            value={String(metrics.delivered.value)}
-            trend={metrics.delivered.trend}
-            trendColor={metrics.delivered.trendColor}
-          />
-          <MetricItem
-            title='SEEN'
-            value={String(metrics.seen.value)}
-            trend={metrics.seen.trend}
-            trendColor={metrics.seen.trendColor}
-          />
-        </div>
-
-        <div className='flex min-h-[120px] w-full flex-none flex-col items-center justify-center rounded-xl border border-slate-200 bg-slate-100 px-6 py-4 md:w-[60%] lg:ml-4 lg:w-auto xl:px-10 xl:py-5 dark:border-transparent dark:bg-[#1a2542]'>
+      <div className='grid w-full flex-1 grid-cols-2 gap-6 p-4 sm:grid-cols-3 md:gap-4 md:p-6 lg:grid-cols-6 lg:gap-2 xl:gap-0 xl:px-8'>
+        <MetricItem
+          title='TOTAL VIDEOS'
+          value={String(metrics.totalVideos.value)}
+          trend={metrics.totalVideos.trend}
+          trendColor={metrics.totalVideos.trendColor}
+        />
+        <MetricItem
+          title='COMPLETED'
+          value={String(metrics.completed.value)}
+          trend={metrics.completed.trend}
+          trendColor={metrics.completed.trendColor}
+        />
+        <MetricItem
+          title='APPROVED'
+          value={String(metrics.approved.value)}
+          trend={metrics.approved.trend}
+          trendColor={metrics.approved.trendColor}
+        />
+        <MetricItem
+          title='DELIVERED'
+          value={String(metrics.delivered.value)}
+          trend={metrics.delivered.trend}
+          trendColor={metrics.delivered.trendColor}
+        />
+        <MetricItem
+          title='SEEN'
+          value={String(metrics.seen.value)}
+          trend={metrics.seen.trend}
+          trendColor={metrics.seen.trendColor}
+        />
+        <div className='flex min-h-[120px] w-full flex-none flex-col items-center justify-center rounded-xl border border-slate-200 bg-slate-100 px-6 py-4 xl:px-10 xl:py-5 dark:border-transparent dark:bg-[#1a2542]'>
           <span className='mb-3 text-center text-[10px] font-bold tracking-widest text-blue-600 uppercase dark:text-blue-400'>
             75%+ COMPLETION
           </span>

@@ -4,6 +4,7 @@ import { FeaturesSettings } from './features-settings'
 import { LanguagesSettings } from './languages-settings'
 import { PersonaOnboardingSettings } from './persona-onboarding-settings'
 import { DangerZone } from './danger-zone'
+import { TokenSettings } from './token-settings'
 
 export function OrganisationOverview() {
   const [isEditing, setIsEditing] = useState(false)
@@ -42,6 +43,7 @@ export function OrganisationOverview() {
       </div>
 
       <FeaturesSettings isEditing={isEditing} />
+      <TokenSettings />
       <LanguagesSettings isEditing={isEditing} />
       <PersonaOnboardingSettings isEditing={isEditing} />
       <DangerZone />

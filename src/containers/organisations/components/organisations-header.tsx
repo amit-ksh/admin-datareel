@@ -1,17 +1,24 @@
 import { Button } from '@/components/ui/button'
-import { Filter, Search } from 'lucide-react'
+import { Search, RotateCcwIcon } from 'lucide-react'
 import { OnboardOrganisationDialog } from './onboard-organisation-dialog'
 import { Input } from '@/components/ui/input'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+import { ListOrganisationsParams } from '@/api/organisation'
 
-export function OrganisationsHeader() {
+interface OrganisationsHeaderProps {
+  params: ListOrganisationsParams
+  setFilters: (filters: Partial<ListOrganisationsParams>) => void
+  resetFilters: () => void
+}
+
+export function OrganisationsHeader({
+  params,
+  setFilters,
+  resetFilters,
+}: OrganisationsHeaderProps) {
+  const handleSearch = (val: string) => {
+    setFilters({ search: val || undefined })
+  }
+
   return (
     <div className='mb-8 flex items-center justify-between'>
       <div className='flex flex-col gap-1'>
@@ -28,27 +35,20 @@ export function OrganisationsHeader() {
           <Input
             placeholder='Search Organisation...'
             className='bg-background h-9 pl-8'
+            defaultValue={params.search}
+            onChange={(e) => handleSearch(e.target.value)}
           />
         </div>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant='outline'
-              size='sm'
-              className='bg-background hover:bg-muted/50 hidden h-9 px-4 text-sm font-medium sm:flex'
-            >
-              <Filter className='mr-2 h-4 w-4' />
-              Filter
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align='end' className='w-48'>
-            <DropdownMenuLabel>Filter by</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Join Date</DropdownMenuItem>
-            <DropdownMenuItem>Feedback Score</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <Button
+          variant='ghost'
+          size='sm'
+          onClick={resetFilters}
+          className='text-muted-foreground h-8 text-xs'
+        >
+          <RotateCcwIcon className='h-3 w-3' />
+          Reset
+        </Button>
 
         <OnboardOrganisationDialog />
       </div>
