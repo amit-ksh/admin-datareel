@@ -8,10 +8,10 @@ import {
 import { z } from 'zod'
 
 export const createOrganisationSchema = z.object({
-  name: z.string().min(1, 'Name is required'),
-  email: z.string().email('Invalid email address'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
-  logo: z.string().optional(),
+  orgName: z.string().min(1, 'Name is required'),
+  adminEmail: z.string().email('Invalid email address'),
+  defaultPassword: z.string().min(6, 'Password must be at least 6 characters'),
+  logo: z.any().optional(),
 })
 
 export type CreateOrganisationPayload = z.infer<typeof createOrganisationSchema>
@@ -96,9 +96,22 @@ export const useInfiniteListOrganisations = (
 export const createOrganisationAPI = async (
   payload: CreateOrganisationPayload,
 ) => {
-  const response = await PrivateAxios.post<{ new_org_id: string }>(
-    'admin/organisations',
-    payload,
+  const formData = new FormData()
+  formData.append('orgName', payload.orgName)
+  formData.append('adminEmail', payload.adminEmail)
+  formData.append('defaultPassword', payload.defaultPassword)
+  if (payload.logo) {
+    formData.append('logo', payload.logo)
+  }
+
+  const response = await PrivateAxios.post<{ organisation_id: string }>(
+    'dashboard/auth/organisations',
+    formData,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    },
   )
   return response.data
 }

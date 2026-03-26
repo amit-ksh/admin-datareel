@@ -47,10 +47,10 @@ export function OnboardOrganisationDialog() {
   } = useForm<CreateOrganisationPayload>({
     resolver: zodResolver(createOrganisationSchema),
     defaultValues: {
-      name: '',
-      email: '',
-      password: '',
-      logo: '',
+      orgName: '',
+      adminEmail: '',
+      defaultPassword: '',
+      logo: undefined,
     },
   })
 
@@ -71,9 +71,9 @@ export function OnboardOrganisationDialog() {
     reader.onloadend = () => {
       const base64String = reader.result as string
       setLogoPreview(base64String)
-      setValue('logo', base64String)
     }
     reader.readAsDataURL(file)
+    setValue('logo', file)
   }
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -94,7 +94,7 @@ export function OnboardOrganisationDialog() {
 
   const removeLogo = () => {
     setLogoPreview(null)
-    setValue('logo', '')
+    setValue('logo', undefined)
   }
 
   const onSubmit = (data: CreateOrganisationPayload) => {
@@ -107,7 +107,7 @@ export function OnboardOrganisationDialog() {
       },
       onError: (error) => {
         toast.error(
-          error?.response?.data?.message || 'Failed to create organisation',
+          error?.response?.data?.detail || 'Failed to create organisation',
         )
       },
     })
@@ -143,10 +143,12 @@ export function OnboardOrganisationDialog() {
                 <Input
                   id='org-name'
                   placeholder='e.g. Acme Analytics'
-                  {...register('name')}
+                  {...register('orgName')}
                 />
-                {errors.name && (
-                  <p className='text-xs text-red-500'>{errors.name.message}</p>
+                {errors.orgName && (
+                  <p className='text-xs text-red-500'>
+                    {errors.orgName.message}
+                  </p>
                 )}
               </div>
 
@@ -157,10 +159,12 @@ export function OnboardOrganisationDialog() {
                 <Input
                   id='admin-email'
                   placeholder='admin@organisation.com'
-                  {...register('email')}
+                  {...register('adminEmail')}
                 />
-                {errors.email && (
-                  <p className='text-xs text-red-500'>{errors.email.message}</p>
+                {errors.adminEmail && (
+                  <p className='text-xs text-red-500'>
+                    {errors.adminEmail.message}
+                  </p>
                 )}
               </div>
 
@@ -173,7 +177,7 @@ export function OnboardOrganisationDialog() {
                     id='password'
                     type={showPassword ? 'text' : 'password'}
                     placeholder='........'
-                    {...register('password')}
+                    {...register('defaultPassword')}
                   />
                   <InputGroupButton
                     type='button'
@@ -182,9 +186,9 @@ export function OnboardOrganisationDialog() {
                     <Eye className='h-4 w-4' />
                   </InputGroupButton>
                 </InputGroup>
-                {errors.password && (
+                {errors.defaultPassword && (
                   <p className='text-xs text-red-500'>
-                    {errors.password.message}
+                    {errors.defaultPassword.message}
                   </p>
                 )}
               </div>
