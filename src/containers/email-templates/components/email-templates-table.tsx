@@ -34,7 +34,6 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import {
   EmailTemplateListitem,
   useGetEmailTemplate,
-  EmailTemplateDetail,
   useApproveEmailTemplate,
 } from '@/api/email-templates'
 import { Skeleton } from '@/components/ui/skeleton'

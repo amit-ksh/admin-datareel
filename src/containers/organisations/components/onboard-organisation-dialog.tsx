@@ -30,6 +30,7 @@ import {
 import { toast } from 'sonner'
 import { Loader2, X } from 'lucide-react'
 import { useRef } from 'react'
+import Image from 'next/image'
 
 export function OnboardOrganisationDialog() {
   const [showPassword, setShowPassword] = useState(false)
@@ -218,10 +219,12 @@ export function OnboardOrganisationDialog() {
               >
                 {logoPreview ? (
                   <>
-                    <img
+                    <Image
                       src={logoPreview}
                       alt='Logo Preview'
                       className='h-full w-full object-contain p-2'
+                      width={512}
+                      height={512}
                     />
                     <Button
                       type='button'
