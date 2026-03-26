@@ -147,9 +147,9 @@ export function EmailTemplatesHeader({
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value='all'>All Organisations</SelectItem>
-                    {organisations?.data.map((org) => (
+                    {organisations?.docs?.map((org) => (
                       <SelectItem key={org.id} value={org.id}>
-                        {org.name}
+                        {org.organisation_name}
                       </SelectItem>
                     ))}
                   </SelectContent>
