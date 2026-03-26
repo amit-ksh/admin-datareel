@@ -59,6 +59,38 @@ export interface ListOrganisationsParams {
   sort_order?: 'asc' | 'desc'
 }
 
+export interface ListOrganisationTenantsParams {
+  org_id: string
+  page?: number
+  page_limit?: number
+  tenant_status?: string
+  search?: string
+}
+
+export interface OrganisationTenant {
+  tenant_id: string
+  tenant_name: string
+  tenant_email: string
+  role: string
+  role_active: boolean
+  onboarded: boolean
+  created_at: string
+}
+
+export interface ListOrganisationTenantsResponse {
+  summary: {
+    total: number
+    active: number
+    inactive: number
+  }
+  tenants: OrganisationTenant[]
+  meta: {
+    page: number
+    limit: number
+    total: number
+  }
+}
+
 export interface ListOrganisationsResponse {
   docs: Organisation[]
   meta: {
@@ -172,5 +204,26 @@ export const useGetOrganisation = (id: string) => {
     queryKey: ['organisation', id],
     queryFn: () => getOrganisationAPI(id),
     enabled: !!id,
+  })
+}
+
+export const listOrganisationTenantsAPI = async (
+  params: ListOrganisationTenantsParams,
+) => {
+  const { org_id, ...rest } = params
+  const response = await PrivateAxios.get<ListOrganisationTenantsResponse>(
+    `dashboard/auth/organisations/${org_id}/tenants`,
+    { params: rest },
+  )
+  return response.data
+}
+
+export const useListOrganisationTenants = (
+  params: ListOrganisationTenantsParams,
+) => {
+  return useQuery({
+    queryKey: ['organisation-tenants', params],
+    queryFn: () => listOrganisationTenantsAPI(params),
+    enabled: !!params.org_id,
   })
 }
