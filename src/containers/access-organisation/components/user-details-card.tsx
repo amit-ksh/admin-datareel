@@ -4,6 +4,8 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { ShieldCheck } from 'lucide-react'
 
+import { ACCESS_ORGANISATION_TEST_IDS } from './test-ids'
+
 interface UserDetails {
   name: string
   email: string
@@ -18,7 +20,10 @@ interface UserDetailsCardProps {
 
 export function UserDetailsCard({ user }: UserDetailsCardProps) {
   return (
-    <Card className='border'>
+    <Card
+      className='border'
+      data-testid={ACCESS_ORGANISATION_TEST_IDS.USER_DETAILS_CARD.CONTAINER}
+    >
       <CardContent>
         <div className='mb-4 flex items-center justify-between'>
           <span className='text-foreground text-lg font-semibold'>
@@ -38,13 +43,21 @@ export function UserDetailsCard({ user }: UserDetailsCardProps) {
             <p className='text-muted-foreground mb-0.5 text-[11px] font-semibold tracking-wider uppercase'>
               Name
             </p>
-            <p className='text-foreground text-sm font-semibold'>{user.name}</p>
+            <p
+              className='text-foreground text-sm font-semibold'
+              data-testid={ACCESS_ORGANISATION_TEST_IDS.USER_DETAILS_CARD.NAME}
+            >
+              {user.name}
+            </p>
           </div>
           <div>
             <p className='text-muted-foreground mb-0.5 text-[11px] font-semibold tracking-wider uppercase'>
               Email
             </p>
-            <p className='text-foreground text-sm font-semibold'>
+            <p
+              className='text-foreground text-sm font-semibold'
+              data-testid={ACCESS_ORGANISATION_TEST_IDS.USER_DETAILS_CARD.EMAIL}
+            >
               {user.email}
             </p>
           </div>
@@ -54,7 +67,12 @@ export function UserDetailsCard({ user }: UserDetailsCardProps) {
             </p>
             <div className='flex items-center gap-1.5'>
               <ShieldCheck className='h-3.5 w-3.5 text-blue-500' />
-              <span className='text-sm font-bold text-blue-600'>
+              <span
+                className='text-sm font-bold text-blue-600'
+                data-testid={
+                  ACCESS_ORGANISATION_TEST_IDS.USER_DETAILS_CARD.ROLE
+                }
+              >
                 {user.role}
               </span>
             </div>

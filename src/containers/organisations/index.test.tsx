@@ -5,7 +5,7 @@ import { ORGANISATION_TEST_IDS } from './test-ids'
 
 // Mock components
 vi.mock('@/components/common/error-state', () => ({
-  default: () => <div data-testid='mock-error-state'>Error</div>,
+  ErrorState: () => <div data-testid='mock-error-state'>Error</div>,
 }))
 
 vi.mock('./components/organisations-header', () => ({

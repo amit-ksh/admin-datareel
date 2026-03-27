@@ -3,7 +3,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { ChartConfig, ChartContainer } from '@/components/ui/chart'
 import { ArrowUp, ArrowDown } from 'lucide-react'
-import { Bar, BarChart, Line, LineChart, Cell, type BarProps } from 'recharts'
+import { Bar, BarChart, Line, LineChart, Cell } from 'recharts'
+
+import { ANALYTICS_TEST_IDS } from './test-ids'
 
 interface AnalyticsMetricCardProps {
   title: string
@@ -14,7 +16,7 @@ interface AnalyticsMetricCardProps {
     label: string
     direction: 'up' | 'down'
   }
-  chartData: BarProps['data'][]
+  chartData: Record<string, string | number | boolean | null>[]
   chartConfig: ChartConfig
   chartType: 'bar' | 'line'
   dataKey: string
@@ -31,9 +33,17 @@ export function AnalyticsMetricCard({
   dataKey,
 }: AnalyticsMetricCardProps) {
   return (
-    <Card className='gap-0'>
+    <Card
+      className='gap-0'
+      data-testid={ANALYTICS_TEST_IDS.METRIC_CARD.CONTAINER}
+    >
       <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-        <CardTitle className='font-medium'>{title}</CardTitle>
+        <CardTitle
+          className='font-medium'
+          data-testid={ANALYTICS_TEST_IDS.METRIC_CARD.TITLE}
+        >
+          {title}
+        </CardTitle>
         {trend && (
           <div
             className={`flex items-center rounded-full px-2 py-1 text-xs ${
@@ -41,6 +51,7 @@ export function AnalyticsMetricCard({
                 ? 'bg-green-100 text-green-600'
                 : 'bg-red-100 text-red-600'
             }`}
+            data-testid={ANALYTICS_TEST_IDS.METRIC_CARD.TREND}
           >
             {trend.direction === 'up' ? (
               <ArrowUp className='mr-1 h-3 w-3' />
@@ -54,7 +65,12 @@ export function AnalyticsMetricCard({
       <CardContent>
         <div className='flex h-[80px] items-end justify-between'>
           <div className='flex h-full w-1/2 flex-col justify-end'>
-            <div className='text-3xl font-bold'>{value}</div>
+            <div
+              className='text-3xl font-bold'
+              data-testid={ANALYTICS_TEST_IDS.METRIC_CARD.VALUE}
+            >
+              {value}
+            </div>
 
             {subtext && (
               <p className='text-muted-foreground mt-1 text-xs'>{subtext}</p>
@@ -68,8 +84,10 @@ export function AnalyticsMetricCard({
                     {chartData.map((entry, index) => (
                       <Cell
                         key={`cell-${index}`}
-                        // @ts-expect-error - bad type
-                        fill={entry?.fill || `var(--color-${dataKey})`}
+                        fill={
+                          (entry as Record<string, string | null>)?.fill ||
+                          `var(--color-${dataKey})`
+                        }
                       />
                     ))}
                   </Bar>
