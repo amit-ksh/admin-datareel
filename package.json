@@ -88,5 +88,6 @@
     "*": [
       "secretlint"
     ]
-  }
+  },
+  "postbuild": "cp -r .next/static .next/standalone/datareel/admin-datareel/.next/static && cp -r public .next/standalone/datareel/admin-datareel/public"
 }
