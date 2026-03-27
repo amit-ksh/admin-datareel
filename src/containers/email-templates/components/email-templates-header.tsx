@@ -16,7 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { ListEmailTemplatesParams } from '@/api/email-templates'
+import { ListEmailTemplatesParams } from '@/types/email-templates'
 import { useListOrganisations } from '@/api/organisation'
 
 interface EmailTemplatesHeaderProps {

@@ -22,11 +22,11 @@ import {
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useCreateOrganisation } from '@/api/organisation'
 import {
   createOrganisationSchema,
   CreateOrganisationPayload,
-  useCreateOrganisation,
-} from '@/api/organisation'
+} from '@/types/organisation'
 import { toast } from 'sonner'
 import { Loader2, X } from 'lucide-react'
 import { useRef } from 'react'

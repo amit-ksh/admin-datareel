@@ -12,7 +12,7 @@ import {
 import { format } from 'date-fns'
 import { useOrganisationFeedback } from '../use-organisation-feedback.hook'
 import { cn } from '@/lib/utils'
-import { FeedbackItem } from '@/api/analytics'
+import { FeedbackItem } from '@/types/analytics'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'

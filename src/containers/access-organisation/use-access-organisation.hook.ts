@@ -3,12 +3,8 @@
 import { useState, useMemo, useCallback } from 'react'
 import { useRouter, useSearchParams, usePathname } from 'next/navigation'
 import { AxiosError } from 'axios'
-import {
-  useListOrganisations,
-  useAccessClientApp,
-  ListOrganisationsParams,
-  Organisation,
-} from '@/api/organisation'
+import { useListOrganisations, useAccessClientApp } from '@/api/organisation'
+import { ListOrganisationsParams, Organisation } from '@/types/organisation'
 import { toast } from 'sonner'
 
 export const useAccessOrganisation = () => {

@@ -21,13 +21,12 @@ import {
 } from '@/types/service-health'
 import { AxiosResponse } from 'axios'
 
+import { CurrentUserResponse } from '@/types/user'
+
 const AuthContext = React.createContext<AuthContextType>({} as AuthContextType)
 
 type AuthContextType = {
-  currentUser?: {
-    permissions: string[]
-    tenant_data: Record<string, string>
-  }
+  currentUser?: CurrentUserResponse
   isCurrentUserLoading: boolean
   isCurrentUserPending: boolean
   isLogoutPending: boolean

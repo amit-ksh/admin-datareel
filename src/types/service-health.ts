@@ -53,3 +53,10 @@ export type VideoServerContainersHealthResponse = {
   uptime: number
   version: string
 }
+
+export type SERVICE_IMPACT_TYPE = {
+  label: string
+  impacts: string[]
+}
+
+export type ServiceImpactMap = Record<string, SERVICE_IMPACT_TYPE>

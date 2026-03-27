@@ -2,10 +2,8 @@
 
 import { useCallback, useMemo } from 'react'
 import { useRouter, useSearchParams, usePathname } from 'next/navigation'
-import {
-  useListOrganisations,
-  ListOrganisationsParams,
-} from '@/api/organisation'
+import { useListOrganisations } from '@/api/organisation'
+import { ListOrganisationsParams } from '@/types/organisation'
 
 export const useOrganisations = () => {
   const router = useRouter()

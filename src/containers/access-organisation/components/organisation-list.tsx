@@ -15,7 +15,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
 import { format } from 'date-fns'
-import { Organisation } from '@/api/organisation'
+import { Organisation } from '@/types/organisation'
 import ErrorState from '@/components/common/error-state'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'

@@ -1,5 +1,15 @@
 import { format } from 'date-fns'
 import { VideoAxios, PrivateAxios } from './index'
+import {
+  AnalyticsSummaryParams,
+  AnalyticsYearlyParams,
+  FeedbackOverview,
+  FeedbackQueryParams,
+  FeedbacksResponse,
+  GetFeedbacksParams,
+  RatingBreakdown,
+  RatingStats,
+} from '@/types/analytics'
 
 const formatDate = ({
   start,
@@ -21,13 +31,7 @@ export const getAnalyticsSummary = async ({
   endDate,
   mode,
   pipelineId,
-}: {
-  organisationId?: string
-  startDate: string | Date
-  endDate: string | Date
-  mode?: string
-  pipelineId?: string
-}) => {
+}: AnalyticsSummaryParams) => {
   const [startD, endD] = formatDate({ start: startDate, end: endDate })
   const params = new URLSearchParams({
     start_date: startD,
@@ -49,11 +53,7 @@ export const getAnalyticsYearly = async ({
   organisationId,
   year,
   pipelineId,
-}: {
-  organisationId?: string
-  year: number | string
-  pipelineId?: string
-}) => {
+}: AnalyticsYearlyParams) => {
   const params = new URLSearchParams({
     year: String(year),
   })
@@ -87,57 +87,12 @@ export const getReportFile = async (
   )
 }
 
-export interface FeedbackOverview {
-  total_feedbacks: number
-  average_rating: number
-  total_comments: number
-  total_positive_rating: number
-}
-
-export interface RatingStats {
-  min_rating: number
-  max_rating: number
-  average_rating: number
-  min_more_info: number
-  max_more_info: number
-  average_more_info: number
-  min_more_videos: number
-  max_more_videos: number
-  average_more_videos: number
-}
-
-export interface RatingBreakdown {
-  rating_counts: Record<string, number>
-}
-
-export interface FeedbackItem {
-  _id: {
-    results_id: string
-    name: string
-  }
-  latest_feedback_at: string
-  average_rating: number[]
-  average_more_info: number[]
-  average_more_videos: number[]
-  feedback: string[]
-}
-
-export interface FeedbacksResponse {
-  data: FeedbackItem[]
-  total_pages: number
-}
-
 export const getFeedbackOverview = async ({
   organisationId,
   startDate,
   endDate,
   pipelineId = '',
-}: {
-  organisationId: string
-  startDate: string | Date
-  endDate: string | Date
-  pipelineId?: string
-}): Promise<FeedbackOverview> => {
+}: FeedbackQueryParams): Promise<FeedbackOverview> => {
   const formatBackendDate = (d: string | Date) => {
     const date = typeof d === 'string' ? new Date(d) : d
     return format(date, 'yyyy-MM-dd HH:mm:ss.SSS')
@@ -162,12 +117,7 @@ export const getRatingStats = async ({
   startDate,
   endDate,
   pipelineId = '',
-}: {
-  organisationId: string
-  startDate: string | Date
-  endDate: string | Date
-  pipelineId?: string
-}): Promise<RatingStats> => {
+}: FeedbackQueryParams): Promise<RatingStats> => {
   const formatBackendDate = (d: string | Date) => {
     const date = typeof d === 'string' ? new Date(d) : d
     return format(date, 'yyyy-MM-dd HH:mm:ss.SSS')
@@ -192,12 +142,7 @@ export const getRatingBreakdown = async ({
   startDate,
   endDate,
   pipelineId = '',
-}: {
-  organisationId: string
-  startDate: string | Date
-  endDate: string | Date
-  pipelineId?: string
-}): Promise<RatingBreakdown> => {
+}: FeedbackQueryParams): Promise<RatingBreakdown> => {
   const formatBackendDate = (d: string | Date) => {
     const date = typeof d === 'string' ? new Date(d) : d
     return format(date, 'yyyy-MM-dd HH:mm:ss.SSS')
@@ -225,15 +170,7 @@ export const getFeedbacks = async ({
   pagenum = 1,
   comments_only = false,
   assignee = '',
-}: {
-  organisationId: string
-  startDate: string | Date
-  endDate: string | Date
-  pipelineId?: string
-  pagenum?: number
-  comments_only?: boolean
-  assignee?: string
-}): Promise<FeedbacksResponse> => {
+}: GetFeedbacksParams): Promise<FeedbacksResponse> => {
   const formatBackendDate = (d: string | Date) => {
     const date = typeof d === 'string' ? new Date(d) : d
     return format(date, 'yyyy-MM-dd HH:mm:ss.SSS')

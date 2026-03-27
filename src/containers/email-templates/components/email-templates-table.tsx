@@ -32,12 +32,12 @@ import {
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import {
-  EmailTemplateListitem,
   useGetEmailTemplate,
   useApproveEmailTemplate,
 } from '@/api/email-templates'
 import { Skeleton } from '@/components/ui/skeleton'
 import { toast } from 'sonner'
+import { EmailTemplateListitem } from '@/types'
 
 interface EmailTemplatesTableProps {
   data: EmailTemplateListitem[]

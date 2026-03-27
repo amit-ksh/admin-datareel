@@ -2,10 +2,8 @@
 
 import { useCallback, useMemo } from 'react'
 import { useRouter, useSearchParams, usePathname } from 'next/navigation'
-import {
-  useListEmailTemplates,
-  ListEmailTemplatesParams,
-} from '@/api/email-templates'
+import { useListEmailTemplates } from '@/api/email-templates'
+import { ListEmailTemplatesParams } from '@/types/email-templates'
 
 export const useEmailTemplates = () => {
   const router = useRouter()
