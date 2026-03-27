@@ -1,0 +1,3 @@
+{
+  "/(protected)/email-templates/page": "app/(protected)/email-templates/page.js"
+}

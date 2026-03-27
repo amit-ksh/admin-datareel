@@ -1,0 +1,12 @@
+{
+  "/(protected)/access-organisation/page": "app/(protected)/access-organisation/page.js",
+  "/(protected)/analytics/page": "app/(protected)/analytics/page.js",
+  "/(protected)/email-templates/page": "app/(protected)/email-templates/page.js",
+  "/(protected)/organisations/[organisationId]/page": "app/(protected)/organisations/[organisationId]/page.js",
+  "/(protected)/organisations/page": "app/(protected)/organisations/page.js",
+  "/(public)/login/page": "app/(public)/login/page.js",
+  "/(public)/server-health/page": "app/(public)/server-health/page.js",
+  "/_global-error/page": "app/_global-error/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/page": "app/page.js"
+}

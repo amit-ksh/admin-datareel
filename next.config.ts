@@ -1,6 +1,7 @@
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
+  output: 'standalone',
   distDir: process.env.NEXT_PUBLIC_NODE_ENV === 'dev' ? 'build' : '.next',
   compiler: {
     removeConsole: process.env.NEXT_PUBLIC_NODE_ENV === 'dev' ? false : true,
