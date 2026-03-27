@@ -1,6 +1,8 @@
 'use client'
 import { useLoginAPI } from '@/api/auth'
+import { type AxiosError } from 'axios'
 import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
 
 export const useLogin = () => {
   const router = useRouter()
@@ -20,6 +22,9 @@ export const useLogin = () => {
       router.push('/analytics')
     } catch (error) {
       console.error(error)
+      toast.error(
+        (error as AxiosError<{ detail: string }>)?.response?.data?.detail,
+      )
     }
   }
 

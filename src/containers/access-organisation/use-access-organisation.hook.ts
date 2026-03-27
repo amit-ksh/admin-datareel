@@ -40,7 +40,9 @@ export const useAccessOrganisation = () => {
     isError,
     error,
     refetch,
-  } = useListOrganisations(params)
+  } = useListOrganisations(params, {
+    enabled: Boolean(searchEmail),
+  })
 
   const { mutate: accessClientApp, isPending: isAccessPending } =
     useAccessClientApp()

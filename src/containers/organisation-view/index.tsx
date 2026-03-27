@@ -98,14 +98,14 @@ export default function OrganisationViewContainer() {
           value='analytics'
           className='p-2 pb-16 ring-0 focus-visible:ring-0 focus-visible:outline-none'
         >
-          <OrganisationAnalytics />
+          <OrganisationAnalytics organisationId={organisation.id} />
         </TabsContent>
 
         <TabsContent
           value='feedback'
           className='p-2 pb-16 ring-0 focus-visible:ring-0 focus-visible:outline-none'
         >
-          <OrganisationFeedback />
+          <OrganisationFeedback organisationId={organisation.id} />
         </TabsContent>
 
         <TabsContent

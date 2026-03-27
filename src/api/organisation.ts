@@ -4,6 +4,7 @@ import {
   useQuery,
   useQueryClient,
   useInfiniteQuery,
+  UseQueryOptions,
 } from '@tanstack/react-query'
 import { z } from 'zod'
 
@@ -125,10 +126,14 @@ export const listOrganisationsAPI = async (params: ListOrganisationsParams) => {
   return response.data
 }
 
-export const useListOrganisations = (params: ListOrganisationsParams) => {
+export const useListOrganisations = (
+  params: ListOrganisationsParams,
+  options?: Partial<UseQueryOptions<ListOrganisationsResponse>>,
+) => {
   return useQuery({
     queryKey: ['organisations', params],
     queryFn: () => listOrganisationsAPI(params),
+    ...options,
   })
 }
 

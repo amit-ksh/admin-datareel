@@ -1,8 +1,6 @@
 'use client'
 
-import { useState } from 'react'
-import { format, subDays } from 'date-fns'
-import { DateRange } from 'react-day-picker'
+import { format } from 'date-fns'
 import { Download, CalendarIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -22,11 +20,25 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 
-export function OrganisationAnalyticsHeader() {
-  const [date, setDate] = useState<DateRange | undefined>({
-    from: subDays(new Date(), 30),
-    to: new Date(),
-  })
+interface OrganisationAnalyticsHeaderProps {
+  mode: string
+  onModeChange: (mode: string) => void
+  dateRange: { startDate: Date; endDate: Date }
+  setDateRange: (range: { startDate: Date; endDate: Date }) => void
+  onDownloadReport: (type: string, label: string) => void
+}
+
+export function OrganisationAnalyticsHeader({
+  mode,
+  onModeChange,
+  dateRange,
+  setDateRange,
+  onDownloadReport,
+}: OrganisationAnalyticsHeaderProps) {
+  const date = {
+    from: dateRange.startDate,
+    to: dateRange.endDate,
+  }
 
   return (
     <div className='flex flex-col justify-between gap-4 xl:flex-row xl:items-center'>
@@ -35,7 +47,8 @@ export function OrganisationAnalyticsHeader() {
           <div className='flex items-center gap-2'>
             <h2 className='text-lg font-bold tracking-tight'>Analytics</h2>
             <Tabs
-              defaultValue='cohort'
+              value={mode}
+              onValueChange={onModeChange}
               className='mt-2 w-full sm:mt-0 sm:ml-4 sm:w-auto'
             >
               <TabsList className='grid w-full grid-cols-2 sm:flex sm:w-auto'>
@@ -84,7 +97,11 @@ export function OrganisationAnalyticsHeader() {
               mode='range'
               defaultMonth={date?.from}
               selected={date}
-              onSelect={setDate}
+              onSelect={(val) => {
+                if (val?.from && val?.to) {
+                  setDateRange({ startDate: val.from, endDate: val.to })
+                }
+              }}
               numberOfMonths={2}
               className='hidden sm:block'
             />
@@ -93,7 +110,11 @@ export function OrganisationAnalyticsHeader() {
               mode='range'
               defaultMonth={date?.from}
               selected={date}
-              onSelect={setDate}
+              onSelect={(val) => {
+                if (val?.from && val?.to) {
+                  setDateRange({ startDate: val.from, endDate: val.to })
+                }
+              }}
               numberOfMonths={1}
               className='block sm:hidden'
             />
@@ -113,10 +134,23 @@ export function OrganisationAnalyticsHeader() {
           <DropdownMenuContent align='end' className='w-48'>
             <DropdownMenuLabel>Export Report</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Summary Report (PDF)</DropdownMenuItem>
-            <DropdownMenuItem>Detailed Runs (CSV)</DropdownMenuItem>
-            <DropdownMenuItem>Organisation Stats (Excel)</DropdownMenuItem>
-            <DropdownMenuItem>Viewer Feedback (CSV)</DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => onDownloadReport('performance', 'Delivery Report')}
+            >
+              Delivery Report (CSV)
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => onDownloadReport('approval', 'Approval Report')}
+            >
+              Approval Report (CSV)
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() =>
+                onDownloadReport('generation', 'Assignee Wise Report')
+              }
+            >
+              Assignee Wise Report (CSV)
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
