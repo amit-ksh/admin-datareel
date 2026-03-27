@@ -108,7 +108,7 @@ interface ErrorStateProps {
   className?: string
 }
 
-export default function ErrorState({
+export function ErrorState({
   error,
   title,
   description,

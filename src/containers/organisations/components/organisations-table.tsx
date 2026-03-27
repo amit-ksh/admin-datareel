@@ -17,7 +17,7 @@ import {
 } from '@/types/organisation'
 import { format } from 'date-fns'
 import { useRouter } from 'next/navigation'
-import ErrorState from '@/components/common/error-state'
+import { ErrorState } from '@/components/common/error-state'
 import { AxiosError } from 'axios'
 
 interface OrganisationsTableProps {
