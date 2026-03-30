@@ -17,6 +17,9 @@ import {
   CreateOrganisationPayload,
   AccessClientAppPayload,
   AccessClientAppResponse,
+  UpdateOrganisationPayload,
+  UnlockOrganisationParams,
+  UpdateOrganisationDetailPayload,
 } from '@/types/organisation'
 
 export const listOrganisationsAPI = async (params: ListOrganisationsParams) => {
@@ -106,9 +109,20 @@ export const useAccessClientApp = () => {
 }
 
 export const getOrganisationAPI = async (id: string) => {
-  const response = await PrivateAxios.get<Organisation>('organisation/', {
-    params: { id },
-  })
+  const response = await PrivateAxios.get<Organisation>(
+    `dashboard/auth/organisations/${id}`,
+  )
+  return response.data
+}
+
+export const updateOrganisationAPI = async (
+  id: string,
+  payload: UpdateOrganisationPayload,
+) => {
+  const response = await PrivateAxios.patch<Organisation>(
+    `dashboard/auth/organisations/${id}`,
+    payload,
+  )
   return response.data
 }
 
@@ -117,6 +131,18 @@ export const useGetOrganisation = (id: string) => {
     queryKey: ['organisation', id],
     queryFn: () => getOrganisationAPI(id),
     enabled: !!id,
+  })
+}
+
+export const useUpdateOrganisation = (id: string) => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (payload: UpdateOrganisationPayload) =>
+      updateOrganisationAPI(id, payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['organisation', id] })
+      queryClient.invalidateQueries({ queryKey: ['organisations'] })
+    },
   })
 }
 
@@ -178,5 +204,65 @@ export const useUpdateOrgTokens = (orgId: string) => {
       })
       queryClient.invalidateQueries({ queryKey: ['organisation', orgId] })
     },
+  })
+}
+
+export const unlockOrganisationAPI = async (
+  params: UnlockOrganisationParams,
+) => {
+  const response = await PrivateAxios.put(
+    'dashboard/auth/organisation/unlock',
+    undefined,
+    { params },
+  )
+  return response.data
+}
+
+export const useUnlockOrganisation = (orgId: string) => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (params: Omit<UnlockOrganisationParams, 'organisation_id'>) =>
+      unlockOrganisationAPI({ ...params, organisation_id: orgId }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['organisation', orgId] })
+    },
+  })
+}
+
+export const updateOrganisationDetailAPI = async (
+  id: string,
+  payload: UpdateOrganisationDetailPayload,
+) => {
+  const response = await PrivateAxios.put<Organisation>(
+    `dashboard/auth/organisations/${id}`,
+    payload,
+  )
+  return response.data
+}
+
+export const useUpdateOrganisationDetail = (id: string) => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (payload: UpdateOrganisationDetailPayload) =>
+      updateOrganisationDetailAPI(id, payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['organisation', id] })
+      queryClient.invalidateQueries({ queryKey: ['organisations'] })
+    },
+  })
+}
+
+export const getOrganisationByIdAPI = async (id: string) => {
+  const response = await PrivateAxios.get<Organisation>('organisaton', {
+    params: { id },
+  })
+  return response.data
+}
+
+export const useGetOrganisationById = (id: string) => {
+  return useQuery({
+    queryKey: ['organisation-by-id', id],
+    queryFn: () => getOrganisationByIdAPI(id),
+    enabled: !!id,
   })
 }

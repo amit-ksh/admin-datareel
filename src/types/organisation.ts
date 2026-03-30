@@ -20,6 +20,9 @@ export interface Organisation {
   enable_avatar_ai: boolean
   unlocked: boolean
   unlocked_at: string
+  enable_daily_report: boolean
+  daily_report_hour: number
+  daily_report_timezone: string
   created_at: string
   updated_at: string
   total_tokens: number
@@ -118,4 +121,42 @@ export interface AccessClientAppPayload {
 export interface AccessClientAppResponse {
   message: string
   redirectUrl: string
+}
+
+export interface UpdateOrganisationPayload {
+  organisation_name?: string
+  enable_cdn?: boolean
+  enable_hls?: boolean
+  enable_content_ai?: boolean
+  enable_avatar_ai?: boolean
+  persona_onboarding_config?: {
+    require_thumbnail?: boolean
+    require_video?: boolean
+    require_audio?: boolean
+  }
+}
+
+export interface UpdateOrganisationDetailPayload {
+  organisation_name: string
+  enable_cdn: boolean
+  enable_hls: boolean
+  enable_content_ai: boolean
+  enable_avatar_ai: boolean
+  enable_daily_report: boolean
+  daily_report_hour: number
+  daily_report_timezone: string
+  infinite_tokens: boolean
+  total_tokens: number
+}
+
+export type UnlockType =
+  | 'organisation'
+  | 'hls'
+  | 'cdn'
+  | 'content_ai'
+  | 'avatar_ai'
+
+export interface UnlockOrganisationParams {
+  organisation_id: string
+  unlock_type: UnlockType
 }

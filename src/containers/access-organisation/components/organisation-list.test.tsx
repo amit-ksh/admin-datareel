@@ -41,6 +41,9 @@ const mockData: ListOrganisationsResponse = {
         cloning_job_id: null,
         cloning_details: null,
       },
+      enable_daily_report: false,
+      daily_report_hour: 0,
+      daily_report_timezone: '',
     },
     {
       id: '2',
@@ -68,6 +71,9 @@ const mockData: ListOrganisationsResponse = {
         cloning_job_id: null,
         cloning_details: null,
       },
+      enable_daily_report: false,
+      daily_report_hour: 0,
+      daily_report_timezone: '',
     },
   ],
   meta: {
