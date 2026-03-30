@@ -1,41 +1,65 @@
-export interface EmailTemplateListitem {
+export type EmailTemplateStatus =
+  | 'PENDING'
+  | 'VERIFIED'
+  | 'REJECTED'
+  | 'DEFAULT'
+
+export type EmailTemplateType =
+  | 'CONFIRMATION'
+  | 'INVITATION'
+  | 'REINVITE'
+  | 'RESHOOT'
+  | 'WELCOME'
+  | 'RESET_PASSWORD'
+  | 'FAILURE_REPORT'
+  | 'SUCCESS_NOTIFICATION'
+  | 'DAILY_REPORT'
+  | 'RESEND_VERIFICATION'
+
+export interface EmailTemplate {
   id: string
-  organisation_id: string
-  organisation_name: string
-  organisation_logo: string | null
-  template_name: string
-  type: string
+  org_id: string
+  name: string
+  email_type: EmailTemplateType
   subject: string
-  status: 'verified' | 'not-verified'
-  updated_at: string
+  status: EmailTemplateStatus | null
+  created_at: string
 }
 
-export interface ListEmailTemplatesParams {
-  search?: string
-  status?: 'verified' | 'not-verified'
-  email_type?: string
-  page?: number
-  limit?: number
-  organisation_id?: string
-  sort_by?: string
-  sort_order?: 'asc' | 'desc'
-}
-
-export interface ListEmailTemplatesResponse {
-  data: EmailTemplateListitem[]
+export interface EmailTemplateListResponse {
+  docs: EmailTemplate[]
   meta: {
-    total: number
     page: number
     limit: number
-    last_page: number
+    total: number
   }
 }
 
 export interface EmailTemplateDetail {
-  id: string
-  template_name: string
-  email_type: string
+  _id: string
+  org_id: string
+  name: string
   subject: string
-  email_body: string
-  status: 'verified' | 'not-verified'
+  body_s3_key: string
+  email_type: EmailTemplateType
+  custom_variables: Record<string, unknown> | null
+  verified: boolean
+  is_deleted: boolean
+  created_at: string
+  updated_at: string
+  status: EmailTemplateStatus | null
+  body: string
+}
+
+export interface ListEmailTemplatesParams {
+  page?: number
+  page_limit?: number
+  org_id?: string
+  status?: EmailTemplateStatus
+  type?: EmailTemplateType
+}
+
+export interface UpdateEmailTemplateStatusPayload {
+  template_id: string
+  status: EmailTemplateStatus
 }

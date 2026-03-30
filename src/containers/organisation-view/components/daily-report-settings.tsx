@@ -152,7 +152,7 @@ export function DailyReportSettings() {
                 onChange={(e) =>
                   setSettings((prev) => ({
                     ...prev,
-                    daily_report_hour: parseInt(e.target.value),
+                    daily_report_hour: parseInt(e.target.value) || 0,
                   }))
                 }
                 disabled={!isEditing}

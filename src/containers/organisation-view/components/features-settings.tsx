@@ -17,10 +17,10 @@ export function FeaturesSettings() {
   const [isEditing, setIsEditing] = useState(false)
 
   const [settings, setSettings] = useState({
-    enable_content_ai: false,
-    enable_avatar_ai: false,
-    enable_hls: false,
-    enable_cdn: false,
+    enable_content_ai: organisation?.enable_content_ai ?? false,
+    enable_avatar_ai: organisation?.enable_avatar_ai ?? false,
+    enable_hls: organisation?.enable_hls ?? false,
+    enable_cdn: organisation?.enable_cdn ?? false,
   })
 
   const handleEdit = () => {

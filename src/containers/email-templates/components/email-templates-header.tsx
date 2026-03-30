@@ -1,7 +1,6 @@
 'use client'
 
-import { Filter, Search, RotateCcw } from 'lucide-react'
-import { Input } from '@/components/ui/input'
+import { Filter, RotateCcw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   Popover,
@@ -16,7 +15,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { ListEmailTemplatesParams } from '@/types/email-templates'
+import {
+  EmailTemplateStatus,
+  EmailTemplateType,
+  ListEmailTemplatesParams,
+} from '@/types/email-templates'
 import { useListOrganisations } from '@/api/organisation'
 
 interface EmailTemplatesHeaderProps {
@@ -43,16 +46,6 @@ export function EmailTemplatesHeader({
         </p>
       </div>
       <div className='flex items-center gap-3'>
-        <div className='relative hidden w-64 sm:block'>
-          <Search className='text-muted-foreground absolute top-2.5 left-2.5 h-4 w-4' />
-          <Input
-            placeholder='Search Template...'
-            className='bg-background h-9 pl-8'
-            value={params.search || ''}
-            onChange={(e) => onFilterChange({ search: e.target.value })}
-          />
-        </div>
-
         <Popover>
           <PopoverTrigger asChild>
             <Button
@@ -62,16 +55,11 @@ export function EmailTemplatesHeader({
             >
               <Filter className='mr-2 h-4 w-4' />
               Filters
-              {(params.status ||
-                params.email_type ||
-                params.organisation_id) && (
+              {(params.status || params.type || params.org_id) && (
                 <span className='bg-primary ml-2 flex h-4 w-4 items-center justify-center rounded-full text-[10px] text-white'>
                   {
-                    [
-                      params.status,
-                      params.email_type,
-                      params.organisation_id,
-                    ].filter(Boolean).length
+                    [params.status, params.type, params.org_id].filter(Boolean)
+                      .length
                   }
                 </span>
               )}
@@ -102,7 +90,7 @@ export function EmailTemplatesHeader({
                       status:
                         value === 'all'
                           ? undefined
-                          : (value as 'verified' | 'not-verified'),
+                          : (value as EmailTemplateStatus),
                     })
                   }
                 >
@@ -111,8 +99,9 @@ export function EmailTemplatesHeader({
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value='all'>All Status</SelectItem>
-                    <SelectItem value='verified'>Verified</SelectItem>
-                    <SelectItem value='not-verified'>Not Verified</SelectItem>
+                    <SelectItem value='PENDING'>Pending</SelectItem>
+                    <SelectItem value='VERIFIED'>Verified</SelectItem>
+                    <SelectItem value='REJECTED'>Rejected</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -120,25 +109,50 @@ export function EmailTemplatesHeader({
                 <Label htmlFor='type' className='text-xs'>
                   Email Type
                 </Label>
-                <Input
-                  id='type'
-                  placeholder='Enter type...'
-                  className='h-8'
-                  value={params.email_type || ''}
-                  onChange={(e) =>
-                    onFilterChange({ email_type: e.target.value })
+                <Select
+                  value={params.type || 'all'}
+                  onValueChange={(value) =>
+                    onFilterChange({
+                      type:
+                        value === 'all'
+                          ? undefined
+                          : (value as EmailTemplateType),
+                    })
                   }
-                />
+                >
+                  <SelectTrigger id='type' className='h-8'>
+                    <SelectValue placeholder='Select Type' />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value='all'>All Types</SelectItem>
+                    {[
+                      'CONFIRMATION',
+                      'INVITATION',
+                      'REINVITE',
+                      'RESHOOT',
+                      'WELCOME',
+                      'RESET_PASSWORD',
+                      'FAILURE_REPORT',
+                      'SUCCESS_NOTIFICATION',
+                      'DAILY_REPORT',
+                      'RESEND_VERIFICATION',
+                    ].map((t) => (
+                      <SelectItem key={t} value={t}>
+                        {t.replace(/_/g, ' ')}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               <div className='grid gap-2'>
                 <Label htmlFor='org' className='text-xs'>
                   Organisation
                 </Label>
                 <Select
-                  value={params.organisation_id || 'all'}
+                  value={params.org_id || 'all'}
                   onValueChange={(value) =>
                     onFilterChange({
-                      organisation_id: value === 'all' ? undefined : value,
+                      org_id: value === 'all' ? undefined : value,
                     })
                   }
                 >

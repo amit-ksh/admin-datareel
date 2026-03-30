@@ -1,6 +1,5 @@
 'use client'
 
-import { useState } from 'react'
 import {
   Table,
   TableBody,
@@ -9,7 +8,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -21,6 +19,7 @@ import {
   Code,
   LayoutTemplate,
   Loader2,
+  Copy,
 } from 'lucide-react'
 import {
   Dialog,
@@ -32,82 +31,77 @@ import {
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import {
-  useGetEmailTemplate,
-  useApproveEmailTemplate,
+  useEmailTemplateAPI,
+  useUpdateEmailTemplateStatusAPI,
 } from '@/api/email-templates'
 import { Skeleton } from '@/components/ui/skeleton'
 import { toast } from 'sonner'
-import { EmailTemplateListitem } from '@/types'
+import { EmailTemplate, EmailTemplateStatus } from '@/types/email-templates'
 
 interface EmailTemplatesTableProps {
-  data: EmailTemplateListitem[]
+  data: EmailTemplate[]
   meta?: {
     total: number
     page: number
     limit: number
-    last_page: number
   }
   isLoading: boolean
+  templateId?: string
   onPageChange: (page: number) => void
+  onReviewTemplate: (id: string | null) => void
+}
+
+const getStatusBadge = (status: EmailTemplateStatus | null) => {
+  const currentStatus = status || 'PENDING'
+  switch (currentStatus) {
+    case 'VERIFIED':
+      return (
+        <Badge
+          variant='default'
+          className='border-0 bg-emerald-500 text-white hover:bg-emerald-600'
+        >
+          <CheckCircle className='mr-1 h-3 w-3' /> Verified
+        </Badge>
+      )
+    case 'PENDING':
+      return (
+        <Badge
+          variant='secondary'
+          className='border-0 bg-amber-100 text-amber-800 hover:bg-amber-200'
+        >
+          <LayoutTemplate className='mr-1 h-3 w-3' /> Pending
+        </Badge>
+      )
+    case 'REJECTED':
+      return (
+        <Badge variant='destructive' className='border-0'>
+          <XCircle className='mr-1 h-3 w-3' /> Rejected
+        </Badge>
+      )
+    case 'DEFAULT':
+      return (
+        <Badge
+          variant='secondary'
+          className='border-0 bg-blue-100 text-blue-800 hover:bg-blue-200'
+        >
+          <LayoutTemplate className='mr-1 h-3 w-3' /> Default
+        </Badge>
+      )
+    default:
+      return <Badge variant='outline'>{currentStatus}</Badge>
+  }
 }
 
 export function EmailTemplatesTable({
   data,
   meta,
   isLoading,
+  templateId,
   onPageChange,
+  onReviewTemplate,
 }: EmailTemplatesTableProps) {
-  const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(
-    null,
-  )
-  const [isReviewDialogOpen, setIsReviewDialogOpen] = useState(false)
-
   const handleReviewClick = (id: string) => {
-    setSelectedTemplateId(id)
-    setIsReviewDialogOpen(true)
-  }
-
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'verified':
-        return (
-          <Badge
-            variant='default'
-            className='border-0 bg-emerald-500 text-white hover:bg-emerald-600'
-          >
-            <CheckCircle className='mr-1 h-3 w-3' /> Verified
-          </Badge>
-        )
-      case 'not-verified':
-        return (
-          <Badge
-            variant='secondary'
-            className='border-0 bg-amber-100 text-amber-800 hover:bg-amber-200'
-          >
-            <LayoutTemplate className='mr-1 h-3 w-3' /> Pending
-          </Badge>
-        )
-      case 'rejected':
-        return (
-          <Badge variant='destructive' className='border-0'>
-            <XCircle className='mr-1 h-3 w-3' /> Rejected
-          </Badge>
-        )
-      default:
-        return <Badge variant='outline'>{status}</Badge>
-    }
-  }
-
-  const getFallbackColor = (name: string) => {
-    const colors = [
-      'bg-blue-500',
-      'bg-emerald-500',
-      'bg-orange-500',
-      'bg-purple-500',
-      'bg-pink-500',
-    ]
-    const index = name.length % colors.length
-    return colors[index]
+    onReviewTemplate(id)
   }
 
   return (
@@ -117,8 +111,7 @@ export function EmailTemplatesTable({
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className='w-[250px] pl-6'>Organisation</TableHead>
-                <TableHead>Template Name</TableHead>
+                <TableHead className='pl-6'>Template Name</TableHead>
                 <TableHead>Type</TableHead>
                 <TableHead>Subject</TableHead>
                 <TableHead>Status</TableHead>
@@ -130,12 +123,6 @@ export function EmailTemplatesTable({
                 Array.from({ length: 5 }).map((_, i) => (
                   <TableRow key={i} className='h-20'>
                     <TableCell className='pl-6'>
-                      <div className='flex items-center gap-3'>
-                        <Skeleton className='h-10 w-10 rounded-full' />
-                        <Skeleton className='h-4 w-24' />
-                      </div>
-                    </TableCell>
-                    <TableCell>
                       <Skeleton className='h-4 w-32' />
                     </TableCell>
                     <TableCell>
@@ -155,7 +142,7 @@ export function EmailTemplatesTable({
               ) : data.length === 0 ? (
                 <TableRow>
                   <TableCell
-                    colSpan={6}
+                    colSpan={5}
                     className='text-muted-foreground h-32 text-center'
                   >
                     No email templates found.
@@ -164,35 +151,37 @@ export function EmailTemplatesTable({
               ) : (
                 data.map((tpl) => (
                   <TableRow key={tpl.id} className='h-20'>
-                    <TableCell className='pl-6'>
-                      <div className='flex items-center gap-3'>
-                        <Avatar className='h-10 w-10 border-none'>
-                          <AvatarImage
-                            src={tpl.organisation_logo || ''}
-                            alt={tpl.organisation_name}
-                          />
-                          <AvatarFallback
-                            className={`${getFallbackColor(tpl.organisation_name)} text-sm font-semibold text-white`}
-                          >
-                            {tpl.organisation_name.substring(0, 1)}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div className='flex flex-col'>
-                          <span className='text-foreground text-sm font-bold'>
-                            {tpl.organisation_name}
+                    <TableCell className='text-foreground pl-6 font-medium'>
+                      <div className='flex max-w-[300px] flex-col'>
+                        <span className='truncate'>{tpl.name}</span>
+                        <div className='flex items-center gap-1.5'>
+                          <span className='text-muted-foreground line-clamp-1 font-mono text-[10px] font-normal opacity-70'>
+                            ID: {tpl.id}
                           </span>
+                          <button
+                            onClick={async () => {
+                              try {
+                                await navigator.clipboard.writeText(tpl.id)
+                                toast.success('ID copied to clipboard')
+                              } catch {
+                                toast.error('Failed to copy ID')
+                              }
+                            }}
+                            className='text-muted-foreground hover:text-foreground transition-colors'
+                            aria-label='Copy template ID'
+                            type='button'
+                          >
+                            <Copy className='h-2.5 w-2.5' />
+                          </button>
                         </div>
                       </div>
-                    </TableCell>
-                    <TableCell className='text-foreground font-medium'>
-                      {tpl.template_name}
                     </TableCell>
                     <TableCell>
                       <Badge
                         variant='outline'
                         className='bg-muted/50 text-muted-foreground border-transparent font-medium'
                       >
-                        {tpl.type}
+                        {tpl.email_type}
                       </Badge>
                     </TableCell>
                     <TableCell
@@ -233,12 +222,11 @@ export function EmailTemplatesTable({
       </Card>
 
       <ReviewTemplateDialog
-        open={isReviewDialogOpen}
+        open={!!templateId}
         onOpenChange={(open) => {
-          setIsReviewDialogOpen(open)
-          if (!open) setSelectedTemplateId(null)
+          if (!open) onReviewTemplate(null)
         }}
-        templateId={selectedTemplateId}
+        templateId={templateId || null}
       />
     </>
   )
@@ -253,32 +241,38 @@ function ReviewTemplateDialog({
   onOpenChange: (open: boolean) => void
   templateId: string | null
 }) {
-  const { data: template, isLoading } = useGetEmailTemplate(templateId)
-  const { mutate: approve, isPending: isApproving } = useApproveEmailTemplate()
+  const { data: template, isLoading } = useEmailTemplateAPI({
+    template_id: templateId || undefined,
+  })
+  const { mutate: updateStatus, isPending: isUpdating } =
+    useUpdateEmailTemplateStatusAPI()
 
-  const handleApprove = () => {
+  const handleStatusUpdate = (status: EmailTemplateStatus) => {
     if (!templateId) return
 
-    approve(templateId, {
-      onSuccess: (res) => {
-        if (res.approve) {
-          toast.success('Template approved successfully')
+    updateStatus(
+      { template_id: templateId, status },
+      {
+        onSuccess: () => {
+          const action = status === 'VERIFIED' ? 'approved' : 'rejected'
+          toast.success(`Template ${action} successfully`)
           onOpenChange(false)
-        } else {
-          toast.error('Failed to approve template')
-        }
+        },
+        onError: () => {
+          const action = status === 'VERIFIED' ? 'approving' : 'rejecting'
+          toast.error(`An error occurred while ${action} the template`)
+        },
       },
-      onError: () => {
-        toast.error('An error occurred while approving the template')
-      },
-    })
+    )
   }
 
-  if (!templateId) return null
+  if (!template) return null
+
+  const currentStatus = template.status || 'PENDING'
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className='flex h-[95vh] w-full flex-col overflow-hidden p-6 sm:h-[90vh] sm:max-w-6xl'>
+      <DialogContent className='flex h-[98vh] w-full flex-col overflow-hidden p-6 sm:h-[90vh] sm:max-w-6xl'>
         {isLoading ? (
           <div className='flex flex-1 items-center justify-center'>
             <div className='border-primary h-8 w-8 animate-spin rounded-full border-b-2'></div>
@@ -288,8 +282,9 @@ function ReviewTemplateDialog({
             <DialogHeader className='flex-none'>
               <div className='flex items-start justify-between'>
                 <div>
-                  <DialogTitle className='text-xl font-bold'>
-                    {template.template_name}
+                  <DialogTitle className='flex items-center gap-2 text-xl font-bold'>
+                    {template.name}
+                    {getStatusBadge(template.status)}
                   </DialogTitle>
                   <div className='text-muted-foreground mt-2 flex items-center gap-3 text-sm'>
                     <span className='bg-muted rounded-md px-2 py-0.5 font-medium'>
@@ -340,8 +335,8 @@ function ReviewTemplateDialog({
                 >
                   <div className='relative flex-1 overflow-hidden rounded-md border bg-white'>
                     <iframe
-                      srcDoc={template.email_body}
-                      title={`${template.template_name} Preview`}
+                      srcDoc={template.body}
+                      title={`${template.name} Preview`}
                       className='absolute inset-0 h-full w-full border-0 bg-white'
                       sandbox='allow-same-origin'
                     />
@@ -355,7 +350,7 @@ function ReviewTemplateDialog({
                   <ScrollArea className='size-full flex-1'>
                     <div className='size-full p-4'>
                       <pre className='text-muted-foreground bg-card rounded-md border p-4 font-mono text-sm break-all whitespace-pre-wrap'>
-                        {template.email_body}
+                        {template.body}
                       </pre>
                     </div>
                   </ScrollArea>
@@ -368,33 +363,42 @@ function ReviewTemplateDialog({
                 variant='outline'
                 onClick={() => onOpenChange(false)}
                 className='px-6'
-                disabled={isApproving}
+                disabled={isUpdating}
               >
                 Cancel
               </Button>
               <div className='flex items-center gap-3'>
-                <Button
-                  variant='destructive'
-                  className='px-6'
-                  onClick={() => onOpenChange(false)}
-                  disabled={isApproving}
-                >
-                  Reject
-                </Button>
-                <Button
-                  className='bg-emerald-600 px-6 text-white hover:bg-emerald-700'
-                  onClick={handleApprove}
-                  disabled={isApproving || template.status === 'verified'}
-                >
-                  {isApproving ? (
-                    <>
-                      <Loader2 className='mr-2 h-4 w-4 animate-spin' />
-                      Approving...
-                    </>
-                  ) : (
-                    'Approve Template'
-                  )}
-                </Button>
+                {currentStatus === 'DEFAULT' ? (
+                  <div className='flex items-center gap-2 pr-4 text-sm font-medium text-blue-600'>
+                    <LayoutTemplate className='h-4 w-4' />
+                    This is a default template and cannot be modified.
+                  </div>
+                ) : (
+                  <>
+                    <Button
+                      variant='destructive'
+                      className='px-6'
+                      onClick={() => handleStatusUpdate('REJECTED')}
+                      disabled={isUpdating || currentStatus === 'REJECTED'}
+                    >
+                      Reject
+                    </Button>
+                    <Button
+                      className='bg-emerald-600 px-6 text-white hover:bg-emerald-700'
+                      onClick={() => handleStatusUpdate('VERIFIED')}
+                      disabled={isUpdating || currentStatus === 'VERIFIED'}
+                    >
+                      {isUpdating ? (
+                        <>
+                          <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                          Processing...
+                        </>
+                      ) : (
+                        'Approve Template'
+                      )}
+                    </Button>
+                  </>
+                )}
               </div>
             </DialogFooter>
           </>

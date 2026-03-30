@@ -253,7 +253,7 @@ export const useUpdateOrganisationDetail = (id: string) => {
 }
 
 export const getOrganisationByIdAPI = async (id: string) => {
-  const response = await PrivateAxios.get<Organisation>('organisaton', {
+  const response = await PrivateAxios.get<Organisation>('organisation', {
     params: { id },
   })
   return response.data

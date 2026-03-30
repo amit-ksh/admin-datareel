@@ -19,16 +19,22 @@ import {
 } from '@/components/ui/sidebar'
 import { useGlobalAuthContext } from '@/providers/auth-provider'
 
-interface NavUserProps {
-  user: {
-    name: string
-    email: string
-    avatar: string
-  }
-}
-export function NavUser({ user }: NavUserProps) {
-  const { logoutUser, isLogoutPending } = useGlobalAuthContext()
+export function NavUser() {
+  const { currentUser, logoutUser, isLogoutPending } = useGlobalAuthContext()
   const { isMobile, changePopoverOpen } = useSidebar()
+
+  const user = {
+    name: currentUser?.name || 'Anonymous',
+    email: currentUser?.email || '',
+    avatar: '',
+  }
+
+  const initials = user.name
+    .split(' ')
+    .map((n) => n[0])
+    .join('')
+    .toUpperCase()
+    .slice(0, 2)
 
   return (
     <SidebarMenu className='flex items-center justify-center'>
@@ -47,7 +53,7 @@ export function NavUser({ user }: NavUserProps) {
                   height={256}
                 />
                 <AvatarFallback className='overflow-hidden rounded-full'>
-                  {user.name.charAt(0) + user.name.charAt(1)}
+                  {initials}
                 </AvatarFallback>
               </Avatar>
               <div className='grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden'>
@@ -67,7 +73,9 @@ export function NavUser({ user }: NavUserProps) {
               <div className='flex items-center gap-2 px-1 py-1.5 text-left text-sm'>
                 <Avatar className='h-8 w-8 rounded-lg'>
                   <AvatarImage src={user.avatar} alt={user.name} />
-                  <AvatarFallback className='rounded-lg'>CN</AvatarFallback>
+                  <AvatarFallback className='rounded-lg'>
+                    {initials}
+                  </AvatarFallback>
                 </Avatar>
                 <div className='grid flex-1 text-left text-sm leading-tight'>
                   <span className='truncate font-medium'>{user.name}</span>

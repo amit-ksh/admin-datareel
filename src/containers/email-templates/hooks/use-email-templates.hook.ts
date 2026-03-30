@@ -2,8 +2,12 @@
 
 import { useCallback, useMemo } from 'react'
 import { useRouter, useSearchParams, usePathname } from 'next/navigation'
-import { useListEmailTemplates } from '@/api/email-templates'
-import { ListEmailTemplatesParams } from '@/types/email-templates'
+import { useEmailTemplatesAPI } from '@/api/email-templates'
+import {
+  ListEmailTemplatesParams,
+  EmailTemplateStatus,
+  EmailTemplateType,
+} from '@/types/email-templates'
 
 export const useEmailTemplates = () => {
   const router = useRouter()
@@ -11,44 +15,25 @@ export const useEmailTemplates = () => {
   const searchParams = useSearchParams()
 
   const page = Number(searchParams.get('page')) || 1
-  const limit = Number(searchParams.get('limit')) || 10
-  const search = searchParams.get('search') || ''
-  const status = searchParams.get('status') as
-    | 'verified'
-    | 'not-verified'
-    | undefined
-  const email_type = searchParams.get('email_type') || undefined
-  const organisation_id = searchParams.get('organisation_id') || undefined
-  const sort_by = searchParams.get('sort_by') || 'updated_at'
-  const sort_order = (searchParams.get('sort_order') || 'desc') as
-    | 'asc'
-    | 'desc'
+  const page_limit = Number(searchParams.get('page_limit')) || 10
+  const template_id = searchParams.get('template_id') || undefined
+  const org_id = searchParams.get('org_id') || undefined
+  const status = searchParams.get('status') as EmailTemplateStatus | undefined
+  const type = searchParams.get('type') as EmailTemplateType | undefined
 
   const params: ListEmailTemplatesParams = useMemo(
     () => ({
       page,
-      limit,
-      search: search || undefined,
-      status: (status as 'verified' | 'not-verified') || undefined,
-      email_type,
-      organisation_id,
-      sort_by,
-      sort_order,
-    }),
-    [
-      page,
-      limit,
-      search,
+      page_limit,
+      org_id,
       status,
-      email_type,
-      organisation_id,
-      sort_by,
-      sort_order,
-    ],
+      type,
+    }),
+    [page, page_limit, org_id, status, type],
   )
 
   const { data, isLoading, isError, error, refetch } =
-    useListEmailTemplates(params)
+    useEmailTemplatesAPI(params)
 
   const updateQueryParams = useCallback(
     (updates: Record<string, string | number | boolean | null | undefined>) => {
@@ -83,6 +68,7 @@ export const useEmailTemplates = () => {
     error,
     refetch,
     params,
+    template_id,
     setFilters,
     resetFilters,
     updateQueryParams,

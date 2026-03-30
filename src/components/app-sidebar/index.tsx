@@ -30,11 +30,9 @@ import {
 } from 'lucide-react'
 import { Separator } from '../ui/separator'
 import { cn } from '@/lib/utils'
-import { useGlobalAuthContext } from '@/providers/auth-provider'
 
 export function AppSidebar({ ...props }) {
   const pathname = usePathname()
-  const { currentUser } = useGlobalAuthContext()
 
   const { isMobile, state, setOpen } = useSidebar()
 
@@ -76,11 +74,6 @@ export function AppSidebar({ ...props }) {
         ],
       },
     ],
-    user: {
-      name: currentUser?.tenant_data?.tenant_name || 'Anonymous',
-      email: currentUser?.tenant_data?.tenant_email || '',
-      avatar: currentUser?.tenant_data?.profile_image || '',
-    },
   }
 
   // Handle hover-to-expand only when currently collapsed on desktop
@@ -219,7 +212,7 @@ export function AppSidebar({ ...props }) {
           </SidebarMenuItem>
         </SidebarMenu>
         <div data-testid={APP_SIDEBAR_TEST_IDS.NAV_USER}>
-          <NavUser user={items.user} />
+          <NavUser />
         </div>
       </SidebarFooter>
       <SidebarRail />
