@@ -5,30 +5,61 @@ export const createOrganisationSchema = z.object({
   adminEmail: z.string().email('Invalid email address'),
   defaultPassword: z.string().min(6, 'Password must be at least 6 characters'),
   logo: z.any().optional(),
+  source_org_id: z.string().optional(),
+  options: z.string().optional(),
+  total_tokens: z.number().int().min(0).default(1),
+  infinite_tokens: z.boolean().default(false),
 })
 
 export type CreateOrganisationPayload = z.infer<typeof createOrganisationSchema>
 
+export interface OrganisationCounts {
+  personas?: number
+  avatars?: number
+  voices?: number
+  videos?: number
+  assets?: number
+  templates?: number
+  content_templates?: number
+  render_settings?: number
+  pipelines?: number
+  clusters?: number
+}
+
 export interface Organisation {
+  _id: string
   id: string
+  created_at: string
   organisation_name: string
   organisation_logo: string | null
   tenant_id: string
+  roles_permissions: Record<string, string[]>
+  languages: string[]
+  password?: string
+  user_id: string
+  notification: string[]
+  additional_emails: string[]
+  unlocked: boolean
+  unlocked_at?: string
+  consent_text: {
+    title: string
+  }
   enable_cdn: boolean
   enable_hls: boolean
   enable_content_ai: boolean
-  enable_avatar_ai: boolean
-  unlocked: boolean
-  unlocked_at: string
-  enable_daily_report: boolean
+  enable_avatar_ai?: boolean
+  persona_onboarding_config?: {
+    require_thumbnail: boolean
+    require_video: boolean
+    require_audio: boolean
+  }
   daily_report_hour: number
   daily_report_timezone: string
-  created_at: string
-  updated_at: string
+  enable_daily_report: boolean
   total_tokens: number
   used_tokens: number
   infinite_tokens: boolean
-  onboarding_status: {
+  onboarding_status?: {
     email_verified: boolean
     email_verified_at: string | null
     information_extracted: boolean
@@ -38,11 +69,7 @@ export interface Organisation {
     cloning_job_id: string | null
     cloning_details: unknown | null
   }
-  persona_onboarding_config?: {
-    require_thumbnail: boolean
-    require_video: boolean
-    require_audio: boolean
-  }
+  counts: OrganisationCounts
 }
 
 export interface OrgTokenBalance {
@@ -147,6 +174,7 @@ export interface UpdateOrganisationDetailPayload {
   daily_report_timezone: string
   infinite_tokens: boolean
   total_tokens: number
+  additional_emails: string[]
 }
 
 export type UnlockType =

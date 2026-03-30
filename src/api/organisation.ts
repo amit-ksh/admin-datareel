@@ -66,6 +66,16 @@ export const createOrganisationAPI = async (
   if (payload.logo) {
     formData.append('logo', payload.logo)
   }
+  if (payload.source_org_id) {
+    formData.append('source_org_id', payload.source_org_id)
+  }
+  if (payload.options) {
+    formData.append('options', payload.options)
+  }
+  formData.append(
+    'total_tokens',
+    payload.total_tokens ? payload.total_tokens.toString() : '0',
+  )
 
   const response = await PrivateAxios.post<{ organisation_id: string }>(
     'dashboard/auth/organisations',

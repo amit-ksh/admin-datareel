@@ -27,9 +27,9 @@ export function FeaturesSettings() {
     if (organisation) {
       setSettings({
         enable_content_ai: organisation.enable_content_ai,
-        enable_avatar_ai: organisation.enable_avatar_ai,
-        enable_hls: organisation.enable_hls,
-        enable_cdn: organisation.enable_cdn,
+        enable_avatar_ai: organisation.enable_avatar_ai ?? false,
+        enable_hls: organisation.enable_hls ?? false,
+        enable_cdn: organisation.enable_cdn ?? false,
       })
     }
     setIsEditing(true)

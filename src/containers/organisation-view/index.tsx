@@ -10,9 +10,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 import { useOrganisationView } from './use-organisation-view.hook'
 import { Skeleton } from '@/components/ui/skeleton'
+import { ErrorState } from '@/components/common/error-state/error-state'
+import { AxiosError } from 'axios'
 
 export default function OrganisationViewContainer() {
-  const { organisation, isLoading } = useOrganisationView()
+  const { organisation, isLoading, error } = useOrganisationView()
 
   if (isLoading) {
     return (
@@ -33,8 +35,28 @@ export default function OrganisationViewContainer() {
     )
   }
 
+  if (error) {
+    return (
+      <div className='flex min-h-[400px] items-center justify-center'>
+        <ErrorState
+          error={error as AxiosError}
+          title='Failed to load organisation'
+          description='We encountered an error while fetching the organisation details.'
+        />
+      </div>
+    )
+  }
+
   if (!organisation) {
-    return <div>Organisation not found</div>
+    return (
+      <div className='flex min-h-[400px] items-center justify-center'>
+        <ErrorState
+          error={(error ?? {}) as AxiosError}
+          title='Organisation not found'
+          description='The organisation you are looking for does not exist or you do not have access.'
+        />
+      </div>
+    )
   }
 
   return (
@@ -112,7 +134,7 @@ export default function OrganisationViewContainer() {
           value='projects-assets'
           className='p-2 pb-16 ring-0 focus-visible:ring-0 focus-visible:outline-none'
         >
-          <OrganisationProjectsAssets />
+          <OrganisationProjectsAssets counts={organisation.counts} />
         </TabsContent>
       </Tabs>
     </div>

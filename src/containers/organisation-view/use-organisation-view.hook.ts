@@ -6,10 +6,9 @@ import {
   useUpdateOrganisation,
   useUnlockOrganisation,
   useUpdateOrganisationDetail,
-  useGetOrganisationById,
 } from '@/api/organisation'
 import { useParams } from 'next/navigation'
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 
 export const useOrganisationView = () => {
   const { organisationId } = useParams()
@@ -18,38 +17,60 @@ export const useOrganisationView = () => {
   const [tenantStatus, setTenantStatus] = useState<string | undefined>()
   const [tenantSearch, setTenantSearch] = useState<string | undefined>()
 
-  const { data: organisationFromApi, isLoading: isOrgLoading } =
-    useGetOrganisation(organisationId as string)
+  const {
+    data: organisationFromApi,
+    isLoading: isOrgLoading,
+    error: orgError,
+  } = useGetOrganisation(organisationId as string)
 
-  const { data: organisationById, isLoading: isOrgByIdLoading } =
-    useGetOrganisationById(organisationId as string)
+  const organisation = useMemo(() => {
+    if (!organisationFromApi) return null
 
-  const organisation = organisationById || organisationFromApi
+    return {
+      ...organisationFromApi,
+      id: organisationFromApi.id || organisationFromApi._id,
+    }
+  }, [organisationFromApi])
 
-  const { mutate: updateOrganisation, isPending: isUpdating } =
-    useUpdateOrganisation(organisationId as string)
+  const {
+    mutate: updateOrganisation,
+    isPending: isUpdating,
+    error: updateError,
+  } = useUpdateOrganisation(organisationId as string)
 
-  const { data: tenantsResponse, isLoading: isTenantsLoading } =
-    useListOrganisationTenants({
-      org_id: organisationId as string,
-      page: tenantPage,
-      page_limit: tenantLimit,
-      tenant_status: tenantStatus,
-      search: tenantSearch,
-    })
+  const {
+    data: tenantsResponse,
+    isLoading: isTenantsLoading,
+    error: tenantsError,
+  } = useListOrganisationTenants({
+    org_id: organisationId as string,
+    page: tenantPage,
+    page_limit: tenantLimit,
+    tenant_status: tenantStatus,
+    search: tenantSearch,
+  })
 
-  const { mutate: updateOrganisationDetail, isPending: isUpdatingDetail } =
-    useUpdateOrganisationDetail(organisationId as string)
+  const {
+    mutate: updateOrganisationDetail,
+    isPending: isUpdatingDetail,
+    error: updateDetailError,
+  } = useUpdateOrganisationDetail(organisationId as string)
 
-  const { mutate: unlockOrganisation, isPending: isUnlocking } =
-    useUnlockOrganisation(organisationId as string)
+  const {
+    mutate: unlockOrganisation,
+    isPending: isUnlocking,
+    error: unlockError,
+  } = useUnlockOrganisation(organisationId as string)
 
   return {
     organisation,
     updateOrganisation,
     isUpdating,
-    isLoading: isOrgLoading && isOrgByIdLoading && isTenantsLoading,
+    isLoading: isOrgLoading || isTenantsLoading,
+    error: orgError,
+    updateError,
     tenantsResponse,
+    tenantsError,
     tenantPage,
     setTenantPage,
     tenantLimit,
@@ -60,9 +81,9 @@ export const useOrganisationView = () => {
     setTenantSearch,
     updateOrganisationDetail,
     isUpdatingDetail,
+    updateDetailError,
     unlockOrganisation,
     isUnlocking,
-    organisationById,
-    isOrgByIdLoading,
+    unlockError,
   }
 }
