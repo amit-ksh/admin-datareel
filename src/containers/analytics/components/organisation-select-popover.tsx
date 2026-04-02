@@ -24,12 +24,13 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 interface OrganisationSelectPopoverProps {
   selectedOrgId: string
-  onSelect: (id: string) => void
+  onSelect: (id: string, org?: Organisation) => void
   className?: string
 }
 
 import { ANALYTICS_TEST_IDS } from './test-ids'
 import { cn } from '@/lib/utils'
+import { Organisation } from '@/types'
 
 export function OrganisationSelectPopover({
   selectedOrgId,
@@ -156,7 +157,7 @@ export function OrganisationSelectPopover({
                     <CommandItem
                       key={org.id}
                       onSelect={() => {
-                        onSelect(org.id)
+                        onSelect(org.id, org)
                         setOpen(false)
                       }}
                       className='flex cursor-pointer items-center justify-between py-2 text-xs'
