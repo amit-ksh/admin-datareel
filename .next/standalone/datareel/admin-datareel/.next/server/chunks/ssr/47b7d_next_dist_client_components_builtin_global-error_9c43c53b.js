@@ -1,0 +1,3 @@
+module.exports=[31013,(a,b,c)=>{let{createClientModuleProxy:d}=a.r(47215);a.n(d("[project]/datareel/admin-datareel/node_modules/.pnpm/next@16.1.6_@babel+core@7.29.0_@playwright+test@1.58.2_react-dom@19.2.4_react@19.2.4__react@19.2.4/node_modules/next/dist/client/components/builtin/global-error.js <module evaluation>"))},75504,(a,b,c)=>{let{createClientModuleProxy:d}=a.r(47215);a.n(d("[project]/datareel/admin-datareel/node_modules/.pnpm/next@16.1.6_@babel+core@7.29.0_@playwright+test@1.58.2_react-dom@19.2.4_react@19.2.4__react@19.2.4/node_modules/next/dist/client/components/builtin/global-error.js"))},32591,a=>{"use strict";a.i(31013);var b=a.i(75504);a.n(b)}];
+
+//# sourceMappingURL=47b7d_next_dist_client_components_builtin_global-error_9c43c53b.js.map

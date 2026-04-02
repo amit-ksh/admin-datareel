@@ -1,3 +1,0 @@
-module.exports=[45185,a=>{"use strict";var b=a.i(45625),c=a.i(20912);function d({className:a,...d}){return(0,b.jsx)("div",{"data-slot":"skeleton",className:(0,c.cn)("bg-accent animate-pulse rounded-md",a),...d})}function e(){return(0,b.jsx)(d,{className:"h-[80vh] w-full rounded-md"})}a.s(["default",()=>e],45185)}];
-
-//# sourceMappingURL=datareel-admin_src_app_%28protected%29_loading_tsx_9807747f._.js.map
