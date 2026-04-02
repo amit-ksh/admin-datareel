@@ -33,7 +33,7 @@ export function EmailTemplatesHeader({
   onFilterChange,
   onReset,
 }: EmailTemplatesHeaderProps) {
-  const { data: organisations } = useListOrganisations({ page_limit: 100 })
+  const { data: organisations } = useListOrganisations({ page_limit: 10 })
 
   return (
     <div className='mb-8 flex items-center justify-between'>

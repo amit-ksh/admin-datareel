@@ -129,7 +129,7 @@ export const updateOrganisationAPI = async (
   id: string,
   payload: UpdateOrganisationPayload,
 ) => {
-  const response = await PrivateAxios.patch<Organisation>(
+  const response = await PrivateAxios.put<Organisation>(
     `dashboard/auth/organisations/${id}`,
     payload,
   )

@@ -109,14 +109,13 @@ export function OrganisationsTable({
               <TableHead className='w-[300px] pl-6'>Organisation</TableHead>
               <TableHead>
                 <div
-                  className='hover:text-foreground flex cursor-pointer items-center gap-2 select-none'
+                  className='hover:text-foreground flex cursor-pointer items-center gap-2 text-nowrap select-none'
                   onClick={() => handleSort('joined_at')}
                 >
                   Join at
                   <ArrowUpDown className='h-3.5 w-3.5' />
                 </div>
               </TableHead>
-              <TableHead>Tenant ID</TableHead>
               <TableHead>CDN</TableHead>
               <TableHead>HLS</TableHead>
               <TableHead>Status</TableHead>
@@ -173,19 +172,17 @@ export function OrganisationsTable({
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell className='text-foreground text-sm font-medium'>
+                  <TableCell className='text-foreground text-sm font-medium text-nowrap'>
                     {format(new Date(org.created_at), 'dd MMM yyyy')}
                   </TableCell>
-                  <TableCell className='text-foreground text-sm font-medium'>
-                    {org.tenant_id.slice(0, 8)}...
-                  </TableCell>
+
                   <TableCell className='text-foreground text-sm font-medium'>
                     {org.enable_cdn ? 'Yes' : 'No'}
                   </TableCell>
                   <TableCell className='text-foreground text-sm font-medium'>
                     {org.enable_hls ? 'Yes' : 'No'}
                   </TableCell>
-                  <TableCell className='text-foreground text-sm font-medium'>
+                  <TableCell className='text-foreground text-sm font-medium text-nowrap'>
                     <div className='flex flex-col gap-1'>
                       <span
                         className={`w-fit rounded-full px-1.5 py-0.5 text-[10px] ${org?.onboarding_status?.email_verified ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}`}

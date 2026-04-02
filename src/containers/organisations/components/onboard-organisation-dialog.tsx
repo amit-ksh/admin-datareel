@@ -84,7 +84,7 @@ export function OnboardOrganisationDialog() {
 
   const sourceOrgId = watch('source_org_id')
   const infiniteTokens = watch('infinite_tokens')
-  const { data: orgsData } = useListOrganisations({ page_limit: 100 })
+  const { data: orgsData } = useListOrganisations({ page_limit: 10 })
   const organisations = orgsData?.docs || []
 
   const updateOption = (key: keyof typeof options, value: boolean) => {
