@@ -1,1 +1,0 @@
-{"version":3,"sources":["../../../../../../datareel/admin-datareel/src/app/%28public%29/layout.ts"],"sourcesContent":["export default function layout({ children }: { children: React.ReactNode }) {\n  return children\n}\n"],"names":[],"mappings":"uCAAe,SAAS,EAAO,UAAE,CAAQ,CAAiC,EACxE,OAAO,CACT"}
