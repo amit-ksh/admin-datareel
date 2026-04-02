@@ -211,29 +211,6 @@ export default function AnalyticsContainer() {
 
       <AnalyticsSystemHealth />
 
-      {/* Yearly Line Chart Row */}
-      <div className='grid gap-4'>
-        <AnalyticsLineChart
-          title='Yearly Video Analytics'
-          description='Monthly comparison of videos processed, approved, and seen.'
-          data={yearlyVideoData}
-          config={{
-            videos: { label: 'Videos', color: '#3b82f6' },
-            approval: { label: 'Approval', color: '#22c55e' },
-            delivered: { label: 'Delivered', color: '#f59e0b' },
-            seen: { label: 'Seen', color: '#eab308' },
-          }}
-          lines={[
-            { key: 'videos' },
-            { key: 'approval' },
-            { key: 'delivered' },
-            { key: 'seen' },
-          ]}
-          year={year.toString()}
-          onYearChange={(y) => setYear(parseInt(y))}
-        />
-      </div>
-
       {/* Status Charts Row */}
       <div className='grid gap-4 lg:grid-cols-2'>
         <AnalyticsStatusChart
@@ -272,6 +249,29 @@ export default function AnalyticsContainer() {
         bottomActions={bottomActions}
         ratings={ratings}
       />
+
+      {/* Yearly Line Chart Row */}
+      <div className='grid gap-4'>
+        <AnalyticsLineChart
+          title='Yearly Video Analytics'
+          description='Monthly comparison of videos processed, approved, and seen.'
+          data={yearlyVideoData}
+          config={{
+            videos: { label: 'Videos', color: '#3b82f6' },
+            approval: { label: 'Approval', color: '#22c55e' },
+            delivered: { label: 'Delivered', color: '#f59e0b' },
+            seen: { label: 'Seen', color: '#eab308' },
+          }}
+          lines={[
+            { key: 'videos' },
+            { key: 'approval' },
+            { key: 'delivered' },
+            { key: 'seen' },
+          ]}
+          year={year.toString()}
+          onYearChange={(y) => setYear(parseInt(y))}
+        />
+      </div>
 
       {/* Top Organizations Table */}
       <div className='grid gap-4'>

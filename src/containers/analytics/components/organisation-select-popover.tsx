@@ -25,13 +25,16 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 interface OrganisationSelectPopoverProps {
   selectedOrgId: string
   onSelect: (id: string) => void
+  className?: string
 }
 
 import { ANALYTICS_TEST_IDS } from './test-ids'
+import { cn } from '@/lib/utils'
 
 export function OrganisationSelectPopover({
   selectedOrgId,
   onSelect,
+  className = '',
 }: OrganisationSelectPopoverProps) {
   const [open, setOpen] = React.useState(false)
   const [search, setSearch] = React.useState('')
@@ -59,13 +62,16 @@ export function OrganisationSelectPopover({
   const selectedOrg = organisations.find((org) => org.id === selectedOrgId)
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={open} onOpenChange={setOpen} modal>
       <PopoverTrigger asChild>
         <Button
           variant='outline'
           role='combobox'
           aria-expanded={open}
-          className='h-9 w-full justify-between border-zinc-200 bg-white text-xs font-semibold hover:bg-zinc-50 sm:w-[240px] dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-900'
+          className={cn(
+            'h-9 w-full justify-between border-zinc-200 bg-white text-xs font-semibold hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-900',
+            className,
+          )}
           data-testid={ANALYTICS_TEST_IDS.ORGANISATION_SELECT.TRIGGER}
         >
           <div className='flex items-center gap-2 truncate'>

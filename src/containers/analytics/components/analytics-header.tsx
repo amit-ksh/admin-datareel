@@ -139,6 +139,7 @@ export function AnalyticsHeader({
         <OrganisationSelectPopover
           selectedOrgId={selectedOrgId}
           onSelect={setSelectedOrgId}
+          className='sm:w-[240px]'
         />
 
         <DropdownMenu>

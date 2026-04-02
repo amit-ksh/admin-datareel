@@ -43,7 +43,7 @@ export function DailyReportSettings() {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setSettings({
         enable_daily_report: organisation.enable_daily_report,
-        daily_report_hour: organisation.daily_report_hour,
+        daily_report_hour: organisation.daily_report_hour ?? 0,
         daily_report_timezone:
           organisation.daily_report_timezone || 'Asia/Calcutta',
         additional_emails: organisation.additional_emails || [],
@@ -109,7 +109,7 @@ export function DailyReportSettings() {
     if (organisation) {
       setSettings({
         enable_daily_report: organisation.enable_daily_report,
-        daily_report_hour: organisation.daily_report_hour,
+        daily_report_hour: organisation.daily_report_hour ?? 0,
         daily_report_timezone:
           organisation.daily_report_timezone || 'Asia/Calcutta',
         additional_emails: organisation.additional_emails || [],

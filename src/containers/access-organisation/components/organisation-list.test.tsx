@@ -51,6 +51,8 @@ const mockData: ListOrganisationsResponse = {
       enable_daily_report: false,
       daily_report_hour: 0,
       daily_report_timezone: '',
+      updated_at: '',
+      notification_emails: {},
     },
     {
       id: '2',
@@ -88,6 +90,8 @@ const mockData: ListOrganisationsResponse = {
       enable_daily_report: false,
       daily_report_hour: 0,
       daily_report_timezone: '',
+      updated_at: '',
+      notification_emails: {},
     },
   ],
   meta: {

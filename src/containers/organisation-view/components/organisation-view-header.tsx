@@ -1,10 +1,14 @@
 import { Badge } from '@/components/ui/badge'
-import { Calendar, Building2 } from 'lucide-react'
+import { Calendar, Building2, Lock, Unlock } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { CloneOrganisationDialog } from './clone-organisation-dialog'
 import { useOrganisationView } from '../use-organisation-view.hook'
 import { format } from 'date-fns'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
 
 export function OrganisationViewHeader() {
   const { organisation, unlockOrganisation, isUnlocking } =
@@ -36,19 +40,67 @@ export function OrganisationViewHeader() {
               >
                 Active
               </Badge>
-              {!organisation.unlocked && (
-                <Button
-                  size='sm'
-                  variant='outline'
-                  className='h-6 rounded-md bg-blue-50 px-2 py-0 text-[10px] font-semibold text-blue-600 hover:bg-blue-100 hover:text-blue-700 dark:bg-blue-900/40 dark:text-blue-400'
-                  onClick={() =>
-                    unlockOrganisation({ unlock_type: 'organisation' })
-                  }
-                  disabled={isUnlocking}
-                >
-                  {isUnlocking ? 'Unlocking…' : 'Unlock Organisation'}
-                </Button>
-              )}
+
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    size='sm'
+                    variant='outline'
+                    className={`h-6 rounded-md px-2 py-0 text-[10px] font-semibold ${
+                      organisation.unlocked
+                        ? 'bg-amber-50 text-amber-600 hover:bg-amber-100 dark:bg-amber-900/40 dark:text-amber-400'
+                        : 'bg-blue-50 text-blue-600 hover:bg-blue-100 dark:bg-blue-900/40 dark:text-blue-400'
+                    }`}
+                  >
+                    {organisation.unlocked ? (
+                      <>
+                        <Lock className='mr-1 h-3 w-3' />
+                        Lock Organisation
+                      </>
+                    ) : (
+                      <>
+                        <Unlock className='mr-1 h-3 w-3' />
+                        Unlock Organisation
+                      </>
+                    )}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className='w-80' side='bottom' align='start'>
+                  <div className='space-y-4'>
+                    <div className='space-y-2'>
+                      <h4 className='leading-none font-medium'>
+                        {organisation.unlocked
+                          ? 'Lock Organisation'
+                          : 'Unlock Organisation'}
+                      </h4>
+                      <p className='text-muted-foreground text-sm'>
+                        Are you sure you want to{' '}
+                        {organisation.unlocked ? 'lock' : 'unlock'}{' '}
+                        <strong>{organisation.organisation_name}</strong>?
+                      </p>
+                    </div>
+                    <div className='flex justify-end gap-2'>
+                      <Button
+                        size='sm'
+                        variant={
+                          organisation.unlocked ? 'destructive' : 'default'
+                        }
+                        onClick={() => {
+                          if (!organisation.unlocked) {
+                            unlockOrganisation({ unlock_type: 'organisation' })
+                          } else {
+                            // TODO: Add lockOrganisation mutation here
+                            console.log('Lock organisation API not implemented')
+                          }
+                        }}
+                        disabled={isUnlocking}
+                      >
+                        {isUnlocking ? 'Processing...' : 'Confirm'}
+                      </Button>
+                    </div>
+                  </div>
+                </PopoverContent>
+              </Popover>
             </div>
             <div className='text-muted-foreground mt-1 flex items-center gap-4 text-sm'>
               <span className='flex items-center gap-1.5'>
@@ -63,9 +115,6 @@ export function OrganisationViewHeader() {
             </div>
           </div>
         </div>
-      </div>
-      <div className='flex w-full items-center gap-3 sm:w-auto'>
-        <CloneOrganisationDialog />
       </div>
     </div>
   )
