@@ -119,7 +119,7 @@ export function AnalyticsStatusChart({
                   </div>
                   <div className='flex items-center gap-3'>
                     <span className='font-semibold'>{item[dataKey]}</span>
-                    <span className='bg-muted text-muted-foreground min-w-[4rem] rounded-sm px-2 py-0.5 text-center text-xs'>
+                    <span className='bg-muted text-muted-foreground min-w-16 rounded-sm px-2 py-0.5 text-center text-xs'>
                       {percentage}%
                     </span>
                   </div>

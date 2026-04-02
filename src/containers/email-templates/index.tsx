@@ -10,6 +10,7 @@ export default function EmailTemplatesContainer() {
     isLoading,
     setFilters,
     params,
+    template_id,
     updateQueryParams,
     resetFilters,
   } = useEmailTemplates()
@@ -22,10 +23,14 @@ export default function EmailTemplatesContainer() {
         onReset={resetFilters}
       />
       <EmailTemplatesTable
-        data={data?.data || []}
+        data={data?.docs || []}
         meta={data?.meta}
         isLoading={isLoading}
+        templateId={template_id}
         onPageChange={(page) => updateQueryParams({ page })}
+        onReviewTemplate={(id: string | null) =>
+          updateQueryParams({ template_id: id })
+        }
       />
     </div>
   )

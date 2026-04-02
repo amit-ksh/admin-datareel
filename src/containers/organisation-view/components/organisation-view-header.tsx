@@ -1,12 +1,14 @@
 import { Badge } from '@/components/ui/badge'
 import { Calendar, Building2 } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import { CloneOrganisationDialog } from './clone-organisation-dialog'
 import { useOrganisationView } from '../use-organisation-view.hook'
 import { format } from 'date-fns'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 export function OrganisationViewHeader() {
-  const { organisation } = useOrganisationView()
+  const { organisation, unlockOrganisation, isUnlocking } =
+    useOrganisationView()
 
   if (!organisation) return null
 
@@ -34,6 +36,19 @@ export function OrganisationViewHeader() {
               >
                 Active
               </Badge>
+              {!organisation.unlocked && (
+                <Button
+                  size='sm'
+                  variant='outline'
+                  className='h-6 rounded-md bg-blue-50 px-2 py-0 text-[10px] font-semibold text-blue-600 hover:bg-blue-100 hover:text-blue-700 dark:bg-blue-900/40 dark:text-blue-400'
+                  onClick={() =>
+                    unlockOrganisation({ unlock_type: 'organisation' })
+                  }
+                  disabled={isUnlocking}
+                >
+                  {isUnlocking ? 'Unlocking…' : 'Unlock Organisation'}
+                </Button>
+              )}
             </div>
             <div className='text-muted-foreground mt-1 flex items-center gap-4 text-sm'>
               <span className='flex items-center gap-1.5'>

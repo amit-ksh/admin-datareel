@@ -26,13 +26,18 @@ export interface MetricsOverviewProps {
   }
 }
 
+import { ANALYTICS_TEST_IDS } from './test-ids'
+
 export function MetricsOverview({
   organization,
   metrics,
   completion,
 }: MetricsOverviewProps) {
   return (
-    <div className='border-border/50 bg-card/50 dark:bg-accent mb-8 flex w-full flex-col overflow-hidden rounded-xl border xl:flex-row'>
+    <div
+      className='border-border/50 bg-card/50 dark:bg-accent mb-8 flex w-full flex-col overflow-hidden rounded-xl border xl:flex-row'
+      data-testid={ANALYTICS_TEST_IDS.METRICS_OVERVIEW.CONTAINER}
+    >
       {/* 1. ORGANIZATION SECTION */}
       {organization && (
         <div className='border-border/50 flex w-full flex-none flex-row items-center justify-between border-b bg-slate-50/50 p-6 xl:w-[360px] xl:border-r xl:border-b-0 xl:px-8 dark:bg-slate-900/30'>
@@ -57,18 +62,22 @@ export function MetricsOverview({
               className='h-full w-full -rotate-90 transform'
               viewBox='0 0 36 36'
             >
-              <path
+              <circle
+                cx='18'
+                cy='18'
+                r='15.9155'
                 className='text-slate-200 dark:text-slate-800/80'
                 strokeDasharray='100, 100'
-                d='M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831'
                 stroke='currentColor'
                 strokeWidth='3.5'
                 fill='none'
               />
-              <path
+              <circle
+                cx='18'
+                cy='18'
+                r='15.9155'
                 className='text-blue-600 dark:text-blue-500'
                 strokeDasharray={`${organization.onboardedPercent}, 100`}
-                d='M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831'
                 stroke='currentColor'
                 strokeWidth='4'
                 fill='none'

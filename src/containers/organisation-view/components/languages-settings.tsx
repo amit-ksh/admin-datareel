@@ -1,5 +1,7 @@
+import { useState } from 'react'
 import { Globe2 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
@@ -7,23 +9,61 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { useOrganisationView } from '../use-organisation-view.hook'
 
-interface LanguagesSettingsProps {
-  isEditing: boolean
-}
+export function LanguagesSettings() {
+  const { isUpdating } = useOrganisationView()
+  const [isEditing, setIsEditing] = useState(false)
 
-export function LanguagesSettings({ isEditing }: LanguagesSettingsProps) {
+  const handleSave = () => {
+    // Implement save logic here when API is ready
+    setIsEditing(false)
+  }
+
+  const handleCancel = () => {
+    setIsEditing(false)
+  }
+
   return (
     <Card>
       <CardHeader className='pb-4'>
-        <CardTitle className='flex items-center gap-2 text-lg'>
-          <Globe2 className='h-5 w-5 text-blue-500' />
-          Languages
-        </CardTitle>
-        <CardDescription>
-          Supported languages for video generation and localization in this
-          organization.
-        </CardDescription>
+        <div className='flex items-start justify-between gap-4'>
+          <div>
+            <CardTitle className='flex items-center gap-2 text-lg'>
+              <Globe2 className='h-5 w-5 text-blue-500' />
+              Languages
+            </CardTitle>
+            <CardDescription>
+              Supported languages for video generation and localization in this
+              organization.
+            </CardDescription>
+          </div>
+          <div className='flex shrink-0 items-center gap-2'>
+            {isEditing ? (
+              <>
+                <Button
+                  variant='outline'
+                  size='sm'
+                  onClick={handleCancel}
+                  disabled={isUpdating}
+                >
+                  Cancel
+                </Button>
+                <Button size='sm' onClick={handleSave} disabled={isUpdating}>
+                  {isUpdating ? 'Saving…' : 'Save'}
+                </Button>
+              </>
+            ) : (
+              <Button
+                variant='outline'
+                size='sm'
+                onClick={() => setIsEditing(true)}
+              >
+                Edit
+              </Button>
+            )}
+          </div>
+        </div>
       </CardHeader>
       <CardContent>
         <div className='flex flex-wrap gap-2'>

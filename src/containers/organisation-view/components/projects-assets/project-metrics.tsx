@@ -1,19 +1,18 @@
-import {
-  TrendingUp,
-  Folder,
-  LayoutDashboard,
-  PlusCircle,
-  Users,
-} from 'lucide-react'
-import { MetricCard, StatBadge, ProgressBar } from './shared-components'
+import { Organisation } from '@/types/organisation'
+import { TrendingUp, Folder, LayoutDashboard, Users } from 'lucide-react'
+import { MetricCard, ProgressBar } from './shared-components'
 
-export function ProjectMetrics() {
+interface ProjectMetricsProps {
+  counts: Organisation['counts']
+}
+
+export function ProjectMetrics({ counts }: ProjectMetricsProps) {
   return (
-    <div className='grid grid-cols-1 gap-6 md:grid-cols-3'>
-      {/* Total Projects */}
+    <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4'>
+      {/* Total Pipelines */}
       <MetricCard
-        title='Total Projects'
-        value='12'
+        title='Total Pipelines'
+        value={(counts?.pipelines ?? 0).toString()}
         subtitle={
           <p className='flex items-center gap-1 text-sm font-medium text-emerald-500'>
             <TrendingUp className='h-4 w-4' />
@@ -27,15 +26,21 @@ export function ProjectMetrics() {
         }
       />
 
-      {/* Video Layouts */}
+      {/* Clusters */}
       <MetricCard
-        title='Video Layouts'
-        value='4'
-        subtitle={
-          <p className='flex items-center gap-1 text-sm font-medium text-emerald-500'>
-            <PlusCircle className='h-4 w-4' />1 new
-          </p>
+        title='Total Clusters'
+        value={(counts?.clusters ?? 0).toString()}
+        icon={
+          <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-50'>
+            <Folder className='h-5 w-5 fill-indigo-500 text-indigo-500' />
+          </div>
         }
+      />
+
+      {/* Templates */}
+      <MetricCard
+        title='Templates'
+        value={(counts?.templates ?? 0).toString()}
         icon={
           <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-purple-50'>
             <LayoutDashboard className='h-5 w-5 fill-purple-500 text-purple-500' />
@@ -46,7 +51,7 @@ export function ProjectMetrics() {
       {/* Persona */}
       <MetricCard
         title='Persona'
-        value='23'
+        value={(counts?.personas ?? 0).toString()}
         icon={
           <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-orange-50'>
             <Users className='h-5 w-5 fill-orange-500 text-orange-500' />
@@ -55,24 +60,14 @@ export function ProjectMetrics() {
       >
         <div className='mt-1 space-y-1'>
           <div className='text-muted-foreground flex justify-between text-[11px] font-medium'>
-            <span>Onboarded: 18</span>
-            <span className='text-blue-500'>Total: 23</span>
+            <span>Onboarded: {counts?.personas ?? 0}</span>
+            <span className='text-blue-500'>
+              Total: {counts?.personas ?? 0}
+            </span>
           </div>
           <ProgressBar
-            segments={[{ width: '78%', colorClass: 'bg-blue-500' }]}
+            segments={[{ width: '100%', colorClass: 'bg-blue-500' }]}
             className='bg-muted/50 h-1.5'
-          />
-        </div>
-        <div className='flex gap-2 pt-2'>
-          <StatBadge
-            label='ONBOARDED'
-            value='18'
-            valueClassName='text-blue-500'
-          />
-          <StatBadge
-            label='PENDING'
-            value='5'
-            valueClassName='text-muted-foreground'
           />
         </div>
       </MetricCard>

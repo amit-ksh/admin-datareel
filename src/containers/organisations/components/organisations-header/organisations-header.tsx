@@ -1,8 +1,8 @@
 import { Button } from '@/components/ui/button'
 import { Search, RotateCcwIcon } from 'lucide-react'
-import { OnboardOrganisationDialog } from './onboard-organisation-dialog'
 import { Input } from '@/components/ui/input'
-import { ListOrganisationsParams } from '@/api/organisation'
+import { ListOrganisationsParams } from '@/types/organisation'
+import { OnboardOrganisationDialog } from '../onboard-organisation-dialog'
 
 interface OrganisationsHeaderProps {
   params: ListOrganisationsParams

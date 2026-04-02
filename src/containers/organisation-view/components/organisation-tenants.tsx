@@ -3,7 +3,6 @@ import {
   Pencil,
   Trash2,
   ChevronDown,
-  Eye,
   Shield,
   ChevronLeft,
   ChevronRight,
@@ -12,7 +11,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { useOrganisationView } from '../use-organisation-view.hook'
-import { OrganisationTenant } from '@/api/organisation'
+import { OrganisationTenant } from '@/types/organisation'
 import { Input } from '@/components/ui/input'
 import {
   DropdownMenu,

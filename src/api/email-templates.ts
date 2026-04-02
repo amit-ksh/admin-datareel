@@ -1,98 +1,77 @@
 import { PrivateAxios } from '@/api'
+import {
+  EmailTemplateDetail,
+  EmailTemplateListResponse,
+  ListEmailTemplatesParams,
+  UpdateEmailTemplateStatusPayload,
+} from '@/types/email-templates'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-export interface EmailTemplateListitem {
-  id: string
-  organisation_id: string
-  organisation_name: string
-  organisation_logo: string | null
-  template_name: string
-  type: string
-  subject: string
-  status: 'verified' | 'not-verified'
-  updated_at: string
-}
-
-export interface ListEmailTemplatesParams {
-  search?: string
-  status?: 'verified' | 'not-verified'
-  email_type?: string
-  page?: number
-  limit?: number
-  organisation_id?: string
-  sort_by?: string
-  sort_order?: 'asc' | 'desc'
-}
-
-export interface ListEmailTemplatesResponse {
-  data: EmailTemplateListitem[]
-  meta: {
-    total: number
-    page: number
-    limit: number
-    last_page: number
-  }
-}
-
-export interface EmailTemplateDetail {
-  id: string
-  template_name: string
-  email_type: string
-  subject: string
-  email_body: string
-  status: 'verified' | 'not-verified'
-}
-
-export const listEmailTemplatesAPI = async (
+export const getEmailTemplatesAPI = async (
   params: ListEmailTemplatesParams,
 ) => {
-  const response = await PrivateAxios.get<ListEmailTemplatesResponse>(
-    'admin/email-templates',
+  const response = await PrivateAxios.get<EmailTemplateListResponse>(
+    'dashboard/auth/email-templates',
     {
       params: {
         ...params,
-        sort_by: params.sort_by || 'updated_at',
+        page_limit: params.page_limit || 10,
       },
     },
   )
   return response.data
 }
 
-export const useListEmailTemplates = (params: ListEmailTemplatesParams) => {
+export const useEmailTemplatesAPI = (params: ListEmailTemplatesParams) => {
   return useQuery({
     queryKey: ['email-templates', params],
-    queryFn: () => listEmailTemplatesAPI(params),
+    queryFn: () => getEmailTemplatesAPI(params),
   })
 }
 
-export const getEmailTemplateAPI = async (id: string) => {
-  const response = await PrivateAxios.get<EmailTemplateDetail>(
-    `admin/email-templates/${id}`,
+export const updateEmailTemplateStatusAPI = async (
+  payload: UpdateEmailTemplateStatusPayload,
+) => {
+  const { template_id, status } = payload
+  const response = await PrivateAxios.patch(
+    `dashboard/auth/email-templates/${template_id}/status`,
+    { template_id, status },
   )
   return response.data
 }
 
-export const useGetEmailTemplate = (id: string | null) => {
-  return useQuery({
-    queryKey: ['email-templates', id],
-    queryFn: () => getEmailTemplateAPI(id!),
-    enabled: !!id,
-  })
-}
-
-export const approveEmailTemplateAPI = async (id: string) => {
-  const response = await PrivateAxios.post<{ approve: boolean }>(
-    `admin/email-templates/${id}/approve`,
-  )
-  return response.data
-}
-
-export const useApproveEmailTemplate = () => {
+export const useUpdateEmailTemplateStatusAPI = () => {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: approveEmailTemplateAPI,
+    mutationFn: updateEmailTemplateStatusAPI,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['email-templates'] })
     },
+  })
+}
+
+export const getEmailTemplateAPI = async (params: {
+  template_id?: string
+  template_type?: string
+  org_id?: string
+}) => {
+  const response = await PrivateAxios.get<EmailTemplateDetail>(
+    'dashboard/auth/email-template',
+    {
+      params,
+    },
+  )
+  return response.data
+}
+
+export const useEmailTemplateAPI = (params: {
+  template_id?: string
+  template_type?: string
+  org_id?: string
+}) => {
+  return useQuery({
+    queryKey: ['email-template', params],
+    queryFn: () => getEmailTemplateAPI(params),
+    enabled: !!(params.template_id || params.template_type),
   })
 }

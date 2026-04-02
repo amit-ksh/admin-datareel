@@ -2,8 +2,7 @@
 import React, { useContext, useEffect, useCallback, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { usePathname } from 'next/navigation'
-import { useCurrentUserAPI } from '@/api/user'
-import { useLogoutAPI } from '@/api/auth'
+import { useMeAPI, useLogoutAPI } from '@/api/auth'
 import { useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { AlertTriangle } from 'lucide-react'
@@ -21,13 +20,12 @@ import {
 } from '@/types/service-health'
 import { AxiosResponse } from 'axios'
 
+import { CurrentUserResponse } from '@/types/user'
+
 const AuthContext = React.createContext<AuthContextType>({} as AuthContextType)
 
 type AuthContextType = {
-  currentUser?: {
-    permissions: string[]
-    tenant_data: Record<string, string>
-  }
+  currentUser?: CurrentUserResponse
   isCurrentUserLoading: boolean
   isCurrentUserPending: boolean
   isLogoutPending: boolean
@@ -53,19 +51,19 @@ type AuthContextType = {
   isVideoServiceHealthError: boolean
 }
 
-// const protectedRoutes = [
-//   /^\/analytics$/,
-//   /^\/organisations(\/.*)?$/,
-//   /^\/access-organisation$/,
-//   /^\/$/,
-// ] as const
+const protectedRoutes = [
+  /^\/analytics$/,
+  /^\/organisations(\/.*)?$/,
+  /^\/access-organisation$/,
+  /^\/$/,
+] as const
 
 // const unprotectedRoutes = [/^\/login$/] as const
 
 // used for stop current user api fetching
 const unblockedRoutesWithAuth = [] as RegExp[]
 
-// const blockedRoutes = [/^\/login$/] as const
+const blockedRoutes = [/^\/login$/] as const
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter()
@@ -79,19 +77,10 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     data: currentUser,
     isLoading: isCurrentUserLoading,
     isPending: isCurrentUserPending,
+    isFetched: isCurrentUserFetched,
     isError,
     error,
-    refetch: refetchCurrentUser,
-  } = useCurrentUserAPI({ isProtected })
-
-  useEffect(() => {
-    if (isCurrentUserLoading) return
-
-    if (!currentUser?.data?.permissions.length) {
-      refetchCurrentUser()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isCurrentUserLoading])
+  } = useMeAPI({ enabled: isProtected })
 
   const {
     data: authServiceHealthData,
@@ -136,16 +125,20 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const queryClient = useQueryClient()
 
-  // useEffect(() => {
-  //   if (blockedRoutes.some((route) => route.test(pathname))) {
-  //     if (isCurrentUserFetched && currentUser) {
-  //       router.replace(
-  //         new URLSearchParams(window.location.search).get("redirect") ||
-  //           "/analytics",
-  //       );
-  //     }
-  //   }
-  // }, [currentUser, isCurrentUserFetched, isError, pathname, router]);
+  useEffect(() => {
+    if (blockedRoutes.some((route) => route.test(pathname))) {
+      if (isCurrentUserFetched && currentUser) {
+        const redirectParam = new URLSearchParams(window.location.search).get(
+          'redirect',
+        )
+        // Only allow relative paths to prevent open redirect
+        const safeRedirect = redirectParam?.startsWith('/')
+          ? redirectParam
+          : '/analytics'
+        router.replace(safeRedirect)
+      }
+    }
+  }, [currentUser, isCurrentUserFetched, isError, pathname, router])
 
   const { mutateAsync: logoutMutateAsync, isPending: isLogoutPending } =
     useLogoutAPI()
@@ -153,14 +146,14 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const logoutUser = useCallback(async () => {
     try {
       await logoutMutateAsync()
-      window.location.href = `/login?redirect=${encodeURIComponent(pathname + window.location.search)}`
+      router.push(
+        `/login?redirect=${encodeURIComponent(pathname + window.location.search)}`,
+      )
     } catch (err) {
       console.error(err)
     } finally {
       queryClient.clear()
     }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [logoutMutateAsync, pathname, queryClient, router])
 
   useEffect(() => {
@@ -169,23 +162,23 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, [isError, error?.response?.status, currentUser, logoutUser])
 
-  // useEffect(() => {
-  //   if (isCurrentUserFetched) {
-  //     if (
-  //       !currentUser &&
-  //       protectedRoutes.some((route) => route.test(pathname))
-  //     ) {
-  //       router.replace(
-  //         `/login?redirect=${encodeURIComponent(pathname + window.location.search)}`,
-  //       );
-  //     }
-  //   }
-  // }, [currentUser, pathname, router, isCurrentUserFetched]);
+  useEffect(() => {
+    if (isCurrentUserFetched) {
+      if (
+        !currentUser &&
+        protectedRoutes.some((route) => route.test(pathname))
+      ) {
+        router.replace(
+          `/login?redirect=${encodeURIComponent(pathname + window.location.search)}`,
+        )
+      }
+    }
+  }, [currentUser, pathname, router, isCurrentUserFetched])
 
   return (
     <AuthContext.Provider
       value={{
-        currentUser: currentUser?.data,
+        currentUser: currentUser,
         isCurrentUserLoading,
         isCurrentUserPending,
         isLogoutPending,

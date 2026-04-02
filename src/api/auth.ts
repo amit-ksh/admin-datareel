@@ -1,18 +1,8 @@
 import { PrivateAxios, PublicAxios } from '@/api'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { z } from 'zod'
-
-export const loginSchema = z.object({
-  email: z.string().email('Invalid email address'),
-  password: z.string().min(1, 'Password is required'),
-})
-
-export type LoginCredentials = z.infer<typeof loginSchema>
-
-export interface AuthResponse {
-  redirect?: string
-  [key: string]: unknown
-}
+import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query'
+import { AuthResponse, LoginCredentials } from '@/types/auth'
+import { CurrentUserResponse } from '@/types/user'
+import { QUERY_KEYS } from '@/lib/query-keys'
 
 export const loginAPI = async (credentials: LoginCredentials) => {
   const response = await PublicAxios.post<AuthResponse>(
@@ -40,9 +30,23 @@ export const useLoginAPI = () => {
   })
 }
 
+export const meAPI = async () => {
+  const response =
+    await PrivateAxios.get<CurrentUserResponse>('dashboard/auth/me')
+  return response.data
+}
+
+export const useMeAPI = (options?: { enabled?: boolean }) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.CURRENT_USER],
+    queryFn: meAPI,
+    ...options,
+  })
+}
+
 export const logoutAPI = async () => {
-  const response = await PublicAxios.post<AuthResponse>(
-    'tenant/logout',
+  const response = await PrivateAxios.post<AuthResponse>(
+    'dashboard/auth/logout',
     undefined,
     {
       headers: {
@@ -58,13 +62,8 @@ export const useLogoutAPI = () => {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: logoutAPI,
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.clear()
-      if (data?.redirect) {
-        window.location.href = data.redirect
-      } else {
-        window.location.href = '/login' // fallback redirect
-      }
     },
   })
 }

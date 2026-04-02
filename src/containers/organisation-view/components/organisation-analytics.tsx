@@ -1,95 +1,195 @@
+'use client'
+
 import { AnalyticsLineChart } from '@/containers/analytics/components/analytics-line-chart'
 import { AnalyticsStatusChart } from '@/containers/analytics/components/analytics-status-chart'
 import { AnalyticsEngagementSection } from '@/containers/analytics/components/analytics-engagement-section'
 import { MetricsOverview } from '@/containers/analytics/components/metrics-overview'
 import { OrganisationAnalyticsHeader } from './organisation-analytics-header'
+import { useAnalytics } from '@/containers/analytics/use-analytics.hook'
 
-const runsStatusData = [
-  { status: 'Processing', value: 1307, fill: '#3b82f6' },
-  { status: 'Completed', value: 7100, fill: '#22c55e' },
-  { status: 'Failed', value: 30, fill: '#ef4444' },
-]
+interface MonthlyVideoCount {
+  month: string
+  videos: number
+  approval: number
+  delivered: number
+  seen: number
+}
+interface MonthlyVideoCountApi {
+  month_label: string
+  total_videos: number
+  approved_videos: number
+  delivered_videos: number
+  seen_videos: number
+}
 
-const approvalStatusData = [
-  { status: 'Pending', value: 8, fill: '#3b82f6' },
-  { status: 'Approved', value: 7092, fill: '#22c55e' },
-  { status: 'Rejected', value: 0, fill: '#ef4444' },
-]
+interface OrganisationAnalyticsProps {
+  organisationId: string
+}
 
-const yearlyVideoData = [
-  { month: 'Jan', videos: 4000, approval: 2400, delivered: 2400, seen: 2400 },
-  { month: 'Feb', videos: 3000, approval: 1398, delivered: 1398, seen: 2210 },
-  { month: 'Mar', videos: 2000, approval: 9800, delivered: 9800, seen: 2290 },
-  { month: 'Apr', videos: 2780, approval: 3908, delivered: 3908, seen: 2000 },
-  { month: 'May', videos: 1890, approval: 4800, delivered: 4800, seen: 2181 },
-  { month: 'Jun', videos: 2390, approval: 3800, delivered: 3800, seen: 2500 },
-  { month: 'Jul', videos: 3490, approval: 4300, delivered: 4300, seen: 2100 },
-  { month: 'Aug', videos: 2390, approval: 3800, delivered: 3800, seen: 2500 },
-  { month: 'Sep', videos: 3490, approval: 4300, delivered: 4300, seen: 2100 },
-  { month: 'Oct', videos: 2390, approval: 3800, delivered: 3800, seen: 2500 },
-  { month: 'Nov', videos: 3490, approval: 4300, delivered: 4300, seen: 2100 },
-  { month: 'Dec', videos: 2390, approval: 3800, delivered: 3800, seen: 2500 },
-]
+export function OrganisationAnalytics({
+  organisationId,
+}: OrganisationAnalyticsProps) {
+  const {
+    summaryData,
+    yearlyData,
+    mode,
+    setMode,
+    dateRange,
+    setDateRange,
+    year,
+    setYear,
+    handleGetReportFile,
+  } = useAnalytics(organisationId)
 
-const topActions = [
-  { label: 'Schedule Meeting', value: 42, color: 'bg-blue-600' },
-  { label: 'Request Demo', value: 28, color: 'bg-blue-600' },
-  { label: 'Download Guide', value: 15, color: 'bg-blue-600' },
-  { label: 'Contact Support', value: 10, color: 'bg-blue-600' },
-  { label: 'Book Demo', value: 7, color: 'bg-blue-600' },
-]
+  const runsStatusData = [
+    {
+      status: 'Processing',
+      value: summaryData?.processing_videos || 0,
+      fill: '#3b82f6',
+    },
+    {
+      status: 'Completed',
+      value: summaryData?.completed_videos || 0,
+      fill: '#22c55e',
+    },
+    {
+      status: 'Failed',
+      value: summaryData?.failed_videos || 0,
+      fill: '#ef4444',
+    },
+  ]
 
-const bottomActions = [
-  { label: 'Follow on Twitter', value: 2, color: 'bg-blue-600/50' },
-  { label: 'Share on LinkedIn', value: 3, color: 'bg-blue-600/50' },
-  { label: 'Subscribe to Newsletter', value: 4, color: 'bg-blue-600/50' },
-  { label: 'View Pricing', value: 6, color: 'bg-blue-600/50' },
-  { label: 'Book Demo', value: 7, color: 'bg-blue-600/50' },
-]
+  const approvalStatusData = [
+    {
+      status: 'Pending',
+      value: summaryData?.pending_approval_videos || 0,
+      fill: '#3b82f6',
+    },
+    {
+      status: 'Approved',
+      value: summaryData?.approved_videos || 0,
+      fill: '#22c55e',
+    },
+    {
+      status: 'Rejected',
+      value: summaryData?.rejected_videos || 0,
+      fill: '#ef4444',
+    },
+  ]
 
-const ratings = [
-  { label: '5 STAR', value: 65, color: 'bg-emerald-500' },
-  { label: '4 STAR', value: 19, color: 'bg-emerald-500' },
-  { label: '3 STAR', value: 10, color: 'bg-amber-500' },
-  { label: '2 STAR', value: 4, color: 'bg-rose-400' },
-  { label: '1 STAR', value: 1, color: 'bg-red-600' },
-]
+  const yearlyVideoData: MonthlyVideoCount[] =
+    yearlyData?.months.map((m: MonthlyVideoCountApi) => ({
+      month: m.month_label,
+      videos: m.total_videos || 0,
+      approval: m.approved_videos || 0,
+      delivered: m.delivered_videos || 0,
+      seen: m.seen_videos || 0,
+    })) || []
 
-export function OrganisationAnalytics() {
+  const topActionsKeys = Object.entries(summaryData?.callbacks_total || {})
+  const topActions = topActionsKeys.map(([key, value]) => ({
+    label: key,
+    value: Number(value),
+    color: 'bg-blue-600',
+  }))
+
+  const bottomActionsKeys = Object.entries(summaryData?.callbacks || {})
+  const bottomActions = bottomActionsKeys.map(([key, value]) => ({
+    label: key,
+    value: Number(value),
+    color: 'bg-blue-600/50',
+  }))
+
+  const ratings = [
+    {
+      label: '5 STAR',
+      value: summaryData?.feedback_5_star || 0,
+      color: 'bg-emerald-500',
+    },
+    {
+      label: '4 STAR',
+      value: summaryData?.feedback_4_star || 0,
+      color: 'bg-emerald-500',
+    },
+    {
+      label: '3 STAR',
+      value: summaryData?.feedback_3_star || 0,
+      color: 'bg-amber-500',
+    },
+    {
+      label: '2 STAR',
+      value: summaryData?.feedback_2_star || 0,
+      color: 'bg-rose-400',
+    },
+    {
+      label: '1 STAR',
+      value: summaryData?.feedback_1_star || 0,
+      color: 'bg-red-600',
+    },
+  ]
+
+  const calculateTrendColor = (val: number) => {
+    if (val > 0) return 'text-emerald-500'
+    if (val < 0) return 'text-rose-500'
+    return 'text-muted-foreground'
+  }
+
+  const formatTrend = (val: number) => {
+    if (val > 0) return `+ ${val}%`
+    if (val < 0) return `- ${Math.abs(val)}%`
+    return '0%'
+  }
+
   return (
     <div className='space-y-4'>
-      <OrganisationAnalyticsHeader />
+      <OrganisationAnalyticsHeader
+        mode={mode}
+        onModeChange={setMode}
+        dateRange={dateRange}
+        setDateRange={setDateRange}
+        onDownloadReport={handleGetReportFile}
+      />
       <MetricsOverview
         metrics={{
           totalVideos: {
-            value: '458',
-            trend: '+ 8%',
-            trendColor: 'text-emerald-500',
+            value: `${summaryData?.total_videos || 0}`,
+            trend: formatTrend(summaryData?.growth?.total_videos || 0),
+            trendColor: calculateTrendColor(
+              summaryData?.growth?.total_videos || 0,
+            ),
           },
           completed: {
-            value: '428',
-            trend: '+ 18%',
-            trendColor: 'text-emerald-500',
+            value: `${summaryData?.completed_videos || 0}`,
+            trend: formatTrend(summaryData?.growth?.completed_videos || 0),
+            trendColor: calculateTrendColor(
+              summaryData?.growth?.completed_videos || 0,
+            ),
           },
           approved: {
-            value: '412',
-            trend: '− 2%',
-            trendColor: 'text-rose-500',
+            value: `${summaryData?.approved_videos || 0}`,
+            trend: formatTrend(summaryData?.growth?.approved_videos || 0),
+            trendColor: calculateTrendColor(
+              summaryData?.growth?.approved_videos || 0,
+            ),
           },
           delivered: {
-            value: '380',
-            trend: '+ 15%',
-            trendColor: 'text-emerald-500',
+            value: `${summaryData?.delivered_videos || 0}`,
+            trend: formatTrend(summaryData?.growth?.delivered_videos || 0),
+            trendColor: calculateTrendColor(
+              summaryData?.growth?.delivered_videos || 0,
+            ),
           },
           seen: {
-            value: '310',
-            trend: '+ 20%',
-            trendColor: 'text-emerald-500',
+            value: `${summaryData?.seen_videos || 0}`,
+            trend: formatTrend(summaryData?.growth?.seen_videos || 0),
+            trendColor: calculateTrendColor(
+              summaryData?.growth?.seen_videos || 0,
+            ),
           },
         }}
         completion={{
-          value: '245',
-          trend: '+ 10%',
+          value: `${summaryData?.avg_completion_percentage || 0}`,
+          trend: '0%',
         }}
       />
 
@@ -97,15 +197,22 @@ export function OrganisationAnalytics() {
       <div className='grid gap-4'>
         <AnalyticsLineChart
           title='Yearly Video Analytics'
-          year='2026'
           description='Monthly comparison of videos processed, approved, and seen.'
           data={yearlyVideoData}
           config={{
             videos: { label: 'Videos', color: '#3b82f6' },
             approval: { label: 'Approval', color: '#22c55e' },
+            delivered: { label: 'Delivered', color: '#f59e0b' },
             seen: { label: 'Seen', color: '#eab308' },
           }}
-          lines={[{ key: 'videos' }, { key: 'approval' }, { key: 'seen' }]}
+          lines={[
+            { key: 'videos' },
+            { key: 'approval' },
+            { key: 'delivered' },
+            { key: 'seen' },
+          ]}
+          year={year.toString()}
+          onYearChange={(y) => setYear(parseInt(y))}
         />
       </div>
 

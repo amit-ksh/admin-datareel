@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import ErrorState from './error-state'
+import { ErrorState } from '.'
 import { COMMON_TEST_IDS } from './test-ids'
 
 const mockRouterBack = vi.fn()

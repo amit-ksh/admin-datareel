@@ -27,6 +27,8 @@ interface OrganisationSelectPopoverProps {
   onSelect: (id: string) => void
 }
 
+import { ANALYTICS_TEST_IDS } from './test-ids'
+
 export function OrganisationSelectPopover({
   selectedOrgId,
   onSelect,
@@ -64,6 +66,7 @@ export function OrganisationSelectPopover({
           role='combobox'
           aria-expanded={open}
           className='h-9 w-full justify-between border-zinc-200 bg-white text-xs font-semibold hover:bg-zinc-50 sm:w-[240px] dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-900'
+          data-testid={ANALYTICS_TEST_IDS.ORGANISATION_SELECT.TRIGGER}
         >
           <div className='flex items-center gap-2 truncate'>
             {selectedOrg ? (
@@ -99,13 +102,18 @@ export function OrganisationSelectPopover({
           <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className='w-[280px] p-0 shadow-xl' align='start'>
+      <PopoverContent
+        className='w-[280px] p-0 shadow-xl'
+        align='start'
+        data-testid={ANALYTICS_TEST_IDS.ORGANISATION_SELECT.POPOVER}
+      >
         <Command shouldFilter={false} className='border-none'>
           <CommandInput
             placeholder='Search organisations...'
             value={search}
             onValueChange={setSearch}
             className='h-10 text-xs'
+            data-testid={ANALYTICS_TEST_IDS.ORGANISATION_SELECT.INPUT}
           />
           <CommandList className='max-h-[300px]'>
             {isLoading && !isFetchingNextPage ? (
@@ -117,7 +125,9 @@ export function OrganisationSelectPopover({
                 <CommandEmpty className='text-muted-foreground py-6 text-center text-xs'>
                   No organisations found.
                 </CommandEmpty>
-                <CommandGroup>
+                <CommandGroup
+                  data-testid={ANALYTICS_TEST_IDS.ORGANISATION_SELECT.LIST}
+                >
                   <CommandItem
                     onSelect={() => {
                       onSelect('')
@@ -144,6 +154,7 @@ export function OrganisationSelectPopover({
                         setOpen(false)
                       }}
                       className='flex cursor-pointer items-center justify-between py-2 text-xs'
+                      data-testid={ANALYTICS_TEST_IDS.ORGANISATION_SELECT.ITEM}
                     >
                       <div className='flex items-center gap-2'>
                         <Avatar className='h-5 w-5 rounded-sm border border-zinc-200 dark:border-zinc-800'>

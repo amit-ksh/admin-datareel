@@ -11,22 +11,9 @@ import { AnalyticsSystemHealth } from './components/analytics-system-health'
 
 import { format } from 'date-fns'
 
-import { Organisation } from '@/api/organisation'
+import { Organisation } from '@/types/organisation'
 
-interface MonthlyVideoCount {
-  month: string
-  videos: number
-  approval: number
-  delivered: number
-  seen: number
-}
-interface MonthlyVideoCountApi {
-  month_label: string
-  total_videos: number
-  approved_videos: number
-  delivered_videos: number
-  seen_videos: number
-}
+import { MonthlyVideoCount, MonthlyVideoCountApi } from '@/types/analytics'
 
 export default function AnalyticsContainer() {
   const {

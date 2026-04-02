@@ -12,11 +12,13 @@ import {
   Loader2,
 } from 'lucide-react'
 
+import { ACCESS_ORGANISATION_TEST_IDS } from './test-ids'
+
 import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
 import { format } from 'date-fns'
-import { Organisation } from '@/api/organisation'
-import ErrorState from '@/components/common/error-state'
+import { Organisation } from '@/types/organisation'
+import { ErrorState } from '@/components/common/error-state'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { useAccessOrganisation } from '../use-access-organisation.hook'
@@ -32,7 +34,10 @@ function OrganisationCard({
   loading?: boolean
 }) {
   return (
-    <Card className='border transition-shadow duration-200 hover:shadow-sm'>
+    <Card
+      className='border transition-shadow duration-200 hover:shadow-sm'
+      data-testid={ACCESS_ORGANISATION_TEST_IDS.ORGANISATION_LIST.ITEM}
+    >
       <CardContent className='flex items-center justify-between p-4'>
         <div className='flex items-center gap-4'>
           {/* Icon/Logo */}
@@ -119,7 +124,10 @@ function OrganisationCard({
 
 export function OrganisationSkeleton() {
   return (
-    <div className='flex flex-col gap-3'>
+    <div
+      className='flex flex-col gap-3'
+      data-testid={ACCESS_ORGANISATION_TEST_IDS.ORGANISATION_LIST.SKELETON}
+    >
       {[1, 2, 3].map((i) => (
         <Card key={i} className='border'>
           <CardContent className='flex items-center justify-between p-4'>
@@ -159,7 +167,10 @@ export function OrganisationList() {
   const totalPages = data ? Math.ceil(data.meta.total / data.meta.limit) : 0
 
   return (
-    <div className='space-y-6'>
+    <div
+      className='space-y-6'
+      data-testid={ACCESS_ORGANISATION_TEST_IDS.ORGANISATION_LIST.CONTAINER}
+    >
       {/* Section Header */}
       <div className='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
         <div className='flex items-center gap-2.5'>
@@ -195,7 +206,12 @@ export function OrganisationList() {
       ) : isError ? (
         <ErrorState error={error as AxiosError} onRetry={() => refetch()} />
       ) : !data?.docs || data?.docs.length === 0 ? (
-        <div className='bg-muted/20 flex flex-col items-center justify-center rounded-xl border border-dashed py-12'>
+        <div
+          className='bg-muted/20 flex flex-col items-center justify-center rounded-xl border border-dashed py-12'
+          data-testid={
+            ACCESS_ORGANISATION_TEST_IDS.ORGANISATION_LIST.EMPTY_STATE
+          }
+        >
           <Building2 className='text-muted-foreground/40 mb-3 h-12 w-12' />
           <p className='text-muted-foreground text-sm font-medium'>
             No organisations found

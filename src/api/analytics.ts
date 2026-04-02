@@ -1,4 +1,15 @@
+import { format } from 'date-fns'
 import { VideoAxios, PrivateAxios } from './index'
+import {
+  AnalyticsSummaryParams,
+  AnalyticsYearlyParams,
+  FeedbackOverview,
+  FeedbackQueryParams,
+  FeedbacksResponse,
+  GetFeedbacksParams,
+  RatingBreakdown,
+  RatingStats,
+} from '@/types/analytics'
 
 const formatDate = ({
   start,
@@ -20,13 +31,7 @@ export const getAnalyticsSummary = async ({
   endDate,
   mode,
   pipelineId,
-}: {
-  organisationId?: string
-  startDate: string | Date
-  endDate: string | Date
-  mode?: string
-  pipelineId?: string
-}) => {
+}: AnalyticsSummaryParams) => {
   const [startD, endD] = formatDate({ start: startDate, end: endDate })
   const params = new URLSearchParams({
     start_date: startD,
@@ -48,11 +53,7 @@ export const getAnalyticsYearly = async ({
   organisationId,
   year,
   pipelineId,
-}: {
-  organisationId?: string
-  year: number | string
-  pipelineId?: string
-}) => {
+}: AnalyticsYearlyParams) => {
   const params = new URLSearchParams({
     year: String(year),
   })
@@ -84,4 +85,110 @@ export const getReportFile = async (
       responseType: 'blob',
     },
   )
+}
+
+export const getFeedbackOverview = async ({
+  organisationId,
+  startDate,
+  endDate,
+  pipelineId = '',
+}: FeedbackQueryParams): Promise<FeedbackOverview> => {
+  const formatBackendDate = (d: string | Date) => {
+    const date = typeof d === 'string' ? new Date(d) : d
+    return format(date, 'yyyy-MM-dd HH:mm:ss.SSS')
+  }
+
+  const response = await PrivateAxios.get('analytics/feedback/overview', {
+    params: {
+      pipeline_id: pipelineId,
+      start_date: formatBackendDate(startDate),
+      end_date: formatBackendDate(endDate),
+    },
+    headers: {
+      'organistion-id': organisationId,
+    },
+  })
+
+  return response.data?.data?.[0] || response.data?.[0] || {}
+}
+
+export const getRatingStats = async ({
+  organisationId,
+  startDate,
+  endDate,
+  pipelineId = '',
+}: FeedbackQueryParams): Promise<RatingStats> => {
+  const formatBackendDate = (d: string | Date) => {
+    const date = typeof d === 'string' ? new Date(d) : d
+    return format(date, 'yyyy-MM-dd HH:mm:ss.SSS')
+  }
+
+  const response = await PrivateAxios.get('analytics/ratings/stats', {
+    params: {
+      pipeline_id: pipelineId,
+      start_date: formatBackendDate(startDate),
+      end_date: formatBackendDate(endDate),
+    },
+    headers: {
+      'organistion-id': organisationId,
+    },
+  })
+
+  return response.data?.data?.[0] || response.data?.[0] || {}
+}
+
+export const getRatingBreakdown = async ({
+  organisationId,
+  startDate,
+  endDate,
+  pipelineId = '',
+}: FeedbackQueryParams): Promise<RatingBreakdown> => {
+  const formatBackendDate = (d: string | Date) => {
+    const date = typeof d === 'string' ? new Date(d) : d
+    return format(date, 'yyyy-MM-dd HH:mm:ss.SSS')
+  }
+
+  const response = await PrivateAxios.get('analytics/ratings/breakdown', {
+    params: {
+      pipeline_id: pipelineId,
+      start_date: formatBackendDate(startDate),
+      end_date: formatBackendDate(endDate),
+    },
+    headers: {
+      'organistion-id': organisationId,
+    },
+  })
+
+  return response.data?.data?.[0] || response.data?.[0] || {}
+}
+
+export const getFeedbacks = async ({
+  organisationId,
+  startDate,
+  endDate,
+  pipelineId = '',
+  pagenum = 1,
+  comments_only = false,
+  assignee = '',
+}: GetFeedbacksParams): Promise<FeedbacksResponse> => {
+  const formatBackendDate = (d: string | Date) => {
+    const date = typeof d === 'string' ? new Date(d) : d
+    return format(date, 'yyyy-MM-dd HH:mm:ss.SSS')
+  }
+
+  const response = await PrivateAxios.get('analytics/feedbacks', {
+    params: {
+      pipeline_id: pipelineId,
+      start_date: formatBackendDate(startDate),
+      end_date: formatBackendDate(endDate),
+      pagenum,
+      comments_only,
+      assignee,
+    },
+    headers: {
+      'organistion-id': organisationId,
+    },
+  })
+
+  return response.data?.data || response.data || {}
 }

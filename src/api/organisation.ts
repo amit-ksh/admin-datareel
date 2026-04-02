@@ -4,118 +4,23 @@ import {
   useQuery,
   useQueryClient,
   useInfiniteQuery,
+  UseQueryOptions,
 } from '@tanstack/react-query'
-import { z } from 'zod'
-
-export const createOrganisationSchema = z.object({
-  orgName: z.string().min(1, 'Name is required'),
-  adminEmail: z.string().email('Invalid email address'),
-  defaultPassword: z.string().min(6, 'Password must be at least 6 characters'),
-  logo: z.any().optional(),
-})
-
-export type CreateOrganisationPayload = z.infer<typeof createOrganisationSchema>
-
-export interface Organisation {
-  id: string
-  organisation_name: string
-  organisation_logo: string | null
-  tenant_id: string
-  enable_cdn: boolean
-  enable_hls: boolean
-  enable_content_ai: boolean
-  enable_avatar_ai: boolean
-  unlocked: boolean
-  unlocked_at: string
-  created_at: string
-  updated_at: string
-  total_tokens: number
-  used_tokens: number
-  infinite_tokens: boolean
-  onboarding_status: {
-    email_verified: boolean
-    email_verified_at: string | null
-    information_extracted: boolean
-    information_extracted_at: string | null
-    assets_cloned: boolean
-    assets_cloned_at: string | null
-    cloning_job_id: string | null
-    cloning_details: unknown | null
-  }
-  persona_onboarding_config?: {
-    require_thumbnail: boolean
-    require_video: boolean
-    require_audio: boolean
-  }
-}
-
-export interface OrgTokenBalance {
-  organisation_id: string
-  total_tokens: number
-  used_tokens: number
-  remaining_tokens: number | null
-  infinite_tokens: boolean
-}
-
-export interface UpdateOrgTokensPayload {
-  total_tokens?: number | null
-  infinite_tokens?: boolean | null
-  reset_used?: boolean
-}
-
-export interface ListOrganisationsParams {
-  email?: string
-  page?: number
-  page_limit?: number
-  search?: string
-  onboarded?: boolean
-  join_at_start?: string
-  join_at_end?: string
-  min_feedback?: number
-  sort_by?: 'feedback_score' | 'last_video' | 'joined_at' | 'videos'
-  sort_order?: 'asc' | 'desc'
-}
-
-export interface ListOrganisationTenantsParams {
-  org_id: string
-  page?: number
-  page_limit?: number
-  tenant_status?: string
-  search?: string
-}
-
-export interface OrganisationTenant {
-  tenant_id: string
-  tenant_name: string
-  tenant_email: string
-  role: string
-  role_active: boolean
-  onboarded: boolean
-  created_at: string
-}
-
-export interface ListOrganisationTenantsResponse {
-  summary: {
-    total: number
-    active: number
-    inactive: number
-  }
-  tenants: OrganisationTenant[]
-  meta: {
-    page: number
-    limit: number
-    total: number
-  }
-}
-
-export interface ListOrganisationsResponse {
-  docs: Organisation[]
-  meta: {
-    total: number
-    page: number
-    limit: number
-  }
-}
+import {
+  Organisation,
+  OrgTokenBalance,
+  UpdateOrgTokensPayload,
+  ListOrganisationsParams,
+  ListOrganisationTenantsParams,
+  ListOrganisationTenantsResponse,
+  ListOrganisationsResponse,
+  CreateOrganisationPayload,
+  AccessClientAppPayload,
+  AccessClientAppResponse,
+  UpdateOrganisationPayload,
+  UnlockOrganisationParams,
+  UpdateOrganisationDetailPayload,
+} from '@/types/organisation'
 
 export const listOrganisationsAPI = async (params: ListOrganisationsParams) => {
   const response = await PrivateAxios.get<ListOrganisationsResponse>(
@@ -125,10 +30,14 @@ export const listOrganisationsAPI = async (params: ListOrganisationsParams) => {
   return response.data
 }
 
-export const useListOrganisations = (params: ListOrganisationsParams) => {
+export const useListOrganisations = (
+  params: ListOrganisationsParams,
+  options?: Partial<UseQueryOptions<ListOrganisationsResponse>>,
+) => {
   return useQuery({
     queryKey: ['organisations', params],
     queryFn: () => listOrganisationsAPI(params),
+    ...options,
   })
 }
 
@@ -157,6 +66,16 @@ export const createOrganisationAPI = async (
   if (payload.logo) {
     formData.append('logo', payload.logo)
   }
+  if (payload.source_org_id) {
+    formData.append('source_org_id', payload.source_org_id)
+  }
+  if (payload.options) {
+    formData.append('options', payload.options)
+  }
+  formData.append(
+    'total_tokens',
+    payload.total_tokens ? payload.total_tokens.toString() : '0',
+  )
 
   const response = await PrivateAxios.post<{ organisation_id: string }>(
     'dashboard/auth/organisations',
@@ -180,16 +99,6 @@ export const useCreateOrganisation = () => {
   })
 }
 
-export interface AccessClientAppPayload {
-  email: string
-  organisationId: string
-}
-
-export interface AccessClientAppResponse {
-  message: string
-  redirectUrl: string
-}
-
 export const accessClientAppAPI = async (payload: AccessClientAppPayload) => {
   const response = await PrivateAxios.post<AccessClientAppResponse>(
     'dashboard/auth/access-client-app',
@@ -210,9 +119,20 @@ export const useAccessClientApp = () => {
 }
 
 export const getOrganisationAPI = async (id: string) => {
-  const response = await PrivateAxios.get<Organisation>('organisation/', {
-    params: { id },
-  })
+  const response = await PrivateAxios.get<Organisation>(
+    `dashboard/auth/organisations/${id}`,
+  )
+  return response.data
+}
+
+export const updateOrganisationAPI = async (
+  id: string,
+  payload: UpdateOrganisationPayload,
+) => {
+  const response = await PrivateAxios.put<Organisation>(
+    `dashboard/auth/organisations/${id}`,
+    payload,
+  )
   return response.data
 }
 
@@ -221,6 +141,18 @@ export const useGetOrganisation = (id: string) => {
     queryKey: ['organisation', id],
     queryFn: () => getOrganisationAPI(id),
     enabled: !!id,
+  })
+}
+
+export const useUpdateOrganisation = (id: string) => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (payload: UpdateOrganisationPayload) =>
+      updateOrganisationAPI(id, payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['organisation', id] })
+      queryClient.invalidateQueries({ queryKey: ['organisations'] })
+    },
   })
 }
 
@@ -282,5 +214,65 @@ export const useUpdateOrgTokens = (orgId: string) => {
       })
       queryClient.invalidateQueries({ queryKey: ['organisation', orgId] })
     },
+  })
+}
+
+export const unlockOrganisationAPI = async (
+  params: UnlockOrganisationParams,
+) => {
+  const response = await PrivateAxios.put(
+    'dashboard/auth/organisation/unlock',
+    undefined,
+    { params },
+  )
+  return response.data
+}
+
+export const useUnlockOrganisation = (orgId: string) => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (params: Omit<UnlockOrganisationParams, 'organisation_id'>) =>
+      unlockOrganisationAPI({ ...params, organisation_id: orgId }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['organisation', orgId] })
+    },
+  })
+}
+
+export const updateOrganisationDetailAPI = async (
+  id: string,
+  payload: UpdateOrganisationDetailPayload,
+) => {
+  const response = await PrivateAxios.put<Organisation>(
+    `dashboard/auth/organisations/${id}`,
+    payload,
+  )
+  return response.data
+}
+
+export const useUpdateOrganisationDetail = (id: string) => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (payload: UpdateOrganisationDetailPayload) =>
+      updateOrganisationDetailAPI(id, payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['organisation', id] })
+      queryClient.invalidateQueries({ queryKey: ['organisations'] })
+    },
+  })
+}
+
+export const getOrganisationByIdAPI = async (id: string) => {
+  const response = await PrivateAxios.get<Organisation>('organisation', {
+    params: { id },
+  })
+  return response.data
+}
+
+export const useGetOrganisationById = (id: string) => {
+  return useQuery({
+    queryKey: ['organisation-by-id', id],
+    queryFn: () => getOrganisationByIdAPI(id),
+    enabled: !!id,
   })
 }

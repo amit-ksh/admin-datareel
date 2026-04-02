@@ -94,10 +94,10 @@ export function EngagementList({
   return (
     <>
       <div className='mb-2 flex items-center justify-between'>
-        <h3 className='text-muted-foreground text-[11px] font-bold tracking-[0.1em] uppercase'>
+        <h3 className='text-muted-foreground text-[11px] font-bold tracking-widest uppercase'>
           {title}
         </h3>
-        {topItems && bottomItems && (
+        {false && (
           <div className='bg-muted flex rounded-md p-0.5'>
             <button
               onClick={() => setShowTop(true)}

@@ -1,2 +1,4 @@
-pnpm lint-staged
-pnpm lint
+npm run prettier:check
+npm run type-check
+npm run lint
+npm run secret:check

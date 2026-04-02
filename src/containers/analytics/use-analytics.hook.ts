@@ -12,7 +12,7 @@ import { subDays, format, parseISO, isValid } from 'date-fns'
 import { useSearchParams, usePathname, useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 
-export const useAnalytics = () => {
+export const useAnalytics = (overrideOrgId?: string) => {
   const searchParams = useSearchParams()
   const pathname = usePathname()
   const router = useRouter()
@@ -53,7 +53,7 @@ export const useAnalytics = () => {
     }
   }, [fromParam, toParam])
 
-  const selectedOrgId = orgIdParam || ''
+  const selectedOrgId = overrideOrgId || orgIdParam || ''
   const year = yearParam ? parseInt(yearParam) : new Date().getFullYear()
 
   const setDateRange = (range: { startDate: Date; endDate: Date }) => {

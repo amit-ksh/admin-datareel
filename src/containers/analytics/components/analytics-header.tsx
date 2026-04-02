@@ -21,6 +21,8 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { OrganisationSelectPopover } from './organisation-select-popover'
 
+import { ANALYTICS_TEST_IDS } from './test-ids'
+
 interface AnalyticsHeaderProps {
   mode: string
   onModeChange: (mode: string) => void
@@ -46,11 +48,17 @@ export function AnalyticsHeader({
   }
 
   return (
-    <div className='mb-8 flex flex-col justify-between gap-4 xl:flex-row xl:items-center'>
+    <div
+      className='mb-8 flex flex-col justify-between gap-4 xl:flex-row xl:items-center'
+      data-testid={ANALYTICS_TEST_IDS.HEADER.CONTAINER}
+    >
       <div className='flex flex-col gap-4 sm:flex-row sm:items-center'>
         <div className='flex flex-col gap-1'>
           <div className='flex items-center gap-2'>
-            <h1 className='text-foreground text-2xl font-bold tracking-tight'>
+            <h1
+              className='text-foreground text-2xl font-bold tracking-tight'
+              data-testid={ANALYTICS_TEST_IDS.HEADER.TITLE}
+            >
               Analytics
             </h1>
             <Tabs
@@ -80,6 +88,7 @@ export function AnalyticsHeader({
                 'bg-background hover:bg-accent hover:text-accent-foreground h-9 w-full justify-start px-4 text-left text-sm font-medium sm:w-65',
                 !date && 'text-muted-foreground',
               )}
+              data-testid={ANALYTICS_TEST_IDS.HEADER.DATE_RANGE}
             >
               <CalendarIcon className='mr-2 h-4 w-4 shrink-0' />
               <span className='truncate'>

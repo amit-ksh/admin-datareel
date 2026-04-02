@@ -30,4 +30,4 @@ export const SERVICE_IMPACT_MAP = {
 } as const
 
 export type ServiceKey = keyof typeof SERVICE_IMPACT_MAP
-export type ServiceImpactMap = typeof SERVICE_IMPACT_MAP
+export type ServiceImpactMapDetailed = typeof SERVICE_IMPACT_MAP

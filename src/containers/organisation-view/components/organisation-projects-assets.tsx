@@ -1,3 +1,4 @@
+import { Organisation } from '@/types/organisation'
 import { Button } from '@/components/ui/button'
 import { Calendar } from 'lucide-react'
 
@@ -6,7 +7,13 @@ import { AssetMetrics } from './projects-assets/asset-metrics'
 import { DistributionCharts } from './projects-assets/distribution-charts'
 import { ActiveProjectsTable } from './projects-assets/active-projects-table'
 
-export function OrganisationProjectsAssets() {
+interface OrganisationProjectsAssetsProps {
+  counts: Organisation['counts']
+}
+
+export function OrganisationProjectsAssets({
+  counts,
+}: OrganisationProjectsAssetsProps) {
   return (
     <div className='space-y-6'>
       <div className='flex flex-col justify-between gap-4 md:flex-row md:items-center'>
@@ -29,9 +36,9 @@ export function OrganisationProjectsAssets() {
         </div>
       </div>
 
-      <ProjectMetrics />
+      <ProjectMetrics counts={counts} />
 
-      <AssetMetrics />
+      <AssetMetrics counts={counts} />
 
       <DistributionCharts />
 
