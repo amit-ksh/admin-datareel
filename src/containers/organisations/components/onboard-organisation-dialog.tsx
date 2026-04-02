@@ -28,6 +28,7 @@ import { Switch } from '@/components/ui/switch'
 import {
   createOrganisationSchema,
   CreateOrganisationPayload,
+  Organisation,
 } from '@/types/organisation'
 import { toast } from 'sonner'
 import { Loader2, X } from 'lucide-react'
@@ -39,6 +40,8 @@ export function OnboardOrganisationDialog() {
   const [open, setOpen] = useState(false)
   const [logoPreview, setLogoPreview] = useState<string | null>(null)
   const [isDragging, setIsDragging] = useState(false)
+  const [selectedSourceOrg, setSelectedSourceOrg] =
+    useState<Organisation | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const {
@@ -312,7 +315,10 @@ export function OnboardOrganisationDialog() {
                   </Label>
                   <OrganisationSelectPopover
                     selectedOrgId={sourceOrgId || ''}
-                    onSelect={(id) => setValue('source_org_id', id)}
+                    onSelect={(id, org) => {
+                      setValue('source_org_id', id)
+                      setSelectedSourceOrg(org || null)
+                    }}
                   />
                   {errors.source_org_id && (
                     <p className='text-[10px] text-red-500'>
@@ -454,9 +460,20 @@ export function OnboardOrganisationDialog() {
                         >
                           <Label
                             htmlFor={`clone-${key}`}
-                            className='text-foreground/80 cursor-pointer text-[11px] font-medium capitalize'
+                            className='text-foreground/80 flex cursor-pointer items-center gap-1.5 text-[11px] font-medium capitalize'
                           >
                             {getLabelForKey(key)}
+                            {selectedSourceOrg?.counts?.[
+                              key as keyof Organisation['counts']
+                            ] !== undefined && (
+                              <span className='text-muted-foreground bg-muted/80 flex min-w-[16px] items-center justify-center rounded-full px-1 py-0.5 text-[9px] leading-none font-bold'>
+                                {
+                                  selectedSourceOrg.counts[
+                                    key as keyof Organisation['counts']
+                                  ]
+                                }
+                              </span>
+                            )}
                           </Label>
                           <Switch
                             id={`clone-${key}`}

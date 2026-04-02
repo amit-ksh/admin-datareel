@@ -122,7 +122,7 @@ export function EngagementList({
           </div>
         )}
       </div>
-      <div className='flex flex-col gap-4'>
+      <div className='flex max-h-[270px] flex-col gap-4 overflow-y-auto'>
         {displayItems.map((item, idx) => (
           <div key={idx} className='flex flex-col gap-1.5'>
             <div className='flex items-center justify-between text-[13px] leading-none font-medium'>
