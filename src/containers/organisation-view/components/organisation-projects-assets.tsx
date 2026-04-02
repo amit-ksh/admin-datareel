@@ -25,7 +25,7 @@ export function OrganisationProjectsAssets({
             Detailed analytics for your video content platform.
           </p>
         </div>
-        <div className='flex items-center gap-3'>
+        {/* <div className='flex items-center gap-3'>
           <Button
             variant='outline'
             className='bg-background gap-2 border shadow-none'
@@ -33,16 +33,16 @@ export function OrganisationProjectsAssets({
             <Calendar className='h-4 w-4' />
             Last 30 Days
           </Button>
-        </div>
+        </div> */}
       </div>
 
       <ProjectMetrics counts={counts} />
 
       <AssetMetrics counts={counts} />
 
-      <DistributionCharts />
+      {/* <DistributionCharts />
 
-      <ActiveProjectsTable />
+      <ActiveProjectsTable /> */}
     </div>
   )
 }

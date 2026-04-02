@@ -20,7 +20,7 @@ import {
   EmailTemplateType,
   ListEmailTemplatesParams,
 } from '@/types/email-templates'
-import { useListOrganisations } from '@/api/organisation'
+import { OrganisationSelectPopover } from '@/containers/analytics/components/organisation-select-popover'
 
 interface EmailTemplatesHeaderProps {
   params: ListEmailTemplatesParams
@@ -33,8 +33,6 @@ export function EmailTemplatesHeader({
   onFilterChange,
   onReset,
 }: EmailTemplatesHeaderProps) {
-  const { data: organisations } = useListOrganisations({ page_limit: 10 })
-
   return (
     <div className='mb-8 flex items-center justify-between'>
       <div className='flex flex-col gap-1'>
@@ -148,26 +146,10 @@ export function EmailTemplatesHeader({
                 <Label htmlFor='org' className='text-xs'>
                   Organisation
                 </Label>
-                <Select
-                  value={params.org_id || 'all'}
-                  onValueChange={(value) =>
-                    onFilterChange({
-                      org_id: value === 'all' ? undefined : value,
-                    })
-                  }
-                >
-                  <SelectTrigger id='org' className='h-8'>
-                    <SelectValue placeholder='Select Organisation' />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value='all'>All Organisations</SelectItem>
-                    {organisations?.docs?.map((org) => (
-                      <SelectItem key={org.id} value={org.id}>
-                        {org.organisation_name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <OrganisationSelectPopover
+                  selectedOrgId={params.org_id || ''}
+                  onSelect={(id) => onFilterChange({ org_id: id || undefined })}
+                />
               </div>
             </div>
           </PopoverContent>

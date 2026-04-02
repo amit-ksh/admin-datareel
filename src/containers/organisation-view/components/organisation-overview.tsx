@@ -1,7 +1,6 @@
 import { FeaturesSettings } from './features-settings'
 import { LanguagesSettings } from './languages-settings'
 import { PersonaOnboardingSettings } from './persona-onboarding-settings'
-import { DangerZone } from './danger-zone'
 import { TokenSettings } from './token-settings'
 import { DailyReportSettings } from './daily-report-settings'
 
@@ -22,7 +21,7 @@ export function OrganisationOverview() {
       <DailyReportSettings />
       <LanguagesSettings />
       <PersonaOnboardingSettings />
-      <DangerZone />
+      {/* <DangerZone /> */}
     </div>
   )
 }

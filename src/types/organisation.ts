@@ -30,18 +30,20 @@ export interface Organisation {
   _id: string
   id: string
   created_at: string
+  updated_at: string
   organisation_name: string
   organisation_logo: string | null
   tenant_id: string
   roles_permissions: Record<string, string[]>
   languages: string[]
-  password?: string
-  user_id: string
-  notification: string[]
+  password?: string | null
+  user_id: string | null
+  notification: string[] | null
   additional_emails: string[]
+  notification_emails: Record<string, string[]>
   unlocked: boolean
-  unlocked_at?: string
-  consent_text: {
+  unlocked_at?: string | null
+  consent_text?: {
     title: string
   }
   enable_cdn: boolean
@@ -53,8 +55,8 @@ export interface Organisation {
     require_video: boolean
     require_audio: boolean
   }
-  daily_report_hour: number
-  daily_report_timezone: string
+  daily_report_hour: number | null
+  daily_report_timezone: string | null
   enable_daily_report: boolean
   total_tokens: number
   used_tokens: number

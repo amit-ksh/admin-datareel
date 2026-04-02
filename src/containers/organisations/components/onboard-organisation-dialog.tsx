@@ -22,15 +22,9 @@ import {
 import { useState } from 'react'
 import { useForm, SubmitHandler, Resolver } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useCreateOrganisation, useListOrganisations } from '@/api/organisation'
+import { useCreateOrganisation } from '@/api/organisation'
+import { OrganisationSelectPopover } from '@/containers/analytics/components/organisation-select-popover'
 import { Switch } from '@/components/ui/switch'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import {
   createOrganisationSchema,
   CreateOrganisationPayload,
@@ -84,8 +78,6 @@ export function OnboardOrganisationDialog() {
 
   const sourceOrgId = watch('source_org_id')
   const infiniteTokens = watch('infinite_tokens')
-  const { data: orgsData } = useListOrganisations({ page_limit: 10 })
-  const organisations = orgsData?.docs || []
 
   const updateOption = (key: keyof typeof options, value: boolean) => {
     setOptions((prev) => {
@@ -318,24 +310,10 @@ export function OnboardOrganisationDialog() {
                   <Label htmlFor='source-org' className='text-xs font-semibold'>
                     Clone from Organisation
                   </Label>
-                  <Select
-                    onValueChange={(val) =>
-                      setValue('source_org_id', val === 'none' ? '' : val)
-                    }
-                    value={sourceOrgId || 'none'}
-                  >
-                    <SelectTrigger id='source-org' className='h-8 text-xs'>
-                      <SelectValue placeholder='Select an organisation' />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value='none'>None (Start fresh)</SelectItem>
-                      {organisations.map((org) => (
-                        <SelectItem key={org.id} value={org.id}>
-                          {org.organisation_name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <OrganisationSelectPopover
+                    selectedOrgId={sourceOrgId || ''}
+                    onSelect={(id) => setValue('source_org_id', id)}
+                  />
                   {errors.source_org_id && (
                     <p className='text-[10px] text-red-500'>
                       {errors.source_org_id.message}

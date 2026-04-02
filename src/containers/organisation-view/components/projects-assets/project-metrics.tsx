@@ -1,5 +1,5 @@
 import { Organisation } from '@/types/organisation'
-import { TrendingUp, Folder, LayoutDashboard, Users } from 'lucide-react'
+import { Folder, LayoutDashboard, Users } from 'lucide-react'
 import { MetricCard, ProgressBar } from './shared-components'
 
 interface ProjectMetricsProps {
@@ -13,12 +13,6 @@ export function ProjectMetrics({ counts }: ProjectMetricsProps) {
       <MetricCard
         title='Total Pipelines'
         value={(counts?.pipelines ?? 0).toString()}
-        subtitle={
-          <p className='flex items-center gap-1 text-sm font-medium text-emerald-500'>
-            <TrendingUp className='h-4 w-4' />
-            +12% this month
-          </p>
-        }
         icon={
           <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50'>
             <Folder className='h-5 w-5 fill-blue-500 text-blue-500' />
