@@ -106,7 +106,7 @@ export function AppSidebar({ ...props }) {
           <Image
             src={
               state === 'collapsed'
-                ? '/datareel/brand/Monogram.jpg'
+                ? '/datareel/brand/logo-icon.svg'
                 : '/datareel/brand/logo-dark.svg'
             }
             alt='DataReel Logo'
@@ -118,7 +118,7 @@ export function AppSidebar({ ...props }) {
           <Image
             src={
               state === 'collapsed'
-                ? '/datareel/brand/Monogram.jpg'
+                ? '/datareel/brand/logo-icon.svg'
                 : '/datareel/brand/logo-light.svg'
             }
             alt='DataReel Logo'

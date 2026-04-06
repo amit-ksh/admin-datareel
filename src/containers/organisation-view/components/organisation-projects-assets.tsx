@@ -1,11 +1,7 @@
 import { Organisation } from '@/types/organisation'
-import { Button } from '@/components/ui/button'
-import { Calendar } from 'lucide-react'
 
 import { ProjectMetrics } from './projects-assets/project-metrics'
 import { AssetMetrics } from './projects-assets/asset-metrics'
-import { DistributionCharts } from './projects-assets/distribution-charts'
-import { ActiveProjectsTable } from './projects-assets/active-projects-table'
 
 interface OrganisationProjectsAssetsProps {
   counts: Organisation['counts']

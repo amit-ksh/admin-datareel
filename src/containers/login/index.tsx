@@ -21,7 +21,7 @@ export default function LoginContainer() {
     <div className='bg-background relative flex min-h-screen w-full overflow-hidden'>
       {/* Left Section: Login Form */}
       <div className='border-border/50 bg-background relative z-10 flex w-full flex-1 flex-col justify-center border-r px-8 sm:px-12 md:px-24 lg:w-1/2 lg:flex-none'>
-        <div className='absolute top-8 left-8 sm:left-12 md:left-24'>
+        <div className='absolute top-8 left-1/2 -translate-x-1/2 sm:top-12'>
           <Image
             src='/datareel/brand/logo-light.svg'
             alt='Datareel Logo'
