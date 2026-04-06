@@ -114,7 +114,6 @@ export function OrganisationsTable({
     e.stopPropagation()
     setAccessingId(orgId)
     accessApp({
-      email: 'admin@datareel.ai', // Dummy email as requested
       organisationId: orgId,
     })
   }
@@ -310,7 +309,7 @@ export function OrganisationsTable({
                         <LayoutDashboard className='h-3.5 w-3.5' />
                         Open
                       </Button>
-                      {/* <Button
+                      <Button
                         variant='outline'
                         size='sm'
                         className='border-primary/20 hover:bg-primary/5 hover:text-primary h-8 w-20 gap-1.5 text-xs font-semibold transition-all'
@@ -323,7 +322,7 @@ export function OrganisationsTable({
                           <ExternalLink className='h-3.5 w-3.5' />
                         )}
                         Login
-                      </Button> */}
+                      </Button>
                     </div>
                   </TableCell>
                 </TableRow>

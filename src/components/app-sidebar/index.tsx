@@ -24,7 +24,7 @@ import {
   Building2Icon,
   ChevronRightIcon,
   ClapperboardIcon,
-  DoorOpenIcon,
+  // DoorOpenIcon,
   ActivityIcon,
   MailIcon,
 } from 'lucide-react'
@@ -57,13 +57,13 @@ export function AppSidebar({ ...props }) {
             hasAccess: true,
             isActive: pathname.startsWith('/organisations'),
           },
-          {
-            title: 'Access Organisations',
-            url: '/access-organisation',
-            icon: DoorOpenIcon,
-            hasAccess: true,
-            isActive: pathname.startsWith('/access-organisation'),
-          },
+          // {
+          //   title: 'Access Organisations',
+          //   url: '/access-organisation',
+          //   icon: DoorOpenIcon,
+          //   hasAccess: true,
+          //   isActive: pathname.startsWith('/access-organisation'),
+          // },
           {
             title: 'Email Templates',
             url: '/email-templates',

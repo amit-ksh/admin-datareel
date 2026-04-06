@@ -37,7 +37,7 @@ export const useAccessOrganisation = () => {
     error,
     refetch,
   } = useListOrganisations(params, {
-    enabled: Boolean(searchEmail),
+    enabled: true,
   })
 
   const { mutate: accessClientApp, isPending: isAccessPending } =

@@ -143,7 +143,7 @@ export interface ListOrganisationsResponse {
 }
 
 export interface AccessClientAppPayload {
-  email: string
+  email?: string
   organisationId: string
 }
 
