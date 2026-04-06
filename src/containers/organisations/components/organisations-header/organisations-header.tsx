@@ -3,6 +3,8 @@ import { Search, RotateCcwIcon } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { ListOrganisationsParams } from '@/types/organisation'
 import { OnboardOrganisationDialog } from '../onboard-organisation-dialog'
+import { useState, useEffect } from 'react'
+import { useDebounce } from '@/hooks/use-debounce'
 
 interface OrganisationsHeaderProps {
   params: ListOrganisationsParams
@@ -15,9 +17,17 @@ export function OrganisationsHeader({
   setFilters,
   resetFilters,
 }: OrganisationsHeaderProps) {
-  const handleSearch = (val: string) => {
-    setFilters({ search: val || undefined })
-  }
+  const [searchValue, setSearchValue] = useState(params.search || '')
+  const debouncedSearchValue = useDebounce(searchValue, 500)
+
+  useEffect(() => {
+    setFilters({ search: debouncedSearchValue || undefined })
+  }, [debouncedSearchValue])
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setSearchValue(params.search || '')
+  }, [params.search])
 
   return (
     <div className='mb-8 flex items-center justify-between'>
@@ -35,8 +45,8 @@ export function OrganisationsHeader({
           <Input
             placeholder='Search Organisation...'
             className='bg-background h-9 pl-8'
-            defaultValue={params.search}
-            onChange={(e) => handleSearch(e.target.value)}
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
           />
         </div>
 

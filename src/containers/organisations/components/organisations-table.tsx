@@ -7,10 +7,24 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { ArrowUpDown, Building2 } from 'lucide-react'
+import {
+  ArrowUpDown,
+  Building2,
+  Copy,
+  Unlock,
+  Lock,
+  LayoutDashboard,
+} from 'lucide-react'
 import { TablePagination } from '@/components/ui/table-pagination'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Badge } from '@/components/ui/badge'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 import {
   ListOrganisationsResponse,
   ListOrganisationsParams,
@@ -19,6 +33,11 @@ import { format } from 'date-fns'
 import { useRouter } from 'next/navigation'
 import { ErrorState } from '@/components/common/error-state'
 import { AxiosError } from 'axios'
+import { toast } from 'sonner'
+import { useAccessClientApp } from '@/api/organisation'
+import { Button } from '@/components/ui/button'
+import { ExternalLink, Loader2 } from 'lucide-react'
+import { useState } from 'react'
 
 interface OrganisationsTableProps {
   data?: ListOrganisationsResponse
@@ -58,19 +77,19 @@ function OrganisationSkeleton() {
             <Skeleton className='h-4 w-24' />
           </TableCell>
           <TableCell>
-            <Skeleton className='h-4 w-16' />
-          </TableCell>
-          <TableCell>
-            <Skeleton className='h-4 w-12' />
-          </TableCell>
-          <TableCell>
-            <Skeleton className='h-4 w-12' />
-          </TableCell>
-          <TableCell>
             <Skeleton className='h-4 w-24' />
           </TableCell>
           <TableCell>
-            <Skeleton className='h-4 w-12' />
+            <Skeleton className='h-6 w-32' />
+          </TableCell>
+          <TableCell>
+            <Skeleton className='h-6 w-20 rounded-full' />
+          </TableCell>
+          <TableCell>
+            <div className='flex justify-end gap-2'>
+              <Skeleton className='h-8 w-20 rounded-md' />
+              <Skeleton className='h-8 w-20 rounded-md' />
+            </div>
           </TableCell>
         </TableRow>
       ))}
@@ -88,6 +107,17 @@ export function OrganisationsTable({
   updateQueryParams,
 }: OrganisationsTableProps) {
   const router = useRouter()
+  const { mutate: accessApp, isPending: isAccessing } = useAccessClientApp()
+  const [accessingId, setAccessingId] = useState<string | null>(null)
+
+  const handleAccess = (e: React.MouseEvent, orgId: string) => {
+    e.stopPropagation()
+    setAccessingId(orgId)
+    accessApp({
+      email: 'admin@datareel.ai', // Dummy email as requested
+      organisationId: orgId,
+    })
+  }
   const handleSort = (key: ListOrganisationsParams['sort_by']) => {
     const order =
       params.sort_by === key && params.sort_order === 'desc' ? 'asc' : 'desc'
@@ -116,10 +146,10 @@ export function OrganisationsTable({
                   <ArrowUpDown className='h-3.5 w-3.5' />
                 </div>
               </TableHead>
-              <TableHead>CDN</TableHead>
-              <TableHead>HLS</TableHead>
               <TableHead>Status</TableHead>
+              <TableHead>Token Details</TableHead>
               <TableHead>Unlocked</TableHead>
+              <TableHead className='pr-6 text-right'>Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -127,13 +157,13 @@ export function OrganisationsTable({
               <OrganisationSkeleton />
             ) : isError ? (
               <TableRow>
-                <TableCell colSpan={7} className='p-0'>
+                <TableCell colSpan={6} className='p-0'>
                   <ErrorState error={error as AxiosError} onRetry={refetch} />
                 </TableCell>
               </TableRow>
             ) : !data?.docs || data?.docs.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={7} className='h-40 text-center'>
+                <TableCell colSpan={6} className='h-40 text-center'>
                   <div className='flex flex-col items-center justify-center gap-2'>
                     <Building2 className='text-muted-foreground/40 h-8 w-8' />
                     <p className='text-muted-foreground text-sm font-medium'>
@@ -149,7 +179,7 @@ export function OrganisationsTable({
                   className='hover:bg-muted/50 h-20 cursor-pointer transition-colors'
                   onClick={() => router.push(`/organisations/${org.id}`)}
                 >
-                  <TableCell className='pl-6'>
+                  <TableCell className='pl-6' title={org?.organisation_name}>
                     <div className='flex items-center gap-3'>
                       <Avatar className={`h-10 w-10 border-none`}>
                         <AvatarImage
@@ -164,11 +194,31 @@ export function OrganisationsTable({
                       </Avatar>
                       <div className='flex flex-col'>
                         <div className='text-foreground flex items-center text-sm font-bold'>
-                          {org.organisation_name}
+                          <span className='line-clamp-1 max-w-[200px] truncate text-wrap'>
+                            {org.organisation_name}
+                          </span>
                         </div>
-                        <span className='text-muted-foreground mt-0.5 text-xs'>
-                          ID: {org.id.slice(0, 8)}...
-                        </span>
+                        <div className='flex items-center gap-1.5'>
+                          <span className='text-muted-foreground line-clamp-1 max-w-[80px] font-mono text-[10px] font-normal opacity-70'>
+                            ID: {org.id}
+                          </span>
+                          <button
+                            onClick={async (e) => {
+                              try {
+                                e.stopPropagation()
+                                await navigator.clipboard.writeText(org.id)
+                                toast.success('ID copied to clipboard')
+                              } catch {
+                                toast.error('Failed to copy ID')
+                              }
+                            }}
+                            className='text-muted-foreground hover:text-foreground transition-colors'
+                            aria-label='Copy template ID'
+                            type='button'
+                          >
+                            <Copy className='h-2.5 w-2.5' />
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </TableCell>
@@ -176,12 +226,6 @@ export function OrganisationsTable({
                     {format(new Date(org.created_at), 'dd MMM yyyy')}
                   </TableCell>
 
-                  <TableCell className='text-foreground text-sm font-medium'>
-                    {org.enable_cdn ? 'Yes' : 'No'}
-                  </TableCell>
-                  <TableCell className='text-foreground text-sm font-medium'>
-                    {org.enable_hls ? 'Yes' : 'No'}
-                  </TableCell>
                   <TableCell className='text-foreground text-sm font-medium text-nowrap'>
                     <div className='flex flex-col gap-1'>
                       <span
@@ -189,12 +233,98 @@ export function OrganisationsTable({
                       >
                         {org?.onboarding_status?.email_verified
                           ? 'Email Verified'
-                          : 'Email Pending'}
+                          : 'Email Verification Pending'}
                       </span>
                     </div>
                   </TableCell>
+
                   <TableCell className='text-foreground text-sm font-medium'>
-                    {org.unlocked ? 'Yes' : 'No'}
+                    <div className='flex items-center gap-3'>
+                      <div className='flex flex-col'>
+                        <span className='text-muted-foreground text-[10px] font-semibold tracking-wider uppercase'>
+                          Used / Total
+                        </span>
+                        <div className='flex items-center gap-1.5'>
+                          <span className='text-foreground text-sm font-bold'>
+                            {org.infinite_tokens
+                              ? '∞'
+                              : `${org.used_tokens || 0} / ${org.total_tokens || 0}`}
+                          </span>
+                          {org.infinite_tokens && (
+                            <Badge
+                              variant='secondary'
+                              className='border-blue-100 bg-blue-50 px-1.5 py-0 text-[10px] text-blue-600'
+                            >
+                              Infinite
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </TableCell>
+
+                  <TableCell className='text-foreground text-sm font-medium'>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div className='flex items-center gap-1.5'>
+                            {org.unlocked ? (
+                              <Badge
+                                variant='secondary'
+                                className='gap-1 border-emerald-100 bg-emerald-50 px-2 text-emerald-600'
+                              >
+                                <Unlock className='h-3 w-3' />
+                                Unlocked
+                              </Badge>
+                            ) : (
+                              <Badge
+                                variant='secondary'
+                                className='gap-1 border-slate-100 bg-slate-50 px-2 text-slate-500'
+                              >
+                                <Lock className='h-3 w-3' />
+                                Locked
+                              </Badge>
+                            )}
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          {org.unlocked
+                            ? 'All features enabled'
+                            : 'Restricted access'}
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </TableCell>
+
+                  <TableCell className='pr-6 text-right'>
+                    <div className='flex items-center justify-end gap-2'>
+                      <Button
+                        variant='outline'
+                        size='sm'
+                        className='h-8 w-20 gap-1.5 border-slate-200 text-xs font-semibold transition-all hover:bg-slate-50'
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          router.push(`/organisations/${org.id}`)
+                        }}
+                      >
+                        <LayoutDashboard className='h-3.5 w-3.5' />
+                        Open
+                      </Button>
+                      {/* <Button
+                        variant='outline'
+                        size='sm'
+                        className='border-primary/20 hover:bg-primary/5 hover:text-primary h-8 w-20 gap-1.5 text-xs font-semibold transition-all'
+                        onClick={(e) => handleAccess(e, org.id)}
+                        disabled={isAccessing && accessingId === org.id}
+                      >
+                        {isAccessing && accessingId === org.id ? (
+                          <Loader2 className='h-3.5 w-3.5 animate-spin' />
+                        ) : (
+                          <ExternalLink className='h-3.5 w-3.5' />
+                        )}
+                        Login
+                      </Button> */}
+                    </div>
                   </TableCell>
                 </TableRow>
               ))

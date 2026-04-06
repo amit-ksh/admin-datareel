@@ -1,7 +1,5 @@
 import { useState } from 'react'
 import {
-  Pencil,
-  Trash2,
   ChevronDown,
   Shield,
   ChevronLeft,
@@ -102,7 +100,7 @@ function TenantList({
                   </div>
                 </div>
                 {/* Actions mobile only */}
-                <div
+                {/* <div
                   className='hidden shrink-0 items-center gap-1.5'
                   onClick={(e) => e.stopPropagation()}
                 >
@@ -120,7 +118,7 @@ function TenantList({
                   >
                     <Trash2 className='h-[18px] w-[18px]' />
                   </Button>
-                </div>
+                </div> */}
               </div>
 
               <div className='flex flex-1 flex-wrap items-center justify-between gap-4 sm:pl-[64px] md:flex-nowrap md:gap-0 md:pl-0'>
@@ -185,7 +183,7 @@ function TenantList({
                 </div>
 
                 {/* Actions Desktop */}
-                <div
+                {/* <div
                   className='flex w-[100px] items-center justify-end gap-1.5'
                   onClick={(e) => e.stopPropagation()}
                 >
@@ -203,7 +201,7 @@ function TenantList({
                   >
                     <Trash2 className='h-[18px] w-[18px]' />
                   </Button>
-                </div>
+                </div> */}
               </div>
             </div>
 

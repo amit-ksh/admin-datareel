@@ -122,7 +122,7 @@ export function EngagementList({
           </div>
         )}
       </div>
-      <div className='flex max-h-[270px] flex-col gap-4 overflow-y-auto'>
+      <div className='flex max-h-[200px] flex-col gap-4 overflow-y-auto'>
         {displayItems.map((item, idx) => (
           <div key={idx} className='flex flex-col gap-1.5'>
             <div className='flex items-center justify-between text-[13px] leading-none font-medium'>
@@ -149,6 +149,7 @@ export function EngagementCard({
   rate,
   rateColor,
   rightContent,
+  avgFeedback,
 }: {
   title: string
   description?: string
@@ -156,10 +157,11 @@ export function EngagementCard({
   rate: number
   rateColor: string
   rightContent: React.ReactNode
+  avgFeedback?: number
 }) {
   return (
-    <Card className='bg-card'>
-      <CardContent className='flex flex-col p-0 md:flex-row'>
+    <Card className='bg-card h-full'>
+      <CardContent className='flex h-full flex-col p-0 md:flex-row'>
         <div className='border-border/50 flex flex-col items-center justify-between gap-4 border-r py-6 md:w-2/5'>
           <div className='flex flex-col items-center gap-1.5 text-center'>
             <h3
@@ -171,6 +173,17 @@ export function EngagementCard({
               <p className='text-muted-foreground px-4 text-[10px] leading-relaxed'>
                 {description}
               </p>
+            )}
+            {avgFeedback !== undefined && (
+              <div className='bg-muted/50 flex items-center gap-1.5 rounded-full px-3 py-1'>
+                <span className='text-muted-foreground text-xs font-bold'>
+                  AVG:
+                </span>
+                <span className='text-foreground text-sm font-bold'>
+                  {avgFeedback}
+                </span>
+                <span className='text-yellow-400'>★</span>
+              </div>
             )}
           </div>
           <EngagementRateChart value={rate} color={rateColor} />
@@ -189,6 +202,7 @@ export interface AnalyticsEngagementSectionProps {
   topActions: ActionItemProps[]
   bottomActions: ActionItemProps[]
   ratings: ActionItemProps[]
+  avgFeedback: number
 }
 
 export function AnalyticsEngagementSection({
@@ -199,11 +213,12 @@ export function AnalyticsEngagementSection({
   topActions,
   bottomActions,
   ratings,
+  avgFeedback,
 }: AnalyticsEngagementSectionProps) {
   return (
     <div className='grid gap-4 lg:grid-cols-2'>
       <EngagementCard
-        title='Callback Rate'
+        title='Engagement Rate'
         description={callbackDescription}
         titleColorClass='text-blue-500'
         rate={callbackRate}
@@ -222,6 +237,7 @@ export function AnalyticsEngagementSection({
         titleColorClass='text-emerald-500'
         rate={feedbackRate}
         rateColor='#10b981'
+        avgFeedback={avgFeedback}
         rightContent={
           <EngagementList title='Rating Distribution' items={ratings} />
         }

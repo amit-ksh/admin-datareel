@@ -117,6 +117,7 @@ export default function AnalyticsContainer() {
       color: 'bg-red-600',
     },
   ]
+  const avgFeedback = summaryData?.feedback_avg || 0
 
   const mappedOrgs = (organisationsData?.docs || []).map(
     (org: Organisation) => ({
@@ -248,6 +249,7 @@ export default function AnalyticsContainer() {
         topActions={topActions}
         bottomActions={bottomActions}
         ratings={ratings}
+        avgFeedback={avgFeedback}
       />
 
       {/* Yearly Line Chart Row */}
@@ -259,8 +261,8 @@ export default function AnalyticsContainer() {
           config={{
             videos: { label: 'Videos', color: '#3b82f6' },
             approval: { label: 'Approval', color: '#22c55e' },
-            delivered: { label: 'Delivered', color: '#f59e0b' },
-            seen: { label: 'Seen', color: '#eab308' },
+            delivered: { label: 'Delivered', color: '#6366f1' },
+            seen: { label: 'Seen', color: '#f59e0b' },
           }}
           lines={[
             { key: 'videos' },

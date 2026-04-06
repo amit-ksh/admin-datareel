@@ -60,7 +60,7 @@ export function TopOrganizationsTable({
               <TableHead>Join at</TableHead>
               <TableHead>Videos</TableHead>
               <TableHead>Approval Rate</TableHead>
-              <TableHead>Viewer Satisfaction</TableHead>
+              <TableHead>Avg. Feedback</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

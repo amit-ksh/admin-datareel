@@ -3,7 +3,6 @@
 import { Suspense } from 'react'
 import { Separator } from '@/components/ui/separator'
 import { EmailSearchCard } from './components/email-search-card'
-import { UserDetailsCard } from './components/user-details-card'
 import {
   OrganisationList,
   OrganisationSkeleton,
@@ -18,17 +17,8 @@ interface UserDetails {
   status: 'active' | 'inactive'
 }
 
-const dummyUser: UserDetails = {
-  name: 'John Doe',
-  email: 'john.doe@company.com',
-  role: 'ADMIN',
-  lastLogin: '2 hours ago',
-  status: 'active',
-}
-
 export default function AccessOrganisationContainer() {
-  const { email, setEmail, searchEmail, isLoading, handleFetch } =
-    useAccessOrganisation()
+  const { email, setEmail, isLoading, handleFetch } = useAccessOrganisation()
 
   return (
     <div className='min-h-screen'>
@@ -52,9 +42,9 @@ export default function AccessOrganisationContainer() {
             onFetch={handleFetch}
             loading={isLoading}
           />
-          {searchEmail && !isLoading && (
+          {/* {searchEmail && !isLoading && (
             <UserDetailsCard user={{ ...dummyUser, email: searchEmail }} />
-          )}
+          )} */}
         </div>
 
         <Separator className='mb-8' />

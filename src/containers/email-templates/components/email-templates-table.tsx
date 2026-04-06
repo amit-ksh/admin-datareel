@@ -152,10 +152,10 @@ export function EmailTemplatesTable({
                 data.map((tpl) => (
                   <TableRow key={tpl.id} className='h-20'>
                     <TableCell className='text-foreground pl-6 font-medium'>
-                      <div className='flex max-w-[300px] flex-col'>
+                      <div className='flex max-w-[200px] flex-col'>
                         <span className='truncate'>{tpl.name}</span>
                         <div className='flex items-center gap-1.5'>
-                          <span className='text-muted-foreground line-clamp-1 font-mono text-[10px] font-normal opacity-70'>
+                          <span className='text-muted-foreground line-clamp-1 max-w-[80px] font-mono text-[10px] font-normal opacity-70'>
                             ID: {tpl.id}
                           </span>
                           <button
