@@ -121,19 +121,20 @@ export default function AnalyticsContainer() {
 
   const mappedOrgs = (organisationsData?.docs || []).map(
     (org: Organisation) => ({
-      id: org.id.substring(0, 8),
+      id: org.id,
       name: org.organisation_name,
       joinDate: (() => {
         if (!org.created_at) return '-'
         const date = new Date(org.created_at)
         return isNaN(date.getTime()) ? '-' : format(date, 'd MMM yyyy')
       })(),
-      usage: '0',
-      videos: '0',
+      usage: org.infinite_tokens
+        ? 'Infinite'
+        : `${org?.used_tokens ?? 0} / ${org?.total_tokens ?? 0}`,
+      videos: String(org?.counts?.videos ?? 0),
       approvalRate: '-',
-      viewerSatisfaction: '0/5',
+      viewerSatisfaction: `${0}/5`,
       logoUrl: org.organisation_logo || '',
-      externalLink: '#',
     }),
   )
 
