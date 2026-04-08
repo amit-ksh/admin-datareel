@@ -63,6 +63,12 @@ export interface GetFeedbacksParams extends FeedbackQueryParams {
   pagenum?: number
   comments_only?: boolean
   assignee?: string
+  rating?: number
+}
+
+export interface DownloadFeedbacksParams extends FeedbackQueryParams {
+  comments_only?: boolean
+  rating?: number
 }
 
 export interface MonthlyVideoCount {

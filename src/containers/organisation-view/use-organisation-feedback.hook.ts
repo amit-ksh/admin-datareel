@@ -6,8 +6,9 @@ import {
   getRatingStats,
   getRatingBreakdown,
   getFeedbacks,
+  downloadFeedbacks,
 } from '@/api/analytics'
-import { useMemo } from 'react'
+import { useMemo, useCallback, useState } from 'react'
 import { subDays, format, parseISO, isValid } from 'date-fns'
 import { useSearchParams, usePathname, useRouter } from 'next/navigation'
 
@@ -33,10 +34,12 @@ export const useOrganisationFeedback = (organisationId: string) => {
   const pageParam = searchParams.get('page')
   const assigneeParam = searchParams.get('assignee')
   const commentsOnlyParam = searchParams.get('comments_only')
+  const ratingParam = searchParams.get('rating')
 
   const page = pageParam ? parseInt(pageParam) : 1
   const assignee = assigneeParam || ''
   const commentsOnly = commentsOnlyParam === 'true'
+  const rating = ratingParam ? parseInt(ratingParam) : undefined
 
   const dateRange = useMemo(() => {
     const start = fromParam ? parseISO(fromParam) : subDays(new Date(), 30)
@@ -66,6 +69,42 @@ export const useOrganisationFeedback = (organisationId: string) => {
   const setCommentsOnly = (val: boolean) => {
     updateUrl({ comments_only: val ? 'true' : 'false', page: '1' })
   }
+
+  const setRating = (newRating: number | undefined) => {
+    updateUrl({ rating: newRating?.toString() ?? null, page: '1' })
+  }
+
+  const [isExporting, setIsExporting] = useState(false)
+
+  const handleExportCSV = useCallback(async () => {
+    try {
+      setIsExporting(true)
+      const startD = format(dateRange.startDate, 'dd-MM-yyyy')
+      const endD = format(dateRange.endDate, 'dd-MM-yyyy')
+      const filename = `feedback-table-${startD}-${endD}.csv`
+
+      const resp = await downloadFeedbacks({
+        organisationId,
+        startDate: dateRange.startDate,
+        endDate: dateRange.endDate,
+        comments_only: commentsOnly,
+        rating,
+      })
+
+      const url = window.URL.createObjectURL(new Blob([resp.data]))
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', filename)
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
+      window.URL.revokeObjectURL(url)
+    } catch (e) {
+      console.error('Failed to download feedback CSV', e)
+    } finally {
+      setIsExporting(false)
+    }
+  }, [organisationId, dateRange, commentsOnly, rating])
 
   const { data: overviewData, isLoading: isLoadingOverview } = useQuery({
     queryKey: ['feedbackOverview', organisationId, dateRange],
@@ -108,6 +147,7 @@ export const useOrganisationFeedback = (organisationId: string) => {
       page,
       assignee,
       commentsOnly,
+      rating,
     ],
     queryFn: () =>
       getFeedbacks({
@@ -117,6 +157,7 @@ export const useOrganisationFeedback = (organisationId: string) => {
         pagenum: page,
         assignee,
         comments_only: commentsOnly,
+        rating,
       }),
     enabled: !!organisationId,
   })
@@ -139,5 +180,9 @@ export const useOrganisationFeedback = (organisationId: string) => {
     setAssignee,
     commentsOnly,
     setCommentsOnly,
+    rating,
+    setRating,
+    handleExportCSV,
+    isExporting,
   }
 }
