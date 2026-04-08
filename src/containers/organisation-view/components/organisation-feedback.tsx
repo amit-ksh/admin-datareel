@@ -308,6 +308,7 @@ export function OrganisationFeedback({
                     setDateRange({ startDate: range.from, endDate: range.to })
                   }
                 }}
+                disabled={{ after: new Date() }}
                 numberOfMonths={2}
               />
             </PopoverContent>

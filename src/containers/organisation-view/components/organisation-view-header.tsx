@@ -1,5 +1,13 @@
 import { Badge } from '@/components/ui/badge'
-import { Calendar, Building2, Lock, Unlock } from 'lucide-react'
+import {
+  Calendar,
+  Building2,
+  Lock,
+  Unlock,
+  Copy,
+  ExternalLink,
+  Loader2,
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useOrganisationView } from '../use-organisation-view.hook'
 import { format } from 'date-fns'
@@ -9,10 +17,23 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
+import { toast } from 'sonner'
+import { useAccessClientApp } from '@/api/organisation'
+import { useState } from 'react'
 
 export function OrganisationViewHeader() {
   const { organisation, unlockOrganisation, isUnlocking } =
     useOrganisationView()
+  const { mutate: accessApp, isPending: isAccessing } = useAccessClientApp()
+  const [accessingId, setAccessingId] = useState<string | null>(null)
+
+  const handleAccess = (e: React.MouseEvent, orgId: string) => {
+    e.stopPropagation()
+    setAccessingId(orgId)
+    accessApp({
+      organisationId: orgId,
+    })
+  }
 
   if (!organisation) return null
 
@@ -101,12 +122,45 @@ export function OrganisationViewHeader() {
                   </div>
                 </PopoverContent>
               </Popover>
+
+              <Button
+                variant='outline'
+                size='sm'
+                className='border-primary/20 hover:bg-primary/5 hover:text-primary h-6 gap-1.5 rounded-md px-2 py-0 text-[10px] font-semibold transition-all'
+                onClick={(e) => handleAccess(e, organisation.id)}
+                disabled={isAccessing && accessingId === organisation.id}
+              >
+                {isAccessing && accessingId === organisation.id ? (
+                  <Loader2 className='h-3 w-3 animate-spin' />
+                ) : (
+                  <ExternalLink className='h-3 w-3' />
+                )}
+                Login
+              </Button>
             </div>
             <div className='text-muted-foreground mt-1 flex items-center gap-4 text-sm'>
-              <span className='flex items-center gap-1.5'>
-                <span className='text-foreground font-medium'>ID:</span>{' '}
-                {organisation.id}
-              </span>
+              <div className='flex items-center gap-1.5'>
+                <span className='text-foreground font-medium'>ID:</span>
+                <span className='line-clamp-1 max-w-[80px] font-mono text-[10px] font-normal opacity-70'>
+                  {organisation.id}
+                </span>
+                <button
+                  onClick={async (e) => {
+                    try {
+                      e.stopPropagation()
+                      await navigator.clipboard.writeText(organisation.id)
+                      toast.success('ID copied to clipboard')
+                    } catch {
+                      toast.error('Failed to copy ID')
+                    }
+                  }}
+                  className='text-muted-foreground hover:text-foreground transition-colors'
+                  aria-label='Copy ID'
+                  type='button'
+                >
+                  <Copy className='h-3 w-3' />
+                </button>
+              </div>
               <span className='flex items-center gap-1.5'>
                 <Calendar className='h-4 w-4' />
                 Joined{' '}

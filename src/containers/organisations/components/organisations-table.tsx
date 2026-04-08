@@ -114,7 +114,6 @@ export function OrganisationsTable({
     e.stopPropagation()
     setAccessingId(orgId)
     accessApp({
-      email: 'admin@datareel.ai', // Dummy email as requested
       organisationId: orgId,
     })
   }
@@ -229,9 +228,10 @@ export function OrganisationsTable({
                   <TableCell className='text-foreground text-sm font-medium text-nowrap'>
                     <div className='flex flex-col gap-1'>
                       <span
-                        className={`w-fit rounded-full px-1.5 py-0.5 text-[10px] ${org?.onboarding_status?.email_verified ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}`}
+                        className={`w-fit rounded-full px-1.5 py-0.5 text-[10px] ${!org?.onboarding_status || org.onboarding_status.email_verified ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}`}
                       >
-                        {org?.onboarding_status?.email_verified
+                        {!org?.onboarding_status ||
+                        org.onboarding_status.email_verified
                           ? 'Email Verified'
                           : 'Email Verification Pending'}
                       </span>
@@ -310,7 +310,7 @@ export function OrganisationsTable({
                         <LayoutDashboard className='h-3.5 w-3.5' />
                         Open
                       </Button>
-                      {/* <Button
+                      <Button
                         variant='outline'
                         size='sm'
                         className='border-primary/20 hover:bg-primary/5 hover:text-primary h-8 w-20 gap-1.5 text-xs font-semibold transition-all'
@@ -323,7 +323,7 @@ export function OrganisationsTable({
                           <ExternalLink className='h-3.5 w-3.5' />
                         )}
                         Login
-                      </Button> */}
+                      </Button>
                     </div>
                   </TableCell>
                 </TableRow>

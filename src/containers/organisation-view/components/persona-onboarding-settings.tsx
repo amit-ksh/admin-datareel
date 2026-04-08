@@ -16,21 +16,28 @@ export function PersonaOnboardingSettings() {
   const { organisation, updateOrganisation, isUpdating } = useOrganisationView()
   const [isEditing, setIsEditing] = useState(false)
 
+  const orgConfig = organisation?.persona_onboarding_config
+
   const [settings, setSettings] = useState({
     require_thumbnail: false,
     require_video: false,
     require_audio: false,
   })
 
+  const displayValues = isEditing
+    ? settings
+    : {
+        require_thumbnail: orgConfig?.require_thumbnail ?? false,
+        require_video: orgConfig?.require_video ?? false,
+        require_audio: orgConfig?.require_audio ?? false,
+      }
+
   const handleEdit = () => {
-    if (organisation?.persona_onboarding_config) {
-      setSettings({
-        require_thumbnail:
-          organisation.persona_onboarding_config.require_thumbnail,
-        require_video: organisation.persona_onboarding_config.require_video,
-        require_audio: organisation.persona_onboarding_config.require_audio,
-      })
-    }
+    setSettings({
+      require_thumbnail: orgConfig?.require_thumbnail ?? false,
+      require_video: orgConfig?.require_video ?? false,
+      require_audio: orgConfig?.require_audio ?? false,
+    })
     setIsEditing(true)
   }
 
@@ -104,7 +111,7 @@ export function PersonaOnboardingSettings() {
             </p>
           </div>
           <Switch
-            checked={settings.require_thumbnail}
+            checked={displayValues.require_thumbnail}
             onCheckedChange={(checked) =>
               setSettings((prev) => ({ ...prev, require_thumbnail: checked }))
             }
@@ -120,7 +127,7 @@ export function PersonaOnboardingSettings() {
             </p>
           </div>
           <Switch
-            checked={settings.require_video}
+            checked={displayValues.require_video}
             onCheckedChange={(checked) =>
               setSettings((prev) => ({ ...prev, require_video: checked }))
             }
@@ -136,7 +143,7 @@ export function PersonaOnboardingSettings() {
             </p>
           </div>
           <Switch
-            checked={settings.require_audio}
+            checked={displayValues.require_audio}
             onCheckedChange={(checked) =>
               setSettings((prev) => ({ ...prev, require_audio: checked }))
             }

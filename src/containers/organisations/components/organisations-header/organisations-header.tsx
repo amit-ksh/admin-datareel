@@ -50,7 +50,7 @@ export function OrganisationsHeader({
           />
         </div>
 
-        <Button
+        {/* <Button
           variant='ghost'
           size='sm'
           onClick={resetFilters}
@@ -58,7 +58,7 @@ export function OrganisationsHeader({
         >
           <RotateCcwIcon className='h-3 w-3' />
           Reset
-        </Button>
+        </Button> */}
 
         <OnboardOrganisationDialog />
       </div>

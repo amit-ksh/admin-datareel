@@ -24,6 +24,7 @@ export interface EmailTemplate {
   subject: string
   status: EmailTemplateStatus | null
   created_at: string
+  organisation_name: string
 }
 
 export interface EmailTemplateListResponse {

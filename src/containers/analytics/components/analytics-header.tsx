@@ -118,6 +118,7 @@ export function AnalyticsHeader({
                   setDateRange({ startDate: val.from, endDate: val.to })
                 }
               }}
+              disabled={{ after: new Date() }}
               numberOfMonths={2}
               className='hidden sm:block'
             />
@@ -130,6 +131,7 @@ export function AnalyticsHeader({
                   setDateRange({ startDate: val.from, endDate: val.to })
                 }
               }}
+              disabled={{ after: new Date() }}
               numberOfMonths={1}
               className='block sm:hidden'
             />
