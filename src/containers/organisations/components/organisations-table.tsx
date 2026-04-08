@@ -228,9 +228,10 @@ export function OrganisationsTable({
                   <TableCell className='text-foreground text-sm font-medium text-nowrap'>
                     <div className='flex flex-col gap-1'>
                       <span
-                        className={`w-fit rounded-full px-1.5 py-0.5 text-[10px] ${org?.onboarding_status?.email_verified ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}`}
+                        className={`w-fit rounded-full px-1.5 py-0.5 text-[10px] ${!org?.onboarding_status || org.onboarding_status.email_verified ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}`}
                       >
-                        {org?.onboarding_status?.email_verified
+                        {!org?.onboarding_status ||
+                        org.onboarding_status.email_verified
                           ? 'Email Verified'
                           : 'Email Verification Pending'}
                       </span>
