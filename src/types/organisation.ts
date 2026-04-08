@@ -158,6 +158,7 @@ export interface UpdateOrganisationPayload {
   enable_hls?: boolean
   enable_content_ai?: boolean
   enable_avatar_ai?: boolean
+  languages?: string[]
   persona_onboarding_config?: {
     require_thumbnail?: boolean
     require_video?: boolean
@@ -174,9 +175,9 @@ export interface UpdateOrganisationDetailPayload {
   enable_daily_report: boolean
   daily_report_hour: number
   daily_report_timezone: string
+  daily_report_emails: string[]
   infinite_tokens: boolean
   total_tokens: number
-  additional_emails: string[]
 }
 
 export type UnlockType =

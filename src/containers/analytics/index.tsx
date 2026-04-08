@@ -76,52 +76,94 @@ export default function AnalyticsContainer() {
       seen: m.seen_videos || 0,
     })) || []
 
-  const topActionsKeys = Object.entries(summaryData?.callbacks_total || {})
-  const topActions = topActionsKeys.map(([key, value]) => ({
-    label: key,
-    value: Number(value),
-    color: 'bg-blue-600',
-  }))
-
-  const bottomActionsKeys = Object.entries(summaryData?.callbacks || {})
-  const bottomActions = bottomActionsKeys.map(([key, value]) => ({
-    label: key,
-    value: Number(value),
-    color: 'bg-blue-600/50',
-  }))
-
   const totalSeen = summaryData?.seen_videos || 0
   const totalCallbacks = summaryData?.callback_total || 0
   const totalFeedback = summaryData?.feedback_total || 0
   const callbackRate =
-    totalSeen > 0 ? Number(((totalCallbacks / totalSeen) * 100).toFixed(1)) : 0
+    totalSeen > 0
+      ? Math.min(Number(((totalCallbacks / totalSeen) * 100).toFixed(1)), 100)
+      : 0
   const feedbackRate =
-    totalSeen > 0 ? Number(((totalFeedback / totalSeen) * 100).toFixed(1)) : 0
+    totalSeen > 0
+      ? Math.min(Number(((totalFeedback / totalSeen) * 100).toFixed(1)), 100)
+      : 0
+
+  const callbacksTotalMap = summaryData?.callbacks_total || {}
+  const callbacksMap = summaryData?.callbacks || {}
+  const callbacksTotalSum =
+    Object.values(callbacksTotalMap).reduce(
+      (sum: number, v) => sum + (Number(v) || 0),
+      0,
+    ) || 1
+  const topActions = Object.entries(callbacksTotalMap)
+    .map(([label, value]) => ({
+      label,
+      value: Number(((Number(value) / callbacksTotalSum) * 100).toFixed(1)),
+      color: 'bg-blue-600',
+    }))
+    .filter((item) => item.label)
+    .sort((a, b) => b.value - a.value)
+    .slice(0, 5)
+
+  const bottomActions = Object.entries(callbacksMap)
+    .map(([label, value]) => ({
+      label,
+      value: Number(((Number(value) / (totalCallbacks || 1)) * 100).toFixed(1)),
+      color: 'bg-blue-600/50',
+    }))
+    .filter((item) => item.label)
+    .sort((a, b) => a.value - b.value)
+    .slice(0, 5)
 
   const ratings = [
     {
       label: '5 STAR',
-      value: summaryData?.feedback_5_star || 0,
+      value: Number(
+        (
+          ((summaryData?.feedback_5_star ?? 0) / (totalFeedback || 1)) *
+          100
+        ).toFixed(1),
+      ),
       color: 'bg-emerald-500',
     },
     {
       label: '4 STAR',
-      value: summaryData?.feedback_4_star || 0,
+      value: Number(
+        (
+          ((summaryData?.feedback_4_star ?? 0) / (totalFeedback || 1)) *
+          100
+        ).toFixed(1),
+      ),
       color: 'bg-emerald-500',
     },
     {
       label: '3 STAR',
-      value: summaryData?.feedback_3_star || 0,
+      value: Number(
+        (
+          ((summaryData?.feedback_3_star ?? 0) / (totalFeedback || 1)) *
+          100
+        ).toFixed(1),
+      ),
       color: 'bg-amber-500',
     },
     {
       label: '2 STAR',
-      value: summaryData?.feedback_2_star || 0,
+      value: Number(
+        (
+          ((summaryData?.feedback_2_star ?? 0) / (totalFeedback || 1)) *
+          100
+        ).toFixed(1),
+      ),
       color: 'bg-rose-400',
     },
     {
       label: '1 STAR',
-      value: summaryData?.feedback_1_star || 0,
+      value: Number(
+        (
+          ((summaryData?.feedback_1_star ?? 0) / (totalFeedback || 1)) *
+          100
+        ).toFixed(1),
+      ),
       color: 'bg-red-600',
     },
   ]

@@ -35,7 +35,7 @@ export function DailyReportSettings() {
     enable_daily_report: false,
     daily_report_hour: 0,
     daily_report_timezone: 'Asia/Calcutta',
-    additional_emails: [] as string[],
+    daily_report_emails: [] as string[],
   })
 
   useEffect(() => {
@@ -46,7 +46,10 @@ export function DailyReportSettings() {
         daily_report_hour: organisation.daily_report_hour ?? 0,
         daily_report_timezone:
           organisation.daily_report_timezone || 'Asia/Calcutta',
-        additional_emails: organisation.additional_emails || [],
+        daily_report_emails:
+          organisation.notification_emails?.DAILY_REPORT ||
+          organisation.additional_emails ||
+          [],
       })
     }
   }, [organisation])
@@ -68,13 +71,13 @@ export function DailyReportSettings() {
       toast.error('Invalid email address')
       return
     }
-    if (settings.additional_emails.includes(emailInput)) {
+    if (settings.daily_report_emails.includes(emailInput)) {
       toast.error('Email already exists')
       return
     }
     setSettings((prev) => ({
       ...prev,
-      additional_emails: [...prev.additional_emails, emailInput],
+      daily_report_emails: [...prev.daily_report_emails, emailInput],
     }))
     setEmailInput('')
   }
@@ -82,7 +85,7 @@ export function DailyReportSettings() {
   const handleRemoveEmail = (email: string) => {
     setSettings((prev) => ({
       ...prev,
-      additional_emails: prev.additional_emails.filter((e) => e !== email),
+      daily_report_emails: prev.daily_report_emails.filter((e) => e !== email),
     }))
   }
 
@@ -112,7 +115,10 @@ export function DailyReportSettings() {
         daily_report_hour: organisation.daily_report_hour ?? 0,
         daily_report_timezone:
           organisation.daily_report_timezone || 'Asia/Calcutta',
-        additional_emails: organisation.additional_emails || [],
+        daily_report_emails:
+          organisation.notification_emails?.DAILY_REPORT ||
+          organisation.additional_emails ||
+          [],
       })
     }
     setIsEditing(false)
@@ -217,12 +223,12 @@ export function DailyReportSettings() {
                 </div>
 
                 <div className='flex flex-wrap gap-2 pt-1'>
-                  {settings.additional_emails.length === 0 ? (
+                  {settings.daily_report_emails.length === 0 ? (
                     <span className='text-sm text-slate-400'>
                       No recipients configured
                     </span>
                   ) : (
-                    settings.additional_emails.map((email) => (
+                    settings.daily_report_emails.map((email) => (
                       <div
                         key={email}
                         className='flex items-center gap-1 rounded-md border bg-slate-50 px-2 py-1 text-sm'

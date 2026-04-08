@@ -18,11 +18,11 @@ const formatDate = ({
   start: string | Date
   end: string | Date
 }) => {
-  const format = (d: string | Date) => {
+  const toDateStr = (d: string | Date) => {
     const date = typeof d === 'string' ? new Date(d) : d
-    return date.toISOString()
+    return format(date, 'yyyy-MM-dd')
   }
-  return [format(start), format(end)]
+  return [toDateStr(start), toDateStr(end)]
 }
 
 export const getAnalyticsSummary = async ({
