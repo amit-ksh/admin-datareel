@@ -90,6 +90,14 @@ export default function AnalyticsContainer() {
     color: 'bg-blue-600/50',
   }))
 
+  const totalSeen = summaryData?.seen_videos || 0
+  const totalCallbacks = summaryData?.callback_total || 0
+  const totalFeedback = summaryData?.feedback_total || 0
+  const callbackRate =
+    totalSeen > 0 ? Number(((totalCallbacks / totalSeen) * 100).toFixed(1)) : 0
+  const feedbackRate =
+    totalSeen > 0 ? Number(((totalFeedback / totalSeen) * 100).toFixed(1)) : 0
+
   const ratings = [
     {
       label: '5 STAR',
@@ -243,9 +251,9 @@ export default function AnalyticsContainer() {
 
       {/* Engagement Metrics Component */}
       <AnalyticsEngagementSection
-        callbackRate={68}
+        callbackRate={callbackRate}
         callbackDescription='from total CTA clicks'
-        feedbackRate={84}
+        feedbackRate={feedbackRate}
         feedbackDescription='from total viewers'
         topActions={topActions}
         bottomActions={bottomActions}
