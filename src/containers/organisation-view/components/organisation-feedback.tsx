@@ -191,10 +191,12 @@ export function OrganisationFeedback({
     setDateRange,
     page,
     setPage,
-    assignee,
-    setAssignee,
     commentsOnly,
     setCommentsOnly,
+    rating,
+    setRating,
+    handleExportCSV,
+    isExporting,
   } = useOrganisationFeedback(organisationId)
 
   const statsData = [
@@ -405,25 +407,21 @@ export function OrganisationFeedback({
             <CardTitle className='text-base font-semibold'>Feedbacks</CardTitle>
             <div className='flex w-full flex-col flex-wrap items-stretch gap-3 sm:flex-row sm:items-center lg:w-auto'>
               <Select
-                value={assignee || 'all-assignees'}
+                value={rating?.toString() ?? 'all-ratings'}
                 onValueChange={(val) =>
-                  setAssignee(val === 'all-assignees' ? '' : val)
+                  setRating(val === 'all-ratings' ? undefined : parseInt(val))
                 }
               >
-                <SelectTrigger className='text-muted-foreground h-9 w-full bg-white text-sm sm:w-[140px]'>
-                  <SelectValue placeholder='All Assignees' />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value='all-assignees'>All Assignees</SelectItem>
-                </SelectContent>
-              </Select>
-
-              <Select defaultValue='all-ratings'>
                 <SelectTrigger className='text-muted-foreground h-9 w-full bg-white text-sm sm:w-[140px]'>
                   <SelectValue placeholder='All ratings' />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value='all-ratings'>All ratings</SelectItem>
+                  <SelectItem value='1'>1</SelectItem>
+                  <SelectItem value='2'>2</SelectItem>
+                  <SelectItem value='3'>3</SelectItem>
+                  <SelectItem value='4'>4</SelectItem>
+                  <SelectItem value='5'>5</SelectItem>
                 </SelectContent>
               </Select>
 
@@ -442,9 +440,13 @@ export function OrganisationFeedback({
                 />
               </div>
 
-              <Button className='h-9 w-full gap-2 bg-blue-600 text-white hover:bg-blue-700 sm:w-auto'>
+              <Button
+                className='h-9 w-full gap-2 bg-blue-600 text-white hover:bg-blue-700 sm:w-auto'
+                onClick={handleExportCSV}
+                disabled={isExporting}
+              >
                 <Upload className='h-4 w-4' />
-                Export CSV
+                {isExporting ? 'Exporting...' : 'Export CSV'}
               </Button>
             </div>
           </div>

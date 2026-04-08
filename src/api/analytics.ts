@@ -7,6 +7,7 @@ import {
   FeedbackQueryParams,
   FeedbacksResponse,
   GetFeedbacksParams,
+  DownloadFeedbacksParams,
   RatingBreakdown,
   RatingStats,
 } from '@/types/analytics'
@@ -170,6 +171,7 @@ export const getFeedbacks = async ({
   pagenum = 1,
   comments_only = false,
   assignee = '',
+  rating,
 }: GetFeedbacksParams): Promise<FeedbacksResponse> => {
   const formatBackendDate = (d: string | Date) => {
     const date = typeof d === 'string' ? new Date(d) : d
@@ -184,6 +186,7 @@ export const getFeedbacks = async ({
       pagenum,
       comments_only,
       assignee,
+      rating: rating || undefined,
     },
     headers: {
       'organistion-id': organisationId,
@@ -191,4 +194,32 @@ export const getFeedbacks = async ({
   })
 
   return response.data?.data || response.data || {}
+}
+
+export const downloadFeedbacks = async ({
+  organisationId,
+  startDate,
+  endDate,
+  pipelineId = '',
+  comments_only = false,
+  rating,
+}: DownloadFeedbacksParams) => {
+  const formatBackendDate = (d: string | Date) => {
+    const date = typeof d === 'string' ? new Date(d) : d
+    return format(date, 'yyyy-MM-dd HH:mm:ss.SSS')
+  }
+
+  return PrivateAxios.get('analytics/download/feedbacks', {
+    params: {
+      pipeline_id: pipelineId,
+      start_date: formatBackendDate(startDate),
+      end_date: formatBackendDate(endDate),
+      comments_only,
+      rating: rating || undefined,
+    },
+    headers: {
+      'organistion-id': organisationId,
+    },
+    responseType: 'blob',
+  })
 }
