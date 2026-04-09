@@ -9,14 +9,6 @@ import {
 } from './components/organisation-list'
 import { useAccessOrganisation } from './use-access-organisation.hook'
 
-interface UserDetails {
-  name: string
-  email: string
-  role: string
-  lastLogin: string
-  status: 'active' | 'inactive'
-}
-
 export default function AccessOrganisationContainer() {
   const { email, setEmail, isLoading, handleFetch } = useAccessOrganisation()
 
