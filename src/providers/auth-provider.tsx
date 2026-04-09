@@ -53,6 +53,7 @@ type AuthContextType = {
 
 const protectedRoutes = [
   /^\/analytics$/,
+  /^\/email-templates$/,
   /^\/organisations(\/.*)?$/,
   /^\/access-organisation$/,
   /^\/$/,
