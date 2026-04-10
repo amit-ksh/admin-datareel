@@ -99,26 +99,6 @@ function TenantList({
                     </span>
                   </div>
                 </div>
-                {/* Actions mobile only */}
-                {/* <div
-                  className='hidden shrink-0 items-center gap-1.5'
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <Button
-                    variant='ghost'
-                    size='icon'
-                    className='h-9 w-9 text-slate-400 hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-800'
-                  >
-                    <Pencil className='h-[18px] w-[18px]' />
-                  </Button>
-                  <Button
-                    variant='ghost'
-                    size='icon'
-                    className='h-9 w-9 text-slate-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20'
-                  >
-                    <Trash2 className='h-[18px] w-[18px]' />
-                  </Button>
-                </div> */}
               </div>
 
               <div className='flex flex-1 flex-wrap items-center justify-between gap-4 sm:pl-[64px] md:flex-nowrap md:gap-0 md:pl-0'>
@@ -181,27 +161,6 @@ function TenantList({
                     {tenant.onboarded ? 'Yes' : 'No'}
                   </div>
                 </div>
-
-                {/* Actions Desktop */}
-                {/* <div
-                  className='flex w-[100px] items-center justify-end gap-1.5'
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <Button
-                    variant='ghost'
-                    size='icon'
-                    className='h-9 w-9 text-slate-400 hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-800'
-                  >
-                    <Pencil className='h-[18px] w-[18px]' />
-                  </Button>
-                  <Button
-                    variant='ghost'
-                    size='icon'
-                    className='h-9 w-9 text-slate-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20'
-                  >
-                    <Trash2 className='h-[18px] w-[18px]' />
-                  </Button>
-                </div> */}
               </div>
             </div>
 

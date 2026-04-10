@@ -97,7 +97,7 @@ export function AssetMetrics({ counts }: AssetMetricsProps) {
 
       {/* Content Templates */}
       <MetricCard
-        title='Content Templates'
+        title='Scripts'
         value={(counts?.content_templates ?? 0).toString()}
         icon={
           <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-slate-50'>
@@ -108,7 +108,7 @@ export function AssetMetrics({ counts }: AssetMetricsProps) {
 
       {/* Render Settings */}
       <MetricCard
-        title='Render Settings'
+        title='Video Layouts'
         value={(counts?.render_settings ?? 0).toString()}
         icon={
           <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-zinc-50'>

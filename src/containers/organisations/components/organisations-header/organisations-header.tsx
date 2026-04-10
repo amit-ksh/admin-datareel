@@ -1,5 +1,4 @@
-import { Button } from '@/components/ui/button'
-import { Search, RotateCcwIcon } from 'lucide-react'
+import { Search } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { ListOrganisationsParams } from '@/types/organisation'
 import { OnboardOrganisationDialog } from '../onboard-organisation-dialog'
@@ -15,13 +14,15 @@ interface OrganisationsHeaderProps {
 export function OrganisationsHeader({
   params,
   setFilters,
-  resetFilters,
+  // resetFilters,
 }: OrganisationsHeaderProps) {
   const [searchValue, setSearchValue] = useState(params.search || '')
   const debouncedSearchValue = useDebounce(searchValue, 500)
 
   useEffect(() => {
     setFilters({ search: debouncedSearchValue || undefined })
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearchValue])
 
   useEffect(() => {

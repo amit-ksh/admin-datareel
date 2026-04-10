@@ -11,7 +11,7 @@ export function ProjectMetrics({ counts }: ProjectMetricsProps) {
     <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4'>
       {/* Total Pipelines */}
       <MetricCard
-        title='Total Pipelines'
+        title='Projects'
         value={(counts?.pipelines ?? 0).toString()}
         icon={
           <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50'>
@@ -22,7 +22,7 @@ export function ProjectMetrics({ counts }: ProjectMetricsProps) {
 
       {/* Clusters */}
       <MetricCard
-        title='Total Clusters'
+        title='Video Folders'
         value={(counts?.clusters ?? 0).toString()}
         icon={
           <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-50'>
@@ -33,7 +33,7 @@ export function ProjectMetrics({ counts }: ProjectMetricsProps) {
 
       {/* Templates */}
       <MetricCard
-        title='Templates'
+        title='Backgrounds'
         value={(counts?.templates ?? 0).toString()}
         icon={
           <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-purple-50'>
