@@ -188,13 +188,15 @@ export default function AnalyticsContainer() {
     }),
   )
 
-  const calculateTrendColor = (val: number) => {
+  const calculateTrendColor = (val: number | null) => {
+    if (val === null || val === undefined) return 'text-blue-500'
     if (val > 0) return 'text-emerald-500'
     if (val < 0) return 'text-rose-500'
     return 'text-muted-foreground'
   }
 
-  const formatTrend = (val: number) => {
+  const formatTrend = (val: number | null) => {
+    if (val === null || val === undefined) return 'New'
     if (val > 0) return `+ ${val}%`
     if (val < 0) return `- ${Math.abs(val)}%`
     return '0%'
@@ -220,38 +222,38 @@ export default function AnalyticsContainer() {
         }}
         metrics={{
           totalVideos: {
-            value: `${summaryData?.total_videos || 0}`,
-            trend: formatTrend(summaryData?.growth?.total_videos || 0),
+            value: `${summaryData?.total_videos ?? 0}`,
+            trend: formatTrend(summaryData?.growth?.total_videos ?? null),
             trendColor: calculateTrendColor(
-              summaryData?.growth?.total_videos || 0,
+              summaryData?.growth?.total_videos ?? null,
             ),
           },
           completed: {
-            value: `${summaryData?.completed_videos || 0}`,
-            trend: formatTrend(summaryData?.growth?.completed_videos || 0),
+            value: `${summaryData?.completed_videos ?? 0}`,
+            trend: formatTrend(summaryData?.growth?.completed_videos ?? null),
             trendColor: calculateTrendColor(
-              summaryData?.growth?.completed_videos || 0,
+              summaryData?.growth?.completed_videos ?? null,
             ),
           },
           approved: {
-            value: `${summaryData?.approved_videos || 0}`,
-            trend: formatTrend(summaryData?.growth?.approved_videos || 0),
+            value: `${summaryData?.approved_videos ?? 0}`,
+            trend: formatTrend(summaryData?.growth?.approved_videos ?? null),
             trendColor: calculateTrendColor(
-              summaryData?.growth?.approved_videos || 0,
+              summaryData?.growth?.approved_videos ?? null,
             ),
           },
           delivered: {
-            value: `${summaryData?.delivered_videos || 0}`,
-            trend: formatTrend(summaryData?.growth?.delivered_videos || 0),
+            value: `${summaryData?.delivered_videos ?? 0}`,
+            trend: formatTrend(summaryData?.growth?.delivered_videos ?? null),
             trendColor: calculateTrendColor(
-              summaryData?.growth?.delivered_videos || 0,
+              summaryData?.growth?.delivered_videos ?? null,
             ),
           },
           seen: {
-            value: `${summaryData?.seen_videos || 0}`,
-            trend: formatTrend(summaryData?.growth?.seen_videos || 0),
+            value: `${summaryData?.seen_videos ?? 0}`,
+            trend: formatTrend(summaryData?.growth?.seen_videos ?? null),
             trendColor: calculateTrendColor(
-              summaryData?.growth?.seen_videos || 0,
+              summaryData?.growth?.seen_videos ?? null,
             ),
           },
         }}
