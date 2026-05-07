@@ -26,8 +26,8 @@ export function OrganisationsHeader({
   }, [debouncedSearchValue])
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSearchValue(params.search || '')
+    // eslint-disable-next-line react-hooks/set-state-in-effect
   }, [params.search])
 
   return (

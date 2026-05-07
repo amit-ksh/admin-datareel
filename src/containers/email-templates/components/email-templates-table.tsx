@@ -112,8 +112,10 @@ export function EmailTemplatesTable({
             <TableHeader>
               <TableRow>
                 <TableHead className='pl-6'>Template Name</TableHead>
-                <TableHead className='text-nowrap'>Organisation</TableHead>
-                <TableHead>Type</TableHead>
+                <TableHead className='min-w-44 text-nowrap'>
+                  Organisation
+                </TableHead>
+                <TableHead className='pl-6'>Type</TableHead>
                 <TableHead>Subject</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className='pr-6 text-right'>Actions</TableHead>
@@ -156,10 +158,10 @@ export function EmailTemplatesTable({
                 data.map((tpl) => (
                   <TableRow key={tpl.id} className='h-20'>
                     <TableCell className='text-foreground pl-6 font-medium'>
-                      <div className='flex max-w-[200px] flex-col'>
+                      <div className='flex max-w-50 flex-col'>
                         <span className='truncate'>{tpl.name}</span>
                         <div className='flex items-center gap-1.5'>
-                          <span className='text-muted-foreground line-clamp-1 max-w-[80px] font-mono text-[10px] font-normal opacity-70'>
+                          <span className='text-muted-foreground line-clamp-1 max-w-20 font-mono text-[10px] font-normal opacity-70'>
                             ID: {tpl.id}
                           </span>
                           <button
@@ -180,19 +182,21 @@ export function EmailTemplatesTable({
                         </div>
                       </div>
                     </TableCell>
-                    <TableCell className='text-muted-foreground font-medium'>
-                      {tpl.organisation_name || '-'}
+                    <TableCell className='text-muted-foreground min-w-44 font-medium'>
+                      <span className='line-clamp-1 max-w-44 font-medium text-wrap'>
+                        {tpl.organisation_name || '-'}
+                      </span>
                     </TableCell>
                     <TableCell>
                       <Badge
                         variant='outline'
                         className='bg-muted/50 text-muted-foreground border-transparent font-medium'
                       >
-                        {tpl.email_type}
+                        {tpl.email_type.replaceAll('_', ' ')}
                       </Badge>
                     </TableCell>
                     <TableCell
-                      className='max-w-[200px] truncate'
+                      className='max-w-50 truncate'
                       title={tpl.subject}
                     >
                       {tpl.subject}
